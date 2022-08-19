@@ -5,6 +5,10 @@
 </script>
 
 <Lucia>
-  <Navbar />
-  <slot />
+  <header>
+    <Navbar />
+  </header>
+  <main class="mx-14 my-4">
+    <slot />
+  </main>
 </Lucia>
