@@ -1,6 +1,7 @@
 <script lang="ts">
   import { setLocation } from "$lib/auth/client";
   import ErrorText from "$lib/components/errorText.svelte";
+  import Loading from "$lib/components/loading.svelte";
   import TopLabel from "$lib/components/topLabel.svelte";
   import type { AxiosError } from "$lib/interfaces";
   import { getFirstError } from "$lib/utils";
@@ -9,8 +10,10 @@
   let email: string;
   let password: string;
   let err = "";
+  let loading = false;
 
   const signin = async () => {
+    loading = true;
     try {
       await axios.post("/signin", {
         email,
@@ -22,6 +25,7 @@
       console.log(error);
       err = getFirstError(<AxiosError>error);
     }
+    loading = false;
   };
 </script>
 
@@ -39,4 +43,6 @@
 
 <ErrorText {err} />
 
-<button class="my-4 btn" on:click={async () => await signin()}>Signin</button>
+<button class="my-4 btn" on:click={async () => await signin()}>
+  <Loading {loading}>Signin</Loading>
+</button>
