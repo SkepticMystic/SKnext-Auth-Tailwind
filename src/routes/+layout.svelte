@@ -4,8 +4,7 @@
   import "../app.css";
 </script>
 
-<Navbar />
-
 <Lucia>
+  <Navbar />
   <slot />
 </Lucia>
