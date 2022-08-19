@@ -44,5 +44,5 @@
 <ErrorText {err} />
 
 <button class="my-4 btn" on:click={async () => await signin()}>
-  <Loading {loading}>Signin</Loading>
+  <Loading {loading}>Sign in</Loading>
 </button>
