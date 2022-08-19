@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .input {
+    @apply px-2 py-1 border rounded;
+  }
+
+  .btn {
+    @apply px-4 py-2 border rounded;
+  }
+}
