@@ -21,7 +21,7 @@
 <div class="my-2" />
 
 {#if $session}
-  <p class="text-lg">Welcome {$session.user.user_id}</p>
+  <p class="text-lg">Welcome {$session.user.email}</p>
 
   <div>
     <button class="btn" on:click={async () => await deleteAccount()}>

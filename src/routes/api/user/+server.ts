@@ -1,5 +1,5 @@
 import { auth } from "$lib/auth/lucia";
-import { redirect, type RequestHandler } from "@sveltejs/kit";
+import type { RequestHandler } from "@sveltejs/kit";
 
 export const DELETE: RequestHandler = async ({ request }) => {
     try {
@@ -8,7 +8,7 @@ export const DELETE: RequestHandler = async ({ request }) => {
 
         await auth.deleteUser(user.user_id);
 
-        throw redirect(302, "/signin");
+        return new Response(null)
     } catch (error) {
         console.log(error)
         return new Response((<Error>error).message, { status: 500 })

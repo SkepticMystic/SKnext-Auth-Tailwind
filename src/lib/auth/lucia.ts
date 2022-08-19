@@ -24,7 +24,7 @@ export const User = mongoose.model<DBUser>(
             },
             hashed_password: String,
         },
-        { _id: false }
+        { _id: false, strict: false }
     )
 );
 

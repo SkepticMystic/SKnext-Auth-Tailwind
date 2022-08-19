@@ -1,6 +1,7 @@
-import { redirect, type ServerLoad } from "@sveltejs/kit"
+import { redirect } from "@sveltejs/kit"
+import type { LayoutServerLoad } from './$types'
 
-export const load: ServerLoad = async ({ locals, routeId }) => {
+export const load: LayoutServerLoad = async ({ locals, routeId }) => {
     const anyoneAllowed = [
         "signup",
         "signin",
