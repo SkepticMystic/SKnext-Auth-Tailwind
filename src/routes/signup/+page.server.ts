@@ -3,7 +3,6 @@ import type { Action } from "@sveltejs/kit";
 
 export const POST: Action = async ({ request, setHeaders }) => {
     const { email, password } = await request.json()
-    console.log(email, password)
     if (!email || !password) return { errors: { validation: "Email and password are required" } };
 
     try {

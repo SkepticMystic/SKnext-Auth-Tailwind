@@ -1,9 +1,4 @@
 <script lang="ts">
-  import { getSession } from "lucia-sveltekit/client";
-
-  const session = getSession();
-
-  console.log($session);
 </script>
 
 <h1>Welcome to SvelteKit</h1>
