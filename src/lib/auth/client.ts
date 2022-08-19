@@ -8,3 +8,5 @@ export const signOutUser = async () => {
         console.log(error)
     }
 };
+
+export const setLocation = (location = '/') => window.location.href = location;

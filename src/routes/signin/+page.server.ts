@@ -13,7 +13,7 @@ export const POST: Action = async ({ request, setHeaders }) => {
         );
 
         setHeaders({ "set-cookie": cookies })
-        return;
+        return { location: "/" };
     } catch (e) {
         const { message } = e as Error;
         if (

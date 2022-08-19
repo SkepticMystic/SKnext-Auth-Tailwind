@@ -2,12 +2,15 @@
 </script>
 
 <nav>
-  <ul class="flex flex-row">
-    <li class="flex-1">
+  <ul class="flex flex-row gap-4">
+    <li>
       <a href="/">Home</a>
     </li>
-    <li class="flex-1">
+    <li>
       <a href="/signup">Signup</a>
+    </li>
+    <li>
+      <a href="/signin">Signin</a>
     </li>
   </ul>
 </nav>

@@ -1,9 +1,10 @@
 <script lang="ts">
-  import axios from "axios";
-  import TopLabel from "$lib/components/topLabel.svelte";
+  import { setLocation } from "$lib/auth/client";
   import ErrorText from "$lib/components/errorText.svelte";
+  import TopLabel from "$lib/components/topLabel.svelte";
   import type { AxiosError } from "$lib/interfaces";
   import { getFirstError } from "$lib/utils";
+  import axios from "axios";
 
   let email: string;
   let password: string;
@@ -11,12 +12,12 @@
 
   const signup = async () => {
     try {
-      const { data } = await axios.post("/signup", {
+      await axios.post("/signup", {
         email,
         password,
       });
 
-      console.log(data);
+      setLocation();
     } catch (error) {
       console.log(error);
       err = getFirstError(<AxiosError>error);
@@ -31,7 +32,7 @@
   <input
     class="input"
     type="password"
-    autocomplete="current-password"
+    autocomplete="new-password"
     bind:value={password}
   />
 </TopLabel>
