@@ -7,3 +7,7 @@ declare namespace App {
 	// interface PrivateEnv {}
 	// interface PublicEnv {}
 }
+
+declare namespace Lucia {
+	interface UserData { }
+}
