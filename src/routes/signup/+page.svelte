@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { setLocation } from "$lib/auth/client";
+  import { set_href } from "$lib/auth/client";
   import ErrorText from "$lib/components/errorText.svelte";
   import Loading from "$lib/components/loading.svelte";
   import TopLabel from "$lib/components/topLabel.svelte";
@@ -20,7 +20,7 @@
         password,
       });
 
-      setLocation();
+      set_href();
     } catch (error) {
       console.log(error);
       err = getFirstError(<AxiosError>error);

@@ -3,7 +3,6 @@
   import { getSession } from "lucia-sveltekit/client";
 
   const session = getSession();
-  console.log({ $session });
 </script>
 
 <nav>

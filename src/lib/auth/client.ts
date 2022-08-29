@@ -4,13 +4,13 @@ import type { Session } from "lucia-sveltekit/types";
 export const signOutUser = async () => {
     try {
         await signOut();
-        setLocation()
+        set_href()
     } catch (error) {
         console.log(error)
     }
 };
 
-export const setLocation = (location = '/') => window.location.href = location;
+export const set_href = (href = '/') => window.location.href = href;
 
 export const authHeader = (session: Session<Lucia.UserData>) => ({
     headers: {

@@ -3,7 +3,7 @@ import type { Action } from "@sveltejs/kit";
 
 export const POST: Action = async ({ request, setHeaders }) => {
     const { email, password } = await request.json()
-    if (!email || !password) return { errors: { validation: "Email and password are required" } };
+    if (!email || !password) return { errors: ["Email and password are required"] };
 
     try {
         const { cookies } = await auth.createUser("email", email, {
@@ -19,8 +19,8 @@ export const POST: Action = async ({ request, setHeaders }) => {
             message === "AUTH_DUPLICATE_IDENTIFIER_TOKEN" ||
             message === "AUTH_DUPLICATE_USER_DATA"
         ) {
-            return { errors: { duplicate: "Email already exists" } };
+            return { errors: ["Email already exists"] };
         }
-        return { errors: { message }, status: 500 };
+        return { errors: [message], status: 500 };
     }
 };

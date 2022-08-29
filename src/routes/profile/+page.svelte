@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { authHeader, setLocation } from "$lib/auth/client";
+  import { authHeader, set_href } from "$lib/auth/client";
   import axios from "axios";
   import { getSession } from "lucia-sveltekit/client";
 
@@ -9,7 +9,7 @@
     if (!confirm("Are you sure you want to delete your account?")) return;
     try {
       await axios.delete("/api/user", authHeader($session));
-      setLocation("/signin");
+      set_href("/signin");
     } catch (error) {
       console.log(error);
     }

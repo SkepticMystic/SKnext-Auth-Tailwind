@@ -3,7 +3,7 @@ import type { Action } from "@sveltejs/kit";
 
 export const POST: Action = async ({ request, setHeaders }) => {
     const { email, password } = await request.json()
-    if (!email || !password) return { errors: { validation: "Email and password are required" } };
+    if (!email || !password) return { errors: ["Email and password are required"] };
 
     try {
         const { cookies } = await auth.authenticateUser(
@@ -20,9 +20,9 @@ export const POST: Action = async ({ request, setHeaders }) => {
             message === "AUTH_INVALID_IDENTIFIER_TOKEN" ||
             message === "AUTH_INVALID_PASSWORD"
         ) {
-            return { errors: { invalid: "Invalid email or password" } };
+            return { errors: ["Invalid email or password"] };
         }
 
-        return { errors: { message }, status: 500 };
+        return { errors: [message], status: 500 };
     }
 };
