@@ -1,9 +1,8 @@
-import * as db from '$lib/db'
-import mongoose from "mongoose";
-import lucia from "lucia-sveltekit";
+import { dev } from "$app/environment";
+import { LUCIA_SECRET, MONGO_URI } from "$env/static/private";
 import adapter from "@lucia-sveltekit/adapter-mongoose";
-import { dev } from "$app/env";
-import { LUCIA_SECRET, MONGO_URI } from "$lib/_env";
+import lucia from "lucia-sveltekit";
+import mongoose from "mongoose";
 
 export interface DBUser {
     _id: string;
@@ -12,28 +11,28 @@ export interface DBUser {
     email: string;
 }
 
-export const User = mongoose.model<DBUser>(
+const userSchema = new mongoose.Schema({
+    _id: String,
+    identifier_token: {
+        type: String,
+        unique: true,
+        required: true,
+    },
+    hashed_password: String,
+    email: String,
+}, { _id: false, strict: false })
+export const User = mongoose.models['user'] || mongoose.model<DBUser>(
     "user",
-    new mongoose.Schema(
-        {
-            _id: String,
-            identifier_token: {
-                type: String,
-                unique: true,
-                required: true,
-            },
-            hashed_password: String,
-        },
-        { _id: false, strict: false }
-    )
+    userSchema
 );
 
-export const RefreshToken = mongoose.model(
+const refreshTokenSchema = new mongoose.Schema({
+    refresh_token: String,
+    user_id: String,
+})
+export const RefreshToken = mongoose.models['refresh_token'] || mongoose.model(
     "refresh_token",
-    new mongoose.Schema({
-        refresh_token: String,
-        user_id: String,
-    })
+    refreshTokenSchema
 );
 
 export const auth = lucia({
