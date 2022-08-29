@@ -8,7 +8,7 @@ specifiers:
   autoprefixer: ^10.4.8
   axios: ^0.27.2
   dotenv: ^16.0.1
-  lucia-sveltekit: ^0.7.0
+  lucia-sveltekit: ^0.7.1
   mongoose: ^6.5.2
   postcss: ^8.4.16
   svelte: ^3.44.0
@@ -23,21 +23,21 @@ specifiers:
 dependencies:
   '@lucia-sveltekit/adapter-mongoose': 0.1.1
   axios: 0.27.2
-  lucia-sveltekit: 0.7.0
+  lucia-sveltekit: 0.7.1
   mongoose: 6.5.2
   svelte-loading-spinners: 0.1.7
 
 devDependencies:
   '@playwright/test': 1.25.0
-  '@sveltejs/adapter-auto': 1.0.0-next.64
-  '@sveltejs/kit': 1.0.0-next.427_svelte@3.49.0+vite@3.0.9
+  '@sveltejs/adapter-auto': 1.0.0-next.68
+  '@sveltejs/kit': 1.0.0-next.445_svelte@3.49.0+vite@3.0.9
   autoprefixer: 10.4.8_postcss@8.4.16
   dotenv: 16.0.1
   postcss: 8.4.16
   svelte: 3.49.0
   svelte-check: 2.8.1_vylzxgme5yisu3bsyvcau4hjtq
   svelte-preprocess: 4.10.7_fje22ktja5v2dh6nbkissncqme
-  tailwindcss: 3.1.8
+  tailwindcss: 3.1.8_postcss@8.4.16
   tslib: 2.4.0
   typescript: 4.7.4
   vite: 3.0.9
@@ -157,27 +157,27 @@ packages:
       - encoding
     dev: false
 
-  /@sveltejs/adapter-auto/1.0.0-next.64:
-    resolution: {integrity: sha512-Q8DwcS6wl1GovzS9JJzaD/WL/Lfk1ur4nAF1HtmsUvZDpsPBVDqnK2AhYU4G3oFNiuHstrjAogMy5th8ptSFGw==}
+  /@sveltejs/adapter-auto/1.0.0-next.68:
+    resolution: {integrity: sha512-UCapdMg/DfDBPvBHDjuqK1bNIAzOD0HM+tf90Q1zGNA2HeUSGyIc2Z4vaGXZ3Z+CBgQWaUhsglytr69KPM8hIA==}
     dependencies:
-      '@sveltejs/adapter-cloudflare': 1.0.0-next.31
-      '@sveltejs/adapter-netlify': 1.0.0-next.71
-      '@sveltejs/adapter-vercel': 1.0.0-next.66
+      '@sveltejs/adapter-cloudflare': 1.0.0-next.32
+      '@sveltejs/adapter-netlify': 1.0.0-next.74
+      '@sveltejs/adapter-vercel': 1.0.0-next.70
     transitivePeerDependencies:
       - encoding
       - supports-color
     dev: true
 
-  /@sveltejs/adapter-cloudflare/1.0.0-next.31:
-    resolution: {integrity: sha512-HhEFZP72GJ8AZGgFECKIiayDcLaAWi65pI0AnBfiNhCifYSlH/mPNWNVD4AWRDnXnH6XU+FLwhGDnIDwytTyYg==}
+  /@sveltejs/adapter-cloudflare/1.0.0-next.32:
+    resolution: {integrity: sha512-tzkUsdQlBk9xUjcGUOBYos4HKaeaXvz9v4TQ1QS2yIHEtL5xvMEDPZ94/DB2gPL4LZCnYbdY2lsy5HCsoN0hkQ==}
     dependencies:
       '@cloudflare/workers-types': 3.14.1
       esbuild: 0.14.54
       worktop: 0.8.0-next.14
     dev: true
 
-  /@sveltejs/adapter-netlify/1.0.0-next.71:
-    resolution: {integrity: sha512-la1CGtWO1xul1L3zEoFAoc4EX2uxZjrZcOMS3tkKB8drxhbQsNbnTE6fmSSMFiZXhxaikczrBgQwqIaDkLTmZg==}
+  /@sveltejs/adapter-netlify/1.0.0-next.74:
+    resolution: {integrity: sha512-pT8JmmFFS378HXYogxMpUTfA/nl/DI1+hNzmSybU2i8wJxqyt2Qi59YZmdu5ewRnUWrJRoZ+CmMplp7SbLOiLQ==}
     dependencies:
       '@iarna/toml': 2.2.5
       esbuild: 0.14.54
@@ -185,18 +185,18 @@ packages:
       tiny-glob: 0.2.9
     dev: true
 
-  /@sveltejs/adapter-vercel/1.0.0-next.66:
-    resolution: {integrity: sha512-s3Hcxu9nCG/rR3C3cFbdQGjTa5W4K2kRcc6S5Xefx7itbrw+4v3KpO8ZPB6qM55XDwVxuG7260NMHVI6MUGmSA==}
+  /@sveltejs/adapter-vercel/1.0.0-next.70:
+    resolution: {integrity: sha512-0kwOpzrgpmHXnx+47fYzD5wrINjZvibL/ewq2dDYJiGxeAT/kNmszrIyoCDxm0oq7n1/+mLsyzX0V+lMs+leKg==}
     dependencies:
-      '@vercel/nft': 0.21.0
+      '@vercel/nft': 0.22.0
       esbuild: 0.14.54
     transitivePeerDependencies:
       - encoding
       - supports-color
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.427_svelte@3.49.0+vite@3.0.9:
-    resolution: {integrity: sha512-HUt1knOXaEM18y7E3k0CvhTxmoNhp0KbgfbLPmuRvSrQxRMsTnTpupZwW5mmU0VZkm4HHsf8mwftGy4WR8qf1Q==}
+  /@sveltejs/kit/1.0.0-next.445_svelte@3.49.0+vite@3.0.9:
+    resolution: {integrity: sha512-E/d6lhJ+4cSGJmAk8JnlrBwJfa6xYeCZ1zBc8kTdrO/vNiFpMDRJM9pgT8DGlXYA7kI+OBud/p3Eipl5m5jntw==}
     engines: {node: '>=16.9'}
     hasBin: true
     requiresBuild: true
@@ -270,8 +270,8 @@ packages:
       '@types/webidl-conversions': 6.1.1
     dev: false
 
-  /@vercel/nft/0.21.0:
-    resolution: {integrity: sha512-hFCAETfI5cG8l5iAiLhMC2bReC5K7SIybzrxGorv+eGspIbIFsVw7Vg85GovXm/LxA08pIDrAlrhR6GN36XB/Q==}
+  /@vercel/nft/0.22.0:
+    resolution: {integrity: sha512-hB80/093PPiCefN2gVbqv6J93MH+63Zr7uDCwkiS/U4W07DXkLoftbnkBmZoS0Q84LiTSl9DRVSHU4XYCX+sJA==}
     hasBin: true
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.9
@@ -1156,8 +1156,8 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /lucia-sveltekit/0.7.0:
-    resolution: {integrity: sha512-0Nsc/Q34bDe1obO83sei+4tkYB+rcDFdu+vISeUVrU2+XgQP7A4R2vsenxOkpOte+wK6m9cYV/2fNcERWXh8aQ==}
+  /lucia-sveltekit/0.7.1:
+    resolution: {integrity: sha512-eywRGjdwxpeybCJ0yUyZoS2yJrJkJLo/PYt76GFqJEkz8l2DV92KZpW17TLcAhOZ5gO0fTQjLaU4F9laQBlA+g==}
     dependencies:
       bcryptjs: 2.4.3
       cookie: 0.5.0
@@ -1865,10 +1865,12 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
-  /tailwindcss/3.1.8:
+  /tailwindcss/3.1.8_postcss@8.4.16:
     resolution: {integrity: sha512-YSneUCZSFDYMwk+TGq8qYFdCA3yfBRdBlS7txSq0LUmzyeqRe3a8fBQzbz9M3WS/iFT4BNf/nmw9mEzrnSaC0g==}
     engines: {node: '>=12.13.0'}
     hasBin: true
+    peerDependencies:
+      postcss: ^8.0.9
     dependencies:
       arg: 5.0.2
       chokidar: 3.5.3

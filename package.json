@@ -29,7 +29,7 @@
 	"dependencies": {
 		"@lucia-sveltekit/adapter-mongoose": "^0.1.1",
 		"axios": "^0.27.2",
-		"lucia-sveltekit": "^0.7.0",
+		"lucia-sveltekit": "^0.7.1",
 		"mongoose": "^6.5.2",
 		"svelte-loading-spinners": "^0.1.7"
 	}
