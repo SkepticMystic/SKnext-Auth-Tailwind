@@ -1,28 +1,30 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import { signOutUser } from "$lib/auth/client";
-  import { getSession } from "lucia-sveltekit/client";
 
-  const session = getSession();
+  const { lucia } = $page.data;
 </script>
 
 <nav>
   <ul class="flex flex-row gap-4">
-    {#if $session}
+    {#if lucia}
       <li>
-        <a href="/">Home</a>
+        <a class="link" href="/">Home</a>
       </li>
       <li>
-        <a href="/profile">Profile</a>
+        <a class="link" href="/profile">Profile</a>
       </li>
       <li>
-        <button on:click={async () => await signOutUser()}> Signout </button>
+        <button class="link" on:click={async () => await signOutUser()}>
+          Signout
+        </button>
       </li>
     {:else}
       <li>
-        <a href="/signup">Signup</a>
+        <a class="link" href="/signup">Signup</a>
       </li>
       <li>
-        <a href="/signin">Signin</a>
+        <a class="link" href="/signin">Signin</a>
       </li>
     {/if}
   </ul>

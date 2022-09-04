@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 
 try {
     mongoose.connect(MONGO_URI, { autoIndex: false });
+    console.log("Connected to MongoDB");
 } catch (error) {
     console.log(error);
 }
