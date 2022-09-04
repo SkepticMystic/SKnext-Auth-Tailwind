@@ -10,4 +10,33 @@
   .btn {
     @apply px-4 py-2 border rounded;
   }
+
+  .link {
+    @apply underline;
+  }
+
+  table.custom-table {
+    @apply w-full border-collapse;
+  }
+  table.custom-table th,
+  table.custom-table td {
+    @apply border;
+  }
+
+  .custom-table th {
+    @apply bg-gray-200;
+  }
+
+  .custom-table tr:nth-child(even) {
+    @apply bg-gray-100;
+  }
+
+  .custom-table tr:hover {
+    @apply bg-gray-200;
+  }
+
+  .custom-table td,
+  .custom-table th {
+    @apply px-2 py-1 text-center;
+  }
 }
