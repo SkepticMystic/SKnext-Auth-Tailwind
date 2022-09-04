@@ -1,0 +1,1 @@
+export const ROW_PREVIEW_LIMIT = 30

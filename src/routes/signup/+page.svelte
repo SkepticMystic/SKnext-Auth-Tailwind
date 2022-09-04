@@ -1,10 +1,10 @@
 <script lang="ts">
   import { set_href } from "$lib/auth/client";
   import ErrorText from "$lib/components/errorText.svelte";
+  import Label from "$lib/components/label.svelte";
   import Loading from "$lib/components/loading.svelte";
-  import TopLabel from "$lib/components/topLabel.svelte";
   import type { AxiosError } from "$lib/interfaces";
-  import { getFirstError } from "$lib/utils";
+  import { getFirstError } from "$lib/utils/errors";
   import axios from "axios";
 
   let email: string;
@@ -29,20 +29,22 @@
   };
 </script>
 
-<TopLabel label="Email">
-  <input class="input" type="email" autocomplete="email" bind:value={email} />
-</TopLabel>
-<TopLabel label="Password">
-  <input
-    class="input"
-    type="password"
-    autocomplete="new-password"
-    bind:value={password}
-  />
-</TopLabel>
+<form on:submit|preventDefault={async () => await signup()}>
+  <Label lbl="Email">
+    <input class="input" type="email" autocomplete="email" bind:value={email} />
+  </Label>
+  <Label lbl="Password">
+    <input
+      class="input"
+      type="password"
+      autocomplete="new-password"
+      bind:value={password}
+    />
+  </Label>
 
-<ErrorText {err} />
+  <ErrorText {err} />
 
-<button class="my-4 btn" on:click={async () => await signup()}>
-  <Loading {loading}>Signup</Loading>
-</button>
+  <button class="my-4 btn" type="submit">
+    <Loading {loading}>Signup</Loading>
+  </button>
+</form>
