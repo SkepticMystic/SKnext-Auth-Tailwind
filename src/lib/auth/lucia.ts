@@ -9,6 +9,7 @@ export interface DBUser {
     hashed_password: string;
     identifier_token: string;
     email: string;
+    roles: string[];
 }
 
 const userSchema = new mongoose.Schema({
@@ -20,7 +21,9 @@ const userSchema = new mongoose.Schema({
     },
     hashed_password: String,
     email: String,
-}, { _id: false, strict: false })
+    roles: [String],
+}, { _id: false })
+
 export const User = mongoose.models['user'] || mongoose.model<DBUser>(
     "user",
     userSchema
@@ -30,6 +33,7 @@ const refreshTokenSchema = new mongoose.Schema({
     refresh_token: String,
     user_id: String,
 })
+
 export const RefreshToken = mongoose.models['refresh_token'] || mongoose.model(
     "refresh_token",
     refreshTokenSchema

@@ -12,7 +12,7 @@ export const signOutUser = async () => {
 
 export const set_href = (href = '/') => window.location.href = href;
 
-export const authHeader = (session: Session<Lucia.UserData>) => ({
+export const authHeader = (session: Session) => ({
     headers: {
         Authorization: `Bearer ${session?.access_token}`,
     }

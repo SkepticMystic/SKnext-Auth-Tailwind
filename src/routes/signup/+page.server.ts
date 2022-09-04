@@ -8,7 +8,7 @@ export const POST: Action = async ({ request, setHeaders }) => {
     try {
         const { cookies } = await auth.createUser("email", email, {
             password,
-            user_data: { email },
+            user_data: { email, roles: [] },
         });
 
         setHeaders({ 'set-cookie': cookies })
@@ -18,9 +18,8 @@ export const POST: Action = async ({ request, setHeaders }) => {
         if (
             message === "AUTH_DUPLICATE_IDENTIFIER_TOKEN" ||
             message === "AUTH_DUPLICATE_USER_DATA"
-        ) {
-            return { errors: ["Email already exists"] };
-        }
+        ) return { errors: ["Email already exists"] }
+
         return { errors: [message], status: 500 };
     }
 };
