@@ -2,7 +2,7 @@ import { getTestName, signin, takeShot } from '../utils.js';
 import { expect, test } from '@playwright/test';
 
 const name = getTestName(import.meta.url);
-test.describe(name, () => {
+test.describe(name, async () => {
     const correct = name + '/correct';
     test(correct, async ({ page }) => {
         await takeShot(page, correct + '/before');
