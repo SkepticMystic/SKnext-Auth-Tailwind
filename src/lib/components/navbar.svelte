@@ -15,7 +15,10 @@
         <a class="link" href="/profile">Profile</a>
       </li>
       <li>
-        <button class="link" on:click={async () => await signOutUser()}>
+        <button
+          class="link"
+          on:click={async () => await signOutUser(lucia?.access_token)}
+        >
           Signout
         </button>
       </li>
