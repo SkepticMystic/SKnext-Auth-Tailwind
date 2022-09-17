@@ -3,7 +3,7 @@ import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { type Actions, error, redirect } from "@sveltejs/kit";
 import { setCookie } from 'lucia-sveltekit'
 
-export const POST: Actions = {
+export const actions: Actions = {
     default: async ({ request, cookies }) => {
         const form = await request.formData()
         const email = form.get('email') as string

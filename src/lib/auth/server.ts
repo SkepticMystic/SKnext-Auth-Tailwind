@@ -8,13 +8,10 @@ export const validateRequest = async (
     request: Request,
     options?: { roles?: string[], byCookie?: boolean }
 ): Promise<ServerSession> => {
-    const { byCookie, roles } = Object.assign(
-        {
-            byCookie: false,
-            roles: ['admin']
-        },
-        options ?? {}
-    )
+    const { byCookie, roles } = Object.assign({
+        byCookie: false,
+        roles: ['admin']
+    }, options ?? {})
 
     try {
         const lucia = await auth[byCookie ? 'validateRequestByCookie' : 'validateRequest'](request);

@@ -3,7 +3,7 @@
   import ErrorText from "$lib/components/errorText.svelte";
   import Label from "$lib/components/label.svelte";
   import Loading from "$lib/components/loading.svelte";
-  import type { HTTPError } from "$lib/interfaces";
+  import type { ActionError } from "$lib/interfaces";
   import axios from "axios";
 
   let email: string;
@@ -25,7 +25,7 @@
       set_href();
     } catch (error) {
       console.log(error);
-      err = (<HTTPError>error).response.data.message;
+      err = (<ActionError>error).response.data.error.message;
     }
     loading = false;
   };
@@ -46,7 +46,11 @@
 
   <ErrorText {err} />
 
-  <button class="my-4 btn" type="submit">
+  <button
+    class="my-4 btn btn-primary"
+    type="submit"
+    disabled={!email || !password || loading}
+  >
     <Loading {loading}>Signup</Loading>
   </button>
 </form>

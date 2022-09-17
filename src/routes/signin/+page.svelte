@@ -1,9 +1,9 @@
 <script lang="ts">
   import { set_href } from "$lib/auth/client";
   import ErrorText from "$lib/components/errorText.svelte";
-  import Loading from "$lib/components/loading.svelte";
   import Label from "$lib/components/label.svelte";
-  import type { HTTPError } from "$lib/interfaces";
+  import Loading from "$lib/components/loading.svelte";
+  import type { ActionError } from "$lib/interfaces";
   import axios from "axios";
 
   let email: string;
@@ -25,7 +25,8 @@
       set_href();
     } catch (error) {
       console.log(error);
-      err = (<HTTPError>error).response.data.message;
+      err = (<ActionError>error).response.data.error.message;
+      console.log({ err });
     }
     loading = false;
   };
@@ -46,7 +47,11 @@
 
   <ErrorText {err} />
 
-  <button class="my-4 btn" type="submit">
+  <button
+    class="my-4 btn btn-primary"
+    type="submit"
+    disabled={!email || !password || loading}
+  >
     <Loading {loading}>Sign in</Loading>
   </button>
 </form>

@@ -2,7 +2,7 @@ import { dev } from "$app/environment";
 import { LUCIA_SECRET, MONGO_URI } from "$env/static/private";
 import adapter from "@lucia-sveltekit/adapter-mongoose";
 import lucia from "lucia-sveltekit";
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 
 export interface DBUser {
     _id: string;
@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     roles: [String],
 }, { _id: false })
 
-export const User = mongoose.models['user'] || mongoose.model<DBUser>(
+export const User: Model<DBUser> = mongoose.models['user'] || mongoose.model(
     "user",
     userSchema
 );
