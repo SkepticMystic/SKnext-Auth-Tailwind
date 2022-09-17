@@ -6,7 +6,7 @@
   const { _lucia } = $page.data;
 </script>
 
-<nav>
+<nav class="navbar">
   <ul class="flex flex-row gap-4">
     {#if _lucia}
       <li>
