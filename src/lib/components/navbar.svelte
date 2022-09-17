@@ -1,13 +1,14 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { signOutUser } from "$lib/auth/client";
+  import { set_href } from "$lib/auth/client";
+  import { signOut } from "lucia-sveltekit/client";
 
-  const { lucia } = $page.data;
+  const { _lucia } = $page.data;
 </script>
 
 <nav>
   <ul class="flex flex-row gap-4">
-    {#if lucia}
+    {#if _lucia}
       <li>
         <a class="link" href="/">Home</a>
       </li>
@@ -17,7 +18,7 @@
       <li>
         <button
           class="link"
-          on:click={async () => await signOutUser(lucia?.access_token)}
+          on:click={async () => (await signOut()) && set_href("/signin")}
         >
           Signout
         </button>

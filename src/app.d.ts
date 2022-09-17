@@ -5,8 +5,8 @@ declare namespace App {
 	// interface Platform {}
 	// interface PrivateEnv {}
 	// interface PublicEnv {}
-	interface Locals {
-		lucia: import("lucia-sveltekit/types").Session<Lucia.UserData> | null;
+	interface PageData {
+		_lucia: import("lucia-sveltekit/types").Session | null;
 	}
 }
 

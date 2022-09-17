@@ -3,8 +3,7 @@
   import ErrorText from "$lib/components/errorText.svelte";
   import Loading from "$lib/components/loading.svelte";
   import Label from "$lib/components/label.svelte";
-  import type { AxiosError } from "$lib/interfaces";
-  import { getFirstError } from "$lib/utils/errors";
+  import type { HTTPError } from "$lib/interfaces";
   import axios from "axios";
 
   let email: string;
@@ -15,15 +14,18 @@
   const signin = async () => {
     loading = true;
     try {
-      await axios.post("/signin", {
-        email,
-        password,
-      });
+      await axios.post(
+        "/signin",
+        new URLSearchParams({
+          email,
+          password,
+        }).toString()
+      );
 
       set_href();
     } catch (error) {
       console.log(error);
-      err = getFirstError(<AxiosError>error);
+      err = (<HTTPError>error).response.data.message;
     }
     loading = false;
   };

@@ -1,7 +1,11 @@
-export interface AxiosError {
+export interface HTTPError {
     response: {
         data: {
-            errors: { [key: string]: string; }
+            message: string
+            status: number
         }
     }
 }
+
+
+export type Primitive = string | number | boolean | null | undefined;

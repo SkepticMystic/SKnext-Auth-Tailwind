@@ -1,28 +1,33 @@
 import { auth } from "$lib/auth/lucia";
-import type { Action } from "@sveltejs/kit";
+import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
+import { error, redirect, type Actions } from "@sveltejs/kit";
+import { setCookie } from "lucia-sveltekit";
 
-export const POST: Action = async ({ request, setHeaders }) => {
-    const { email, password } = await request.json()
-    if (!email || !password) return { errors: ["Email and password are required"] };
+export const POST: Actions = {
+    default: async ({ request, cookies }) => {
+        const form = await request.formData()
+        const email = form.get('email') as string
+        const password = form.get('password') as string
+        if (!email || !password) throw error(400, 'Missing email or password')
 
-    try {
-        const { cookies } = await auth.authenticateUser(
-            "email",
-            email,
-            password
-        );
+        try {
+            const { cookies: luciaCookies } = await auth.authenticateUser(
+                "email",
+                email,
+                password
+            );
 
-        setHeaders({ "set-cookie": cookies })
-        return { location: "/" };
-    } catch (e) {
-        const { message } = e as Error;
-        if (
-            message === "AUTH_INVALID_IDENTIFIER_TOKEN" ||
-            message === "AUTH_INVALID_PASSWORD"
-        ) {
-            return { errors: ["Invalid email or password"] };
+            setCookie(cookies, ...luciaCookies)
+        } catch (e) {
+            const { message } = e as Error;
+            if (
+                message === "AUTH_INVALID_IDENTIFIER_TOKEN" ||
+                message === "AUTH_INVALID_PASSWORD"
+            ) throw error(400, "Invalid email or password");
+
+            throw INTERNAL_SERVER_ERROR(e)
         }
 
-        return { errors: [message], status: 500 };
+        throw redirect(302, "/")
     }
 };

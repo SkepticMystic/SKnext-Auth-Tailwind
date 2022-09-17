@@ -1,25 +1,32 @@
 import { auth } from "$lib/auth/lucia";
-import type { Action } from "@sveltejs/kit";
+import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
+import { type Actions, error, redirect } from "@sveltejs/kit";
+import { setCookie } from 'lucia-sveltekit'
 
-export const POST: Action = async ({ request, setHeaders }) => {
-    const { email, password } = await request.json()
-    if (!email || !password) return { errors: ["Email and password are required"] };
+export const POST: Actions = {
+    default: async ({ request, cookies }) => {
+        const form = await request.formData()
+        const email = form.get('email') as string
+        const password = form.get('password') as string
+        if (!email || !password) throw error(400, 'Missing email or password')
 
-    try {
-        const { cookies } = await auth.createUser("email", email, {
-            password,
-            user_data: { email, roles: [] },
-        });
+        try {
+            const { cookies: luciaCookies } = await auth.createUser("email", email, {
+                password,
+                user_data: { email, roles: [] },
+            });
 
-        setHeaders({ 'set-cookie': cookies })
-        return { location: "/" }
-    } catch (e) {
-        const { message } = e as Error;
-        if (
-            message === "AUTH_DUPLICATE_IDENTIFIER_TOKEN" ||
-            message === "AUTH_DUPLICATE_USER_DATA"
-        ) return { errors: ["Email already exists"] }
+            setCookie(cookies, ...luciaCookies)
+        } catch (e) {
+            const { message } = e as Error;
+            if (
+                message === "AUTH_DUPLICATE_IDENTIFIER_TOKEN" ||
+                message === "AUTH_DUPLICATE_USER_DATA"
+            ) throw error(400, "Email already in use");
 
-        return { errors: [message], status: 500 };
+            throw INTERNAL_SERVER_ERROR(e)
+        }
+
+        throw redirect(302, "/")
     }
 };

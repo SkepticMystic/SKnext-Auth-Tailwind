@@ -1,15 +1,15 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import { authHeader, set_href } from "$lib/auth/client";
   import axios from "axios";
-  import { getSession } from "lucia-sveltekit/client";
 
-  const session = getSession();
+  const { _lucia } = $page.data;
 
   const deleteAccount = async () => {
     if (!confirm("Are you sure you want to delete your account?")) return;
     try {
-      await axios.delete("/api/user", authHeader($session));
-      set_href("/signin");
+      const { data } = await axios.delete("/api/user", authHeader(_lucia));
+      if (data.ok) set_href("/signin");
     } catch (error) {
       console.log(error);
     }
@@ -20,8 +20,8 @@
 
 <div class="my-2" />
 
-{#if $session}
-  <p class="text-lg">Welcome {$session.user.email}</p>
+{#if _lucia}
+  <p class="text-lg">Welcome {_lucia.user.email.split("@")[0]}</p>
 
   <div>
     <button class="btn" on:click={async () => await deleteAccount()}>

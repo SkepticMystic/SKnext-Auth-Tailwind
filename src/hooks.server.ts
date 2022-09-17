@@ -9,4 +9,4 @@ try {
     console.log(error);
 }
 
-export const handle = auth.handleAuth;
+export const handle = auth.handleHooks();

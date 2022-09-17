@@ -1,10 +1,9 @@
 <script lang="ts">
   import { ROW_PREVIEW_LIMIT } from "$lib/const/index";
+  import type { Primitive } from "$lib/interfaces";
   import RowCount from "./rowCount.svelte";
 
-  export let rows: {
-    [col: string]: string | number | boolean | string[] | number[];
-  }[];
+  export let rows: { [col: string]: Primitive }[];
   export let headers: string[] = [];
   export let preview: number = ROW_PREVIEW_LIMIT;
   export let indexCol: boolean = false;
@@ -13,16 +12,14 @@
 </script>
 
 <div>
-  <div>
+  <div class="my-3">
     <RowCount {preview} max={rows.length} />
   </div>
 
-  <table class="custom-table">
+  <table class="table table-zebra">
     <thead>
       <tr>
-        {#if indexCol}
-          <th>Index</th>
-        {/if}
+        {#if indexCol} <th>Index</th> {/if}
         {#each headers as header}
           <th class="capitalize">{header}</th>
         {/each}
@@ -31,9 +28,7 @@
     <tbody>
       {#each rows.slice(0, preview) as row, i}
         <tr>
-          {#if indexCol}
-            <td>{i + 1}</td>
-          {/if}
+          {#if indexCol} <td>{i + 1}</td> {/if}
           {#each headers as header}
             <td>{row[header]}</td>
           {/each}

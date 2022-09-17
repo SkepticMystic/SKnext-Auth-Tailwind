@@ -4,9 +4,9 @@
 </script>
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
-<label class="flex flex-col">
-  <p class="{cls} font-semibold">{lbl}</p>
+<div class="flex flex-col">
+  <label class="{cls} font-semibold">{lbl}</label>
   <div>
     <slot />
   </div>
-</label>
+</div>
