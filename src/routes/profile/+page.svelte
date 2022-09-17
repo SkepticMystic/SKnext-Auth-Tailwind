@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import { page } from "$app/stores";
-  import { authHeader, set_href } from "$lib/auth/client";
+  import { authHeader } from "$lib/auth/client";
+  import ErrorText from "$lib/components/errorText.svelte";
   import Loading from "$lib/components/loading.svelte";
   import type { HTTPError } from "$lib/interfaces";
   import axios from "axios";
@@ -10,7 +12,7 @@
   let loading = false;
   let err = "";
 
-  const deleteAccount = async () => {
+  const deleteUser = async () => {
     if (!confirm("Are you sure you want to delete your account?")) return;
 
     loading = true;
@@ -18,10 +20,10 @@
 
     try {
       const { data } = await axios.delete("/api/user", authHeader(_lucia));
-      if (data.ok) set_href("/signin");
+      if (data.ok) await goto("/signin");
     } catch (error) {
       console.log(error);
-      err = (<HTTPError>error).response.data.message;
+      err = (<HTTPError>error)?.response?.data?.message;
     }
 
     loading = false;
@@ -39,11 +41,13 @@
     <button
       class="btn btn-warning"
       disabled={loading}
-      on:click={async () => await deleteAccount()}
+      on:click={async () => await deleteUser()}
     >
       <Loading {loading}>Delete Account</Loading>
     </button>
   </div>
+
+  <ErrorText {err} />
 {:else}
   <p class="text-lg">You are not logged in</p>
 {/if}

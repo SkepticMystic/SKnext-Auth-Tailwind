@@ -1,4 +1,5 @@
 import { auth } from "$lib/auth/lucia";
+import { isValidEmail } from "$lib/schema";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { error, redirect, type Actions } from "@sveltejs/kit";
 import { setCookie } from "lucia-sveltekit";
@@ -9,6 +10,8 @@ export const actions: Actions = {
         const email = form.get('email') as string
         const password = form.get('password') as string
         if (!email || !password) throw error(400, 'Missing email or password')
+
+        if (!isValidEmail(email)) throw error(400, 'Invalid email')
 
         try {
             const { cookies: luciaCookies } = await auth.authenticateUser(

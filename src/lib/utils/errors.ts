@@ -1,3 +1,4 @@
+import type { ActionError } from "$lib/interfaces";
 import { error } from "@sveltejs/kit";
 
 export const errToString = (err: unknown) => {
@@ -10,3 +11,5 @@ export const UNAUTHORIZED = () => error(401, 'Unauthorized')
 export const FORBIDDEN = () => error(403, 'Forbidden')
 export const NOT_FOUND = () => error(404, 'Not found')
 export const INTERNAL_SERVER_ERROR = (err: unknown) => error(500, errToString(err))
+
+export const getActionErrorMsg = (err: unknown) => (<ActionError>err)?.response?.data?.error?.message ?? errToString(err)

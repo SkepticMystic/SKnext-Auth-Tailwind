@@ -3,7 +3,7 @@
   import ErrorText from "$lib/components/errorText.svelte";
   import Label from "$lib/components/label.svelte";
   import Loading from "$lib/components/loading.svelte";
-  import type { ActionError } from "$lib/interfaces";
+  import { getActionErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
 
   let email: string;
@@ -13,6 +13,8 @@
 
   const signup = async () => {
     loading = true;
+    err = "";
+
     try {
       await axios.post(
         "/signup",
@@ -25,7 +27,7 @@
       set_href();
     } catch (error) {
       console.log(error);
-      err = (<ActionError>error).response.data.error.message;
+      err = getActionErrorMsg(error);
     }
     loading = false;
   };

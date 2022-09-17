@@ -9,4 +9,8 @@ export interface HTTPError<D = {
 
 export type ActionError = HTTPError<{ type: 'error', error: { message: string } }>
 
+export interface ZodError {
+
+}
+
 export type Primitive = string | number | boolean | null | undefined;
