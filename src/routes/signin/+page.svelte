@@ -2,7 +2,6 @@
   import { set_href } from "$lib/auth/client";
   import ErrorText from "$lib/components/errorText.svelte";
   import Label from "$lib/components/label.svelte";
-  import Loading from "$lib/components/loading.svelte";
   import { getActionErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
 
@@ -50,9 +49,10 @@
 
   <button
     class="my-4 btn btn-primary"
+    class:loading
     type="submit"
     disabled={!email || !password || loading}
   >
-    <Loading {loading}>Sign in</Loading>
+    Sign in
   </button>
 </form>

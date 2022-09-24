@@ -3,7 +3,6 @@
   import { page } from "$app/stores";
   import { authHeader } from "$lib/auth/client";
   import ErrorText from "$lib/components/errorText.svelte";
-  import Loading from "$lib/components/loading.svelte";
   import type { HTTPError } from "$lib/interfaces";
   import axios from "axios";
 
@@ -40,10 +39,11 @@
   <div class="my-4">
     <button
       class="btn btn-warning"
+      class:loading
       disabled={loading}
       on:click={async () => await deleteUser()}
     >
-      <Loading {loading}>Delete Account</Loading>
+      Delete Account
     </button>
   </div>
 
