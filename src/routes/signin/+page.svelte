@@ -15,13 +15,10 @@
     err = "";
 
     try {
-      await axios.post(
-        "/signin",
-        new URLSearchParams({
-          email,
-          password,
-        }).toString()
-      );
+      await axios.postForm("", {
+        email,
+        password,
+      });
 
       set_href();
     } catch (error) {
@@ -30,6 +27,8 @@
     }
     loading = false;
   };
+
+  $: if (email || password) err = "";
 </script>
 
 <form on:submit|preventDefault={async () => await signin()}>
@@ -45,8 +44,6 @@
     />
   </Label>
 
-  <ErrorText {err} />
-
   <button
     class="my-4 btn btn-primary"
     class:loading
@@ -55,4 +52,10 @@
   >
     Sign in
   </button>
+
+  <ErrorText {err} />
+
+  <p class="my-3">
+    <a class="link" href="/forgot-password">Forgot Password?</a>
+  </p>
 </form>
