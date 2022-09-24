@@ -11,7 +11,7 @@ export const actions: Actions = {
         if (!newPass) throw error(400, "New password is required")
         if (!token) throw error(400, "Token is required")
 
-        const resetRequest = await PasswordResetRequests.findOne({ token })
+        const resetRequest = await PasswordResetRequests.findOne({ token }).exec()
         if (!resetRequest) throw error(400, "Invalid token")
         if (resetRequest.expiresAt < new Date()) {
             await resetRequest.remove()

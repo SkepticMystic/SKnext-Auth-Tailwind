@@ -14,5 +14,6 @@ declare namespace Lucia {
 	interface UserData {
 		email: string
 		roles: string[]
+		emailVerified: boolean
 	}
 }

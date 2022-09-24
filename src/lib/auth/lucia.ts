@@ -10,6 +10,7 @@ export interface DBUser {
     identifier_token: string;
     email: string;
     roles: string[];
+    emailVerified: boolean;
 }
 
 const userSchema = new mongoose.Schema({
@@ -22,6 +23,11 @@ const userSchema = new mongoose.Schema({
     hashed_password: String,
     email: String,
     roles: [String],
+    emailVerified: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
 }, { _id: false })
 
 export const User: Model<DBUser> = mongoose.models['user'] || mongoose.model(
