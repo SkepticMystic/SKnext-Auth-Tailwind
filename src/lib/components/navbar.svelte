@@ -1,6 +1,5 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { set_href } from "$lib/auth/client";
   import { signOut } from "lucia-sveltekit/client";
 
   const { _lucia } = $page.data;
@@ -16,10 +15,7 @@
         <a class="link" href="/profile">Profile</a>
       </li>
       <li>
-        <button
-          class="link"
-          on:click={async () => (await signOut()) && set_href("/signin")}
-        >
+        <button class="link" on:click={async () => await signOut("/signin")}>
           Signout
         </button>
       </li>
