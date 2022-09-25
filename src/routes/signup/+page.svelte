@@ -20,6 +20,9 @@
         password,
       });
 
+      email = "";
+      password = "";
+
       set_href();
     } catch (error) {
       console.log(error);
