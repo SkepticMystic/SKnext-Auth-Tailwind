@@ -6,6 +6,7 @@
   import { errSucLoading } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
+  import ChangePassword from "./changePassword.svelte";
 
   const { _lucia } = $page.data;
 
@@ -35,6 +36,10 @@
 
 {#if _lucia}
   <p class="text-lg">Welcome {_lucia.user.email.split("@")[0]}</p>
+
+  <div class="my-4">
+    <ChangePassword />
+  </div>
 
   <div class="my-4">
     <button
