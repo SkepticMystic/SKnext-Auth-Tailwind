@@ -1,9 +1,9 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { set_href } from "$lib/auth/client";
-  import ErrorText from "$lib/components/errorText.svelte";
   import Label from "$lib/components/label.svelte";
-  import SuccessText from "$lib/components/successText.svelte";
+  import ResultText from "$lib/components/resultText.svelte";
+  import { errSucLoading } from "$lib/utils";
   import { getActionErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
 
@@ -11,9 +11,7 @@
 
   let newPass: string;
   let confirmPass: string;
-  let err = "";
-  let suc = "";
-  let loading = false;
+  let { err, suc, loading } = errSucLoading();
 
   const resetPassword = async () => {
     if (newPass !== confirmPass) return (err = "Passwords do not match");
@@ -66,6 +64,5 @@
     Sign in
   </button>
 
-  <ErrorText {err} />
-  <SuccessText {suc} />
+  <ResultText {err} {suc} />
 </form>

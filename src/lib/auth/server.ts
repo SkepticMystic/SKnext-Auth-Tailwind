@@ -4,9 +4,12 @@ import { FORBIDDEN, INTERNAL_SERVER_ERROR, UNAUTHORIZED } from "$lib/utils/error
 
 export const hasRole = (user: User, ...roles: string[]) => roles.some(role => user.roles.includes(role))
 
-export const validateRequest = async (
+export const validateRequestByRole = async (
     request: Request,
-    options?: { roles?: string[], byCookie?: boolean }
+    options?: {
+        roles?: string[],
+        byCookie?: boolean
+    }
 ): Promise<ServerSession> => {
     const { byCookie, roles } = Object.assign({
         byCookie: false,
@@ -14,7 +17,8 @@ export const validateRequest = async (
     }, options ?? {})
 
     try {
-        const lucia = await auth[byCookie ? 'validateRequestByCookie' : 'validateRequest'](request);
+        const method = byCookie ? 'validateRequestByCookie' : 'validateRequest'
+        const lucia = await auth[method](request.clone());
 
         if (!lucia) throw UNAUTHORIZED()
         if (!hasRole(lucia.user, ...roles)) throw FORBIDDEN()

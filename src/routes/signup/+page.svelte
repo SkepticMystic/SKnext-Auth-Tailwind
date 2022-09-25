@@ -1,14 +1,14 @@
 <script lang="ts">
   import { set_href } from "$lib/auth/client";
-  import ErrorText from "$lib/components/errorText.svelte";
+  import ResultText from "$lib/components/resultText.svelte";
   import Label from "$lib/components/label.svelte";
   import { getActionErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
+  import { errSucLoading } from "$lib/utils";
 
   let email: string;
   let password: string;
-  let err = "";
-  let loading = false;
+  let { err, loading } = errSucLoading();
 
   const signup = async () => {
     loading = true;
@@ -53,7 +53,7 @@
     Signup
   </button>
 
-  <ErrorText {err} />
+  <ResultText {err} />
 
   <p class="my-3">
     <a class="link" href="/forgot-password">Forgot Password?</a>

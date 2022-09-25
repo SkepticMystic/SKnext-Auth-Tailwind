@@ -2,14 +2,14 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import { authHeader } from "$lib/auth/client";
-  import ErrorText from "$lib/components/errorText.svelte";
-  import type { HTTPError } from "$lib/interfaces";
+  import ResultText from "$lib/components/resultText.svelte";
+  import { errSucLoading } from "$lib/utils";
+  import { getHTTPErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
 
   const { _lucia } = $page.data;
 
-  let loading = false;
-  let err = "";
+  let { err, loading } = errSucLoading();
 
   const deleteUser = async () => {
     if (!confirm("Are you sure you want to delete your account?")) return;
@@ -22,7 +22,7 @@
       if (data.ok) await goto("/signin");
     } catch (error) {
       console.log(error);
-      err = (<HTTPError>error)?.response?.data?.message;
+      err = getHTTPErrorMsg(error);
     }
 
     loading = false;
@@ -47,7 +47,7 @@
     </button>
   </div>
 
-  <ErrorText {err} />
+  <ResultText {err} />
 {:else}
   <p class="text-lg">You are not logged in</p>
 {/if}

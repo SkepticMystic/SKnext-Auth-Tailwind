@@ -1,14 +1,13 @@
 <script lang="ts">
-  import ErrorText from "$lib/components/errorText.svelte";
   import Label from "$lib/components/label.svelte";
-  import SuccessText from "$lib/components/successText.svelte";
+  import ResultText from "$lib/components/resultText.svelte";
+  import { errSucLoading } from "$lib/utils";
   import { getActionErrorMsg } from "$lib/utils/errors";
+  import type { ActionResult } from "@sveltejs/kit";
   import axios from "axios";
 
   let email: string;
-  let err = "";
-  let suc = "";
-  let loading = false;
+  let { err, suc, loading } = errSucLoading();
 
   const forgotPassword = async () => {
     loading = true;
@@ -16,9 +15,11 @@
     suc = "";
 
     try {
-      const { data } = await axios.postForm("", { email });
+      const { data }: { data: ActionResult } = await axios.postForm("", {
+        email,
+      });
 
-      if (data?.data?.ok)
+      if (data.type === "success")
         suc = "Check your email for a link to reset your password.";
       else err = "There was an error sending the email.";
     } catch (error) {
@@ -49,6 +50,5 @@
     Send Password Reset Email
   </button>
 
-  <ErrorText {err} />
-  <SuccessText {suc} />
+  <ResultText {err} {suc} />
 </form>

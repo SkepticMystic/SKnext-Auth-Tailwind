@@ -11,6 +11,6 @@
   }
 
   .link {
-    @apply no-underline;
+    @apply no-underline link-hover;
   }
 }

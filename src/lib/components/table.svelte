@@ -3,12 +3,12 @@
   import type { Primitive } from "$lib/interfaces";
   import RowCount from "./rowCount.svelte";
 
-  export let rows: { [col: string]: Primitive }[];
+  export let rows: { [col: string]: Primitive | Primitive[] }[];
   export let headers: string[] = [];
   export let preview: number = ROW_PREVIEW_LIMIT;
   export let indexCol: boolean = false;
 
-  headers = headers.length ? headers : Object.keys(rows[0]);
+  headers = headers.length ? headers : Object.keys(rows[0] ?? {});
 </script>
 
 <div>

@@ -15,7 +15,6 @@ export interface Redirect {
 }
 
 export interface ZodError {
-
 }
 
 export type Primitive = string | number | boolean | null | undefined;

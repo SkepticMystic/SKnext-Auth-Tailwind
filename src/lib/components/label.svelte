@@ -1,5 +1,6 @@
 <script lang="ts">
   export let lbl: string;
+  /** Pass in any classes to the label */
   export let cls = "";
 </script>
 
