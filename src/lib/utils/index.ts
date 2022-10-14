@@ -1,5 +1,6 @@
-export const errSucLoading = () => ({
+export const getProps = () => ({
     err: '',
     suc: '',
     loading: false,
+    disabled: false,
 })

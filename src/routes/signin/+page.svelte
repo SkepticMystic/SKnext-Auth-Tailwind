@@ -4,11 +4,11 @@
   import Label from "$lib/components/label.svelte";
   import { getActionErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
-  import { errSucLoading } from "$lib/utils";
+  import { getProps } from "$lib/utils";
 
   let email: string;
   let password: string;
-  let { err, loading } = errSucLoading();
+  let { err, loading } = getProps();
 
   const signin = async () => {
     loading = true;
@@ -20,9 +20,7 @@
         password,
       });
 
-      email = "";
-      password = "";
-
+      email = password = "";
       set_href();
     } catch (error) {
       console.log(error);

@@ -8,24 +8,25 @@ export const actions: Actions = {
         const email = form.get("email") as string | null
         if (!email) throw error(400, "Email is required")
 
-        const user = await auth.getUser('email', email)
+        const user = await auth.getUserByProviderId('email', email)
         if (!user) throw error(400, "User not found")
-        const { user_id } = user
 
-        let resetRequest = await PasswordResetRequests.findOne({ user_id })
+        const { userId } = user
+
+        let resetRequest = await PasswordResetRequests.findOne({ userId })
         if (resetRequest) {
             if (resetRequest.expiresAt < new Date()) {
                 await resetRequest.remove()
-                resetRequest = await PasswordResetRequests.create({ user_id })
+                resetRequest = await PasswordResetRequests.create({ userId })
             } else throw error(400, "Password reset request already exists")
         } else {
-            resetRequest = await PasswordResetRequests.create({ user_id })
+            resetRequest = await PasswordResetRequests.create({ userId })
         }
 
 
         const href = `${url.origin}/reset-password?token=${resetRequest.token}`
         console.log(href)
-        // sendEmail()
+        console.log('TODO: sendEmail')
 
         return { ok: true }
     }

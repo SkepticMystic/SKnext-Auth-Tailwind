@@ -3,7 +3,7 @@ import { ONE_DAY } from "$lib/const";
 
 export interface EmailVerificationRequest {
     _id: string;
-    user_id: string;
+    userId: string;
     token: string;
     expiresAt: Date;
 }
@@ -12,7 +12,7 @@ export const EmailVerificationRequests: Model<EmailVerificationRequest> = mongoo
     mongoose.model(
         "email_verification_requests",
         new mongoose.Schema({
-            user_id: {
+            userId: {
                 type: String,
                 required: true
             },

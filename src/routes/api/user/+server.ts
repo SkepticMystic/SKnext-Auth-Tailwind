@@ -5,9 +5,9 @@ import { json, type RequestHandler } from "@sveltejs/kit";
 export const DELETE: RequestHandler = async ({ request }) => {
     try {
         // No role is needed to delete yourself
-        const { user } = await auth.validateRequest(request);
+        const { userId } = await auth.validateRequest(request);
 
-        await auth.deleteUser(user.user_id);
+        await auth.deleteUser(userId);
 
         return json({ ok: true })
     } catch (err) {

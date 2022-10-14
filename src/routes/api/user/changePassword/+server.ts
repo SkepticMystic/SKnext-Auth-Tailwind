@@ -1,12 +1,16 @@
 import { auth } from "$lib/auth/lucia";
-import { json, type RequestHandler } from "@sveltejs/kit";
+import { passwordSchema } from "$lib/schema";
+import { error, json, type RequestHandler } from "@sveltejs/kit";
 
 export const PUT: RequestHandler = async ({ request }) => {
-    const { user } = await auth.validateRequest(request);
+    const { userId } = await auth.validateRequest(request);
 
     const { newPass } = await request.json();
 
-    await auth.resetUserPassword(user.user_id, newPass);
+    const passwordParse = passwordSchema.safeParse(newPass)
+    if (!passwordParse.success) throw error(400, passwordParse.error.issues[0].message)
+
+    await auth.updateUserPassword(userId, passwordParse.data);
 
     return json({ ok: true })
 }

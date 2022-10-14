@@ -14,13 +14,14 @@ export const actions: Actions = {
         if (!isValidEmail(email)) throw error(400, 'Invalid email')
 
         try {
-            const { cookies: luciaCookies } = await auth.authenticateUser(
+            const user = await auth.authenticateUser(
                 "email",
                 email,
                 password
             );
 
-            setCookie(cookies, ...luciaCookies)
+            const { tokens } = await auth.createSession(user.userId)
+            setCookie(cookies, ...tokens.cookies)
         } catch (e) {
             const { message } = e as Error;
             if (

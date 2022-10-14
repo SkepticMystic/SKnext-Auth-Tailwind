@@ -1,36 +1,26 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import { authHeader } from "$lib/auth/client";
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
-  import { errSucLoading } from "$lib/utils";
+  import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
 
-  const { _lucia } = $page.data;
-
   let newPass = "";
   let confirmPass = "";
-  let { err, loading, suc } = errSucLoading();
+  let { err, loading, suc } = getProps();
 
   const changePassword = async () => {
     if (newPass !== confirmPass) return (err = "Passwords do not match");
 
     loading = true;
-    err = "";
-    suc = "";
+    err = suc = "";
 
     try {
-      const { data } = await axios.put(
-        "/api/user/changePassword",
-        { newPass },
-        authHeader(_lucia)
-      );
+      const { data } = await axios.put("/api/user/changePassword", { newPass });
 
       if (data.ok) {
         suc = "Password changed successfully";
-        newPass = "";
-        confirmPass = "";
+        newPass = confirmPass = "";
       } else err = "Something went wrong";
     } catch (error) {
       console.log(error);
@@ -40,10 +30,7 @@
     loading = false;
   };
 
-  $: if (newPass || confirmPass) {
-    err = "";
-    suc = "";
-  }
+  $: if (newPass || confirmPass) err = suc = "";
 </script>
 
 <h2 class="text-xl">Change Password</h2>

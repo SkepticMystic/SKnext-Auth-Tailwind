@@ -23,8 +23,10 @@ export const load = auth.handleServerSession(
         if (anyoneAllowed.some((route) => routeId?.startsWith(route))) return {}
 
         try {
-            const session = await auth.validateRequestByCookie(request)
-            if (session.user.emailVerified) return {}
+            const { accessToken } = await auth.parseRequest(request);
+            const { emailVerified } = await auth.getSessionUser(accessToken);
+
+            if (emailVerified) return {}
             else throw redirect(302, "/unverified-email")
         } catch (error) {
             if (isRedirect(error)) throw redirect(302, error.location)

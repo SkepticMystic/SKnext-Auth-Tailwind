@@ -7,10 +7,10 @@ import { error, redirect, type Actions } from "@sveltejs/kit";
 import { setCookie } from 'lucia-sveltekit';
 
 const sendEmailVerificationLink = async (user_id: string, origin: string) => {
-    const request = await EmailVerificationRequests.create({ user_id })
+    const request = await EmailVerificationRequests.create({ userId: user_id })
     const href = `${origin}/api/verify-email?token=${request.token}`
     console.log(href)
-    // TODO: sendEmail
+    console.log("TODO: sendEmail")
 }
 
 export const actions: Actions = {
@@ -21,22 +21,24 @@ export const actions: Actions = {
         if (!email || !password) throw error(400, 'Missing email or password')
 
         if (!isValidEmail(email)) throw error(400, 'Invalid email')
+
         const passwordParse = passwordSchema.safeParse(password)
         if (!passwordParse.success) throw error(400, passwordParse.error.issues[0].message)
 
         try {
-            const { cookies: luciaCookies, user } = await auth.createUser("email", email, {
+            const user = await auth.createUser("email", email, {
                 password,
-                user_data: {
+                userData: {
                     email,
                     roles: [],
                     emailVerified: false
                 },
             });
 
-            await sendEmailVerificationLink(user.user_id, url.origin)
+            await sendEmailVerificationLink(user.userId, url.origin)
 
-            setCookie(cookies, ...luciaCookies)
+            const { tokens } = await auth.createSession(user.userId)
+            setCookie(cookies, ...tokens.cookies)
         } catch (e) {
             const { message } = e as Error;
             if (

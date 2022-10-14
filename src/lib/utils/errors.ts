@@ -1,4 +1,4 @@
-import type { ActionError, HTTPError } from "$lib/interfaces";
+import type { ActionError, HTTPError } from "$lib/interfaces/errors";
 import { error } from "@sveltejs/kit";
 
 export const errToString = (err: unknown) => {

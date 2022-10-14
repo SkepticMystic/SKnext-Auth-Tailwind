@@ -1,13 +1,13 @@
 <script lang="ts">
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
-  import { errSucLoading } from "$lib/utils";
+  import { getProps } from "$lib/utils";
   import { getActionErrorMsg } from "$lib/utils/errors";
   import type { ActionResult } from "@sveltejs/kit";
   import axios from "axios";
 
   let email: string;
-  let { err, suc, loading } = errSucLoading();
+  let { err, suc, loading } = getProps();
 
   const forgotPassword = async () => {
     loading = true;

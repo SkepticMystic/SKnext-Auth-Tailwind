@@ -3,7 +3,7 @@ import mongoose, { type Model } from "mongoose";
 
 export interface PasswordResetRequest {
     _id: string;
-    user_id: string;
+    userId: string;
     token: string;
     expiresAt: Date;
 }
@@ -12,7 +12,7 @@ export const PasswordResetRequests: Model<PasswordResetRequest> = mongoose.model
     mongoose.model(
         "password_reset_requests",
         new mongoose.Schema({
-            user_id: {
+            userId: {
                 type: String,
                 required: true
             },

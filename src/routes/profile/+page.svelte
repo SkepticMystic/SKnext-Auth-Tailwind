@@ -1,16 +1,15 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
-  import { authHeader } from "$lib/auth/client";
   import ResultText from "$lib/components/resultText.svelte";
-  import { errSucLoading } from "$lib/utils";
+  import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
+  import { getUser } from "lucia-sveltekit/client";
   import ChangePassword from "./changePassword.svelte";
 
-  const { _lucia } = $page.data;
+  const user = getUser();
 
-  let { err, loading } = errSucLoading();
+  let { err, loading } = getProps();
 
   const deleteUser = async () => {
     if (!confirm("Are you sure you want to delete your account?")) return;
@@ -19,7 +18,7 @@
     err = "";
 
     try {
-      const { data } = await axios.delete("/api/user", authHeader(_lucia));
+      const { data } = await axios.delete("/api/user");
       if (data.ok) await goto("/signin");
     } catch (error) {
       console.log(error);
@@ -34,8 +33,8 @@
 
 <div class="my-2" />
 
-{#if _lucia}
-  <p class="text-lg">Welcome {_lucia.user.email.split("@")[0]}</p>
+{#if user}
+  <p class="text-lg">Welcome {user.email.split("@")[0]}</p>
 
   <div class="my-4">
     <ChangePassword />

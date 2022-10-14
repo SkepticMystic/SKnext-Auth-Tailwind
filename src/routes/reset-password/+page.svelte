@@ -3,7 +3,7 @@
   import { set_href } from "$lib/auth/client";
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
-  import { errSucLoading } from "$lib/utils";
+  import { getProps } from "$lib/utils";
   import { getActionErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
 
@@ -11,14 +11,13 @@
 
   let newPass: string;
   let confirmPass: string;
-  let { err, suc, loading } = errSucLoading();
+  let { err, suc, loading } = getProps();
 
   const resetPassword = async () => {
     if (newPass !== confirmPass) return (err = "Passwords do not match");
 
     loading = true;
-    err = "";
-    suc = "";
+    err = suc = "";
 
     try {
       const { data } = await axios.postForm("", { newPass, token });
@@ -34,7 +33,7 @@
     loading = false;
   };
 
-  $: if (newPass || confirmPass) err = "";
+  $: if (newPass || confirmPass) err = suc = "";
 </script>
 
 <form on:submit|preventDefault={async () => await resetPassword()}>
@@ -61,7 +60,7 @@
     type="submit"
     disabled={!newPass || !confirmPass || loading}
   >
-    Sign in
+    Reset Password
   </button>
 
   <ResultText {err} {suc} />

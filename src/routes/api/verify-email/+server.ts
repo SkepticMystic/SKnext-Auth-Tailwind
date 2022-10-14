@@ -8,13 +8,15 @@ export const GET: RequestHandler = async ({ url }) => {
 
     const verificationRequest = await EmailVerificationRequests.findOne({ token }).exec();
     if (!verificationRequest) throw error(400, "Invalid token");
-    const { user_id, expiresAt } = verificationRequest;
+
+    const { userId, expiresAt } = verificationRequest;
 
     if (expiresAt < new Date()) throw error(400, "Token expired");
 
-    const user = await auth.getUserById(user_id);
+    const user = await auth.getUser(userId);
     if (!user) throw error(400, "Invalid token");
-    await auth.updateUserData(user_id, {
+
+    await auth.updateUserData(userId, {
         emailVerified: true,
     });
 
