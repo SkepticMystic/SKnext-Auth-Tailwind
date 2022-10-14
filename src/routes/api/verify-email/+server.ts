@@ -1,5 +1,5 @@
 import { auth } from "$lib/auth/lucia";
-import { EmailVerificationRequests } from "$lib/models/emailVerifications";
+import { EmailVerificationRequests } from "$lib/models/emailVerificationRequests";
 import { error, redirect, type RequestHandler } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async ({ url }) => {

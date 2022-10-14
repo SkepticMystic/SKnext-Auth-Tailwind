@@ -1,5 +1,5 @@
 import { auth } from "$lib/auth/lucia";
-import { EmailVerificationRequests } from "$lib/models/emailVerifications";
+import { EmailVerificationRequests } from "$lib/models/emailVerificationRequests";
 import { isValidEmail } from "$lib/schema";
 import { passwordSchema } from '$lib/schema/index';
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
