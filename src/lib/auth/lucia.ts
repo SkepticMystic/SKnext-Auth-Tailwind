@@ -34,39 +34,28 @@ export const User: Model<DBUser> = mongoose.models['user'] ||
         }, { _id: false })
     );
 
-
-const RefreshToken = mongoose.model(
-    "refresh_token",
-    new mongoose.Schema({
-        refresh_token: {
-            unique: true,
-            required: true,
-            type: String,
-        },
-        user_id: {
-            required: true,
-            type: String,
-        },
-    })
-);
-
 const Session = mongoose.model(
     "session",
-    new mongoose.Schema({
-        access_token: {
-            type: String,
-            unique: true,
-            required: true,
+    new mongoose.Schema(
+        {
+            _id: {
+                type: String,
+            },
+            user_id: {
+                type: String,
+                required: true,
+            },
+            expires: {
+                type: Number,
+                required: true,
+            },
+            idle_expires: {
+                type: Number,
+                required: true,
+            },
         },
-        user_id: {
-            type: String,
-            required: true,
-        },
-        expires: {
-            type: Number,
-            required: true,
-        },
-    })
+        { _id: false }
+    )
 );
 
 export const auth = lucia({

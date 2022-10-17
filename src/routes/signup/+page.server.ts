@@ -4,10 +4,9 @@ import { isValidEmail } from "$lib/schema";
 import { passwordSchema } from '$lib/schema/index';
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { error, redirect, type Actions } from "@sveltejs/kit";
-import { setCookie } from 'lucia-sveltekit';
 
-const sendEmailVerificationLink = async (user_id: string, origin: string) => {
-    const request = await EmailVerificationRequests.create({ userId: user_id })
+const sendEmailVerificationLink = async (userId: string, origin: string) => {
+    const request = await EmailVerificationRequests.create({ userId })
     const href = `${origin}/api/verify-email?token=${request.token}`
     console.log(href)
     console.log("TODO: sendEmail")
@@ -26,7 +25,7 @@ export const actions: Actions = {
         if (!passwordParse.success) throw error(400, passwordParse.error.issues[0].message)
 
         try {
-            const user = await auth.createUser("email", email, {
+            const { userId } = await auth.createUser("email", email, {
                 password,
                 userData: {
                     email,
@@ -35,10 +34,10 @@ export const actions: Actions = {
                 },
             });
 
-            await sendEmailVerificationLink(user.userId, url.origin)
+            await sendEmailVerificationLink(userId, url.origin)
 
-            const { tokens } = await auth.createSession(user.userId)
-            setCookie(cookies, ...tokens.cookies)
+            const { setSessionCookie } = await auth.createSession(userId)
+            setSessionCookie(cookies)
         } catch (e) {
             const { message } = e as Error;
             if (

@@ -2,7 +2,6 @@ import { auth } from "$lib/auth/lucia";
 import { isValidEmail } from "$lib/schema";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { error, redirect, type Actions } from "@sveltejs/kit";
-import { setCookie } from "lucia-sveltekit";
 
 export const actions: Actions = {
     default: async ({ request, cookies }) => {
@@ -20,8 +19,10 @@ export const actions: Actions = {
                 password
             );
 
-            const { tokens } = await auth.createSession(user.userId)
-            setCookie(cookies, ...tokens.cookies)
+            console.log(user)
+
+            const { setSessionCookie } = await auth.createSession(user.userId)
+            setSessionCookie(cookies)
         } catch (e) {
             const { message } = e as Error;
             if (

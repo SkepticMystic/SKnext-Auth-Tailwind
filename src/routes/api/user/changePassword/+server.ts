@@ -2,8 +2,8 @@ import { auth } from "$lib/auth/lucia";
 import { passwordSchema } from "$lib/schema";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 
-export const PUT: RequestHandler = async ({ request }) => {
-    const { userId } = await auth.validateRequest(request);
+export const PUT: RequestHandler = async ({ request, cookies }) => {
+    const { userId } = await auth.validateRequestEvent({ request, cookies });
 
     const { newPass } = await request.json();
 
