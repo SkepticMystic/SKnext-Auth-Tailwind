@@ -1,6 +1,13 @@
 import { auth } from "$lib/auth/lucia";
-import { FORBIDDEN, INTERNAL_SERVER_ERROR, UNAUTHORIZED } from "$lib/utils/errors";
+import { FORBIDDEN, UNAUTHORIZED } from "$lib/utils/errors";
+import { redirect } from "@sveltejs/kit";
 import type { User } from "lucia-sveltekit/types";
+
+export const getSession = (locals: App.Locals) => {
+    const session = locals.getSession();
+    if (!session) throw redirect(302, '/signin')
+    return session;
+}
 
 export const hasRole = (user: User, ...roles: string[]) => roles.some(role => user.roles.includes(role))
 

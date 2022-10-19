@@ -27,7 +27,7 @@ export const actions: Actions = {
         try {
             const { userId } = await auth.createUser("email", email, {
                 password,
-                userData: {
+                attributes: {
                     email,
                     roles: [],
                     emailVerified: false
@@ -41,7 +41,7 @@ export const actions: Actions = {
         } catch (e) {
             const { message } = e as Error;
             if (
-                message === "AUTH_DUPLICATE_IDENTIFIER_TOKEN" ||
+                message === "AUTH_DUPLICATE_PROVIDER_ID" ||
                 message === "AUTH_DUPLICATE_USER_DATA"
             ) throw error(400, "Email already in use");
 

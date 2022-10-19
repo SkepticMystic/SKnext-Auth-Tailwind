@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { getUser, signOut } from "lucia-sveltekit/client";
+  import { page } from "$app/stores";
+  import { signOut } from "lucia-sveltekit/client";
 
-  const user = getUser();
+  const { user } = $page.data;
 </script>
 
 <nav class="navbar">

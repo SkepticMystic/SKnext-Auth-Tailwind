@@ -14,7 +14,8 @@ export const EmailVerificationRequests: Model<EmailVerificationRequest> = mongoo
         new mongoose.Schema({
             userId: {
                 type: String,
-                required: true
+                required: true,
+                ref: 'user'
             },
             token: {
                 type: String,

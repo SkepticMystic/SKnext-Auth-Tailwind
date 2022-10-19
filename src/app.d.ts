@@ -6,12 +6,16 @@ declare namespace App {
 	// interface PrivateEnv {}
 	// interface PublicEnv {}
 	interface PageData {
-		_lucia: import("lucia-sveltekit/types").Session | null;
+		user: import("lucia-sveltekit/types").User | null;
+	}
+	interface Locals {
+		getSession: import("lucia-sveltekit/types").GetSession
 	}
 }
 
 declare namespace Lucia {
-	interface UserData {
+	type Auth = import('$lib/auth/lucia').Auth;
+	type UserAttributes = {
 		email: string
 		roles: string[]
 		emailVerified: boolean

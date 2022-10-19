@@ -1,11 +1,11 @@
 import { auth } from "$lib/auth/lucia";
+import { getSession } from "$lib/auth/server";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { json, type RequestHandler } from "@sveltejs/kit";
 
-export const DELETE: RequestHandler = async ({ request, cookies }) => {
+export const DELETE: RequestHandler = async ({ locals }) => {
     try {
-        // No role is needed to delete yourself
-        const { userId } = await auth.validateRequestEvent({ request, cookies });
+        const { userId } = getSession(locals);
 
         await auth.deleteUser(userId);
 

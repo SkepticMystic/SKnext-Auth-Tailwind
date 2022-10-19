@@ -1,4 +1,5 @@
 import { auth } from "$lib/auth/lucia";
+import { getSession } from "$lib/auth/server";
 import type { Redirect } from '$lib/interfaces';
 import { redirect } from "@sveltejs/kit";
 
@@ -18,18 +19,20 @@ const isRedirect = (err: unknown): err is Redirect => {
     } else return false
 }
 
+
 export const load = auth.handleServerSession(
-    async ({ request, routeId }) => {
+    async ({ routeId, locals }) => {
         if (anyoneAllowed.some((route) => routeId?.startsWith(route))) return {}
 
         try {
-            const sessionId = auth.parseRequest(request);
-            const { user: { emailVerified } } = await auth.getSessionUser(sessionId);
+            const { sessionId } = getSession(locals);
+            const { user } = await auth.getSessionUser(sessionId);
 
-            if (emailVerified) return {}
+            if (user.emailVerified) return { user }
             else throw redirect(302, "/unverified-email")
         } catch (error) {
             if (isRedirect(error)) throw redirect(302, error.location)
             else throw redirect(302, "/signin")
         }
-    })
+    }
+)

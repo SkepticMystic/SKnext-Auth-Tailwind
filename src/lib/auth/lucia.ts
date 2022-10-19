@@ -62,4 +62,12 @@ export const auth = lucia({
     adapter: adapter(mongoose, MONGO_URI),
     env: dev ? "DEV" : "PROD",
     generateCustomUserId: async () => generateRandomString(8),
+    transformUserData: (user) => ({
+        userId: user.id,
+        email: user.email,
+        roles: user.roles,
+        emailVerified: user.emailVerified,
+    })
 });
+
+export type Auth = typeof auth;

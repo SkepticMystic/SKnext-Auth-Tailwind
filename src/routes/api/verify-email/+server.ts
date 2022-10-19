@@ -16,7 +16,7 @@ export const GET: RequestHandler = async ({ url }) => {
     const user = await auth.getUser(userId);
     if (!user) throw error(400, "Invalid token");
 
-    await auth.updateUserData(userId, {
+    await auth.updateUserAttributes(userId, {
         emailVerified: true,
     });
 
