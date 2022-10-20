@@ -26,7 +26,7 @@ export const actions: Actions = {
         } catch (e) {
             const { message } = e as Error;
             if (
-                message === "AUTH_INVALID_IDENTIFIER_TOKEN" ||
+                message === "AUTH_INVALID_PROVIDER_ID" ||
                 message === "AUTH_INVALID_PASSWORD"
             ) throw error(400, "Invalid email or password");
 

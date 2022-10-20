@@ -19,8 +19,8 @@
       const { data } = await axios.put("/api/user/changePassword", { newPass });
 
       if (data.ok) {
-        suc = "Password changed successfully";
         newPass = confirmPass = "";
+        suc = "Password changed successfully";
       } else err = "Something went wrong";
     } catch (error) {
       console.log(error);
@@ -35,10 +35,12 @@
 
 <h2 class="text-xl">Change Password</h2>
 
-<form on:submit|preventDefault={async () => await changePassword()}>
+<form on:submit|preventDefault={changePassword}>
   <Label lbl="New Password">
     <input
-      class="input"
+      class="input input-sm"
+      class:input-error={err}
+      class:input-success={suc}
       type="password"
       autocomplete="new-password"
       bind:value={newPass}
@@ -46,7 +48,9 @@
   </Label>
   <Label lbl="Password">
     <input
-      class="input"
+      class="input input-sm"
+      class:input-error={err}
+      class:input-success={suc}
       type="password"
       autocomplete="new-password"
       bind:value={confirmPass}

@@ -28,23 +28,22 @@
   };
 </script>
 
-<h1 class="text-xl">Profile</h1>
-
-<div class="my-2" />
+<h1 class="text-2xl">Profile</h1>
+<div class="my-3" />
 
 {#if user}
   <p class="text-lg">Welcome {user.email.split("@")[0]}</p>
 
-  <div class="my-4">
+  <div class="my-5">
     <ChangePassword />
   </div>
 
-  <div class="my-4">
+  <div class="my-5">
     <button
-      class="btn btn-warning"
+      class="btn btn-error"
       class:loading
       disabled={loading}
-      on:click={async () => await deleteUser()}
+      on:click={deleteUser}
     >
       Delete Account
     </button>

@@ -8,11 +8,11 @@
 
   let email: string;
   let password: string;
-  let { err, loading } = getProps();
+  let { err, loading, suc } = getProps();
 
   const signin = async () => {
     loading = true;
-    err = "";
+    err = suc = "";
 
     try {
       await axios.postForm("", {
@@ -21,6 +21,7 @@
       });
 
       email = password = "";
+      suc = "Sign in successful";
       set_href();
     } catch (error) {
       console.log(error);
@@ -29,16 +30,25 @@
     loading = false;
   };
 
-  $: if (email || password) err = "";
+  $: if (email || password) err = suc = "";
 </script>
 
-<form on:submit|preventDefault={async () => await signin()}>
+<form on:submit|preventDefault={signin}>
   <Label lbl="Email">
-    <input class="input" type="email" autocomplete="email" bind:value={email} />
+    <input
+      class="input input-sm"
+      class:input-error={err}
+      class:input-success={suc}
+      type="email"
+      autocomplete="email"
+      bind:value={email}
+    />
   </Label>
   <Label lbl="Password">
     <input
-      class="input"
+      class="input input-sm"
+      class:input-error={err}
+      class:input-success={suc}
       type="password"
       autocomplete="current-password"
       bind:value={password}

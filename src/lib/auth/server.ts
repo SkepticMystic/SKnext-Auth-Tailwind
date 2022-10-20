@@ -9,7 +9,12 @@ export const getSession = (locals: App.Locals) => {
     return session;
 }
 
-export const hasRole = (user: User, ...roles: string[]) => roles.some(role => user.roles.includes(role))
+export const hasSomeRoles = (user: User, ...roles: string[]) => roles.some(
+    role => user.roles.includes(role)
+)
+export const hasAllRoles = (user: User, ...roles: string[]) => roles.every(
+    role => user.roles.includes(role)
+)
 
 export const validateRequestByRole = async (
     request: Request,
@@ -25,7 +30,7 @@ export const validateRequestByRole = async (
         const sessionId = auth.parseRequest(request);
         const { user } = await auth.getSessionUser(sessionId);
 
-        if (!hasRole(user, ...roles)) throw FORBIDDEN()
+        if (!hasSomeRoles(user, ...roles)) throw FORBIDDEN()
 
         return user;
     } catch (err) {

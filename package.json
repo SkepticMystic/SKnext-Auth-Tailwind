@@ -34,6 +34,7 @@
     "daisyui": "^2.31.0",
     "lucia-sveltekit": "^0.13.2",
     "mongoose": "^6.6.1",
+    "theme-change": "^2.2.0",
     "zod": "^3.19.1"
   }
 }

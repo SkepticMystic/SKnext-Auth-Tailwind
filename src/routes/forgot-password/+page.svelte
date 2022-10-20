@@ -1,6 +1,7 @@
 <script lang="ts">
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
+  import type { Data } from "$lib/interfaces";
   import { getProps } from "$lib/utils";
   import { getActionErrorMsg } from "$lib/utils/errors";
   import type { ActionResult } from "@sveltejs/kit";
@@ -11,13 +12,10 @@
 
   const forgotPassword = async () => {
     loading = true;
-    err = "";
-    suc = "";
+    err = suc = "";
 
     try {
-      const { data }: { data: ActionResult } = await axios.postForm("", {
-        email,
-      });
+      const { data }: Data<ActionResult> = await axios.postForm("", { email });
 
       if (data.type === "success")
         suc = "Check your email for a link to reset your password.";
@@ -30,13 +28,10 @@
     loading = false;
   };
 
-  $: if (email) {
-    err = "";
-    suc = "";
-  }
+  $: if (email) err = suc = "";
 </script>
 
-<form on:submit|preventDefault={async () => await forgotPassword()}>
+<form on:submit|preventDefault={forgotPassword}>
   <Label lbl="Email">
     <input class="input" type="email" autocomplete="email" bind:value={email} />
   </Label>
