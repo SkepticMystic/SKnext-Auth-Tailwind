@@ -10,6 +10,8 @@ declare namespace App {
 	}
 	interface Locals {
 		getSession: import("lucia-sveltekit/types").GetSession
+		setSession: import("lucia-sveltekit/types").SetSession
+		clearSession: import("lucia-sveltekit/types").ClearSession
 	}
 }
 

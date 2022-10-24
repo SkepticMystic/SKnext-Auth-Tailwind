@@ -59,7 +59,7 @@ const Session = mongoose.model(
 );
 
 export const auth = lucia({
-    adapter: adapter(mongoose, MONGO_URI),
+    adapter: adapter(mongoose),
     env: dev ? "DEV" : "PROD",
     generateCustomUserId: async () => generateRandomString(8),
     transformUserData: (user) => ({

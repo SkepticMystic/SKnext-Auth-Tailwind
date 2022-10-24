@@ -1,13 +1,10 @@
 <script lang="ts">
-  import { page } from "$app/stores";
   import { set_href } from "$lib/auth/client";
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
   import { getProps } from "$lib/utils";
   import { getActionErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
-
-  const token = $page.url.searchParams.get("token");
 
   let newPass: string;
   let confirmPass: string;
@@ -20,7 +17,7 @@
     err = suc = "";
 
     try {
-      const { data } = await axios.postForm("", { newPass, token });
+      const { data } = await axios.postForm("", { newPass });
       if (data?.data?.ok) suc = "Password changed successfully";
       else err = "Something went wrong";
 

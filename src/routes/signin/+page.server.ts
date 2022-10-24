@@ -4,7 +4,7 @@ import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { error, redirect, type Actions } from "@sveltejs/kit";
 
 export const actions: Actions = {
-    default: async ({ request, cookies }) => {
+    default: async ({ request, cookies, locals }) => {
         const form = await request.formData()
         const email = form.get('email') as string
         const password = form.get('password') as string
@@ -21,8 +21,8 @@ export const actions: Actions = {
 
             console.log(user)
 
-            const { setSessionCookie } = await auth.createSession(user.userId)
-            setSessionCookie(cookies)
+            const session = await auth.createSession(user.userId)
+            locals.setSession(session)
         } catch (e) {
             const { message } = e as Error;
             if (

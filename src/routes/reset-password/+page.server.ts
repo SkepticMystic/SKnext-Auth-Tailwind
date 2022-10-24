@@ -5,11 +5,12 @@ import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { error, type Actions } from "@sveltejs/kit";
 
 export const actions: Actions = {
-    default: async ({ request }) => {
+    default: async ({ request, url }) => {
         const form = await request.formData()
         const newPass = form.get("newPass") as string | null
-        const token = form.get("token") as string | null
         if (!newPass) throw error(400, "New password is required")
+
+        const token = url.searchParams.get("token");
         if (!token) throw error(400, "Token is required")
 
         const passwordParse = passwordSchema.safeParse(newPass)

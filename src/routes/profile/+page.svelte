@@ -1,13 +1,13 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
   import ResultText from "$lib/components/resultText.svelte";
   import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
+  import { getUser } from "lucia-sveltekit/client";
   import ChangePassword from "./changePassword.svelte";
 
-  const { user } = $page.data;
+  const user = getUser();
   let { err, loading } = getProps();
 
   const deleteUser = async () => {

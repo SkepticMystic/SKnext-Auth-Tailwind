@@ -13,7 +13,7 @@ const sendEmailVerificationLink = async (userId: string, origin: string) => {
 }
 
 export const actions: Actions = {
-    default: async ({ request, cookies, url }) => {
+    default: async ({ request, locals, url }) => {
         const form = await request.formData()
         const email = form.get('email') as string
         const password = form.get('password') as string
@@ -36,8 +36,8 @@ export const actions: Actions = {
 
             await sendEmailVerificationLink(userId, url.origin)
 
-            const { setSessionCookie } = await auth.createSession(userId)
-            setSessionCookie(cookies)
+            const session = await auth.createSession(userId)
+            locals.setSession(session)
         } catch (e) {
             const { message } = e as Error;
             if (

@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import { signOut } from "lucia-sveltekit/client";
+  import { getUser, signOut } from "lucia-sveltekit/client";
   import { onMount } from "svelte";
   import { themeChange } from "theme-change";
 
   // NOTE: the element that is using one of the theme attributes must be in the DOM on mount
   onMount(() => themeChange(false));
 
-  const { user } = $page.data;
+  const user = getUser();
 </script>
 
 <nav class="px-4 navbar shadow bg-base-200">

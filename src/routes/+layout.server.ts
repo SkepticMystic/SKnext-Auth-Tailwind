@@ -4,12 +4,12 @@ import type { Redirect } from '$lib/interfaces';
 import { redirect } from "@sveltejs/kit";
 
 const anyoneAllowed = [
-    "signup",
-    "signin",
-    "forgot-password",
-    "reset-password",
-    "verify-email",
-    "unverified-email",
+    "/signup",
+    "/signin",
+    "/forgot-password",
+    "/reset-password",
+    "/verify-email",
+    "/unverified-email",
 ]
 
 const isRedirect = (err: unknown): err is Redirect => {
@@ -21,8 +21,8 @@ const isRedirect = (err: unknown): err is Redirect => {
 
 
 export const load = auth.handleServerSession(
-    async ({ routeId, locals }) => {
-        if (anyoneAllowed.some((route) => routeId?.startsWith(route))) return {}
+    async ({ locals, url }) => {
+        if (anyoneAllowed.some((route) => url.pathname?.startsWith(route))) return {}
 
         try {
             const { sessionId } = getSession(locals);
