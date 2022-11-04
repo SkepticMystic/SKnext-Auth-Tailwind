@@ -1,17 +1,24 @@
 <script lang="ts">
-  import { getUser, signOut } from "lucia-sveltekit/client";
+  import { goto, invalidateAll } from "$app/navigation";
+  import { getUser, signOut } from "@lucia-auth/sveltekit/client";
   import { onMount } from "svelte";
   import { themeChange } from "theme-change";
 
   // NOTE: the element that is using one of the theme attributes must be in the DOM on mount
   onMount(() => themeChange(false));
 
+  const mySignOut = async () => {
+    await goto("/signin");
+    await signOut();
+    await invalidateAll();
+  };
+
   const user = getUser();
 </script>
 
 <nav class="px-4 navbar shadow bg-base-200">
   <ul class="navbar-start flex flex-row gap-4">
-    {#if user}
+    {#if $user}
       <li>
         <a class="link" href="/">Home</a>
       </li>
@@ -31,12 +38,10 @@
       {/each}
     </select>
 
-    {#if user}
+    {#if $user}
       <li><a class="link" href="/profile">Profile</a></li>
       <li>
-        <button class="link" on:click={async () => await signOut("/signin")}>
-          Signout
-        </button>
+        <button class="link" on:click={mySignOut}> Signout </button>
       </li>
     {/if}
   </ul>

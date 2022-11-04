@@ -1,10 +1,11 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import ResultText from "$lib/components/resultText.svelte";
+  import type { DOK } from "$lib/interfaces";
   import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
+  import { getUser } from "@lucia-auth/sveltekit/client";
   import axios from "axios";
-  import { getUser } from "lucia-sveltekit/client";
   import ChangePassword from "./changePassword.svelte";
 
   const user = getUser();
@@ -17,7 +18,7 @@
     err = "";
 
     try {
-      const { data } = await axios.delete("/api/user");
+      const { data }: DOK = await axios.delete("/api/user");
       if (data.ok) await goto("/signin");
     } catch (error) {
       console.log(error);
@@ -31,8 +32,8 @@
 <h1 class="text-2xl">Profile</h1>
 <div class="my-3" />
 
-{#if user}
-  <p class="text-lg">Welcome {user.email.split("@")[0]}</p>
+{#if $user}
+  <p class="text-lg">Welcome {$user.email.split("@")[0]}</p>
 
   <div class="my-5">
     <ChangePassword />

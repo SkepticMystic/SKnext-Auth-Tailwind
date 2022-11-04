@@ -5,6 +5,8 @@
   import { getActionErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
   import { getProps } from "$lib/utils";
+  import type { D } from "$lib/interfaces";
+  import type { ActionResult } from "@sveltejs/kit";
 
   let email: string;
   let password: string;
@@ -15,14 +17,14 @@
     err = suc = "";
 
     try {
-      await axios.postForm("", {
+      const { data }: D<ActionResult> = await axios.postForm("", {
         email,
         password,
       });
 
       email = password = "";
       suc = "Sign in successful";
-      set_href();
+      if (data.type === "redirect") set_href(data.location);
     } catch (error) {
       console.log(error);
       err = getActionErrorMsg(error);

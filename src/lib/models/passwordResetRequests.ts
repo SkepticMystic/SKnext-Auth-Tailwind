@@ -8,9 +8,10 @@ export interface PasswordResetRequest {
     expiresAt: Date;
 }
 
-export const PasswordResetRequests: Model<PasswordResetRequest> = mongoose.models['password_reset_requests'] ||
+const modelName = "PasswordResetRequest";
+export const PasswordResetRequests: Model<PasswordResetRequest> = mongoose.models[modelName] ||
     mongoose.model(
-        "password_reset_requests",
+        modelName,
         new mongoose.Schema({
             userId: {
                 type: String,
@@ -27,5 +28,6 @@ export const PasswordResetRequests: Model<PasswordResetRequest> = mongoose.model
                 required: true,
                 default: () => Date.now() + ONE_DAY
             },
-        })
+        }),
+        modelName
     );

@@ -1,6 +1,6 @@
 import { auth } from "$lib/auth/lucia";
 import { PasswordResetRequests } from "$lib/models/passwordResetRequests";
-import { passwordSchema } from "$lib/schema";
+import { parseInputAs, passwordSchema } from "$lib/schema";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { error, type Actions } from "@sveltejs/kit";
 
@@ -8,13 +8,12 @@ export const actions: Actions = {
     default: async ({ request, url }) => {
         const form = await request.formData()
         const newPass = form.get("newPass") as string | null
-        if (!newPass) throw error(400, "New password is required")
+        const token = url.searchParams.get("token") as string | null;
 
-        const token = url.searchParams.get("token");
+        if (!newPass) throw error(400, "New password is required")
         if (!token) throw error(400, "Token is required")
 
-        const passwordParse = passwordSchema.safeParse(newPass)
-        if (!passwordParse.success) throw error(400, passwordParse.error.issues[0].message)
+        const passwordParse = parseInputAs(newPass, passwordSchema);
 
         const resetRequest = await PasswordResetRequests.findOne({ token }).exec()
         if (!resetRequest) throw error(400, "Invalid token")

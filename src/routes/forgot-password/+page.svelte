@@ -1,7 +1,7 @@
 <script lang="ts">
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
-  import type { Data } from "$lib/interfaces";
+  import type { D } from "$lib/interfaces";
   import { getProps } from "$lib/utils";
   import { getActionErrorMsg } from "$lib/utils/errors";
   import type { ActionResult } from "@sveltejs/kit";
@@ -15,7 +15,7 @@
     err = suc = "";
 
     try {
-      const { data }: Data<ActionResult> = await axios.postForm("", { email });
+      const { data }: D<ActionResult> = await axios.postForm("", { email });
 
       if (data.type === "success")
         suc = "Check your email for a link to reset your password.";

@@ -1,7 +1,6 @@
 import { dev } from "$app/environment";
-import { MONGO_URI } from "$env/static/private";
 import adapter from "@lucia-sveltekit/adapter-mongoose";
-import lucia, { generateRandomString } from "lucia-sveltekit";
+import lucia, { generateRandomString } from "lucia-auth";
 import mongoose, { Model } from "mongoose";
 
 export interface DBUser {

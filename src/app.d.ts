@@ -5,13 +5,11 @@ declare namespace App {
 	// interface Platform {}
 	// interface PrivateEnv {}
 	// interface PublicEnv {}
-	interface PageData {
-		user: import("lucia-sveltekit/types").User | null;
-	}
 	interface Locals {
-		getSession: import("lucia-sveltekit/types").GetSession
-		setSession: import("lucia-sveltekit/types").SetSession
-		clearSession: import("lucia-sveltekit/types").ClearSession
+		getSession: import("@lucia-auth/sveltekit").GetSession;
+		getSessionUser: import("@lucia-auth/sveltekit").GetSessionUser;
+		setSession: import("@lucia-auth/sveltekit").SetSession;
+		clearSession: import("@lucia-auth/sveltekit").ClearSession;
 	}
 }
 

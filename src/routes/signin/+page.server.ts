@@ -4,12 +4,12 @@ import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { error, redirect, type Actions } from "@sveltejs/kit";
 
 export const actions: Actions = {
-    default: async ({ request, cookies, locals }) => {
+    default: async ({ request, locals, url }) => {
         const form = await request.formData()
         const email = form.get('email') as string
         const password = form.get('password') as string
-        if (!email || !password) throw error(400, 'Missing email or password')
 
+        if (!email || !password) throw error(400, 'Missing email or password')
         if (!isValidEmail(email)) throw error(400, 'Invalid email')
 
         try {
@@ -19,7 +19,6 @@ export const actions: Actions = {
                 password
             );
 
-            console.log(user)
 
             const session = await auth.createSession(user.userId)
             locals.setSession(session)
@@ -33,6 +32,6 @@ export const actions: Actions = {
             throw INTERNAL_SERVER_ERROR(e)
         }
 
-        throw redirect(302, "/")
+        throw redirect(302, url.searchParams.get('redirect') ?? '/')
     }
 };

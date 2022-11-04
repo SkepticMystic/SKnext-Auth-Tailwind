@@ -8,9 +8,10 @@ export interface EmailVerificationRequest {
     expiresAt: Date;
 }
 
-export const EmailVerificationRequests: Model<EmailVerificationRequest> = mongoose.models['email_verification_requests'] ||
+const modelName = "EmailVerificationRequest";
+export const EmailVerificationRequests: Model<EmailVerificationRequest> = mongoose.models[modelName] ||
     mongoose.model(
-        "email_verification_requests",
+        modelName,
         new mongoose.Schema({
             userId: {
                 type: String,
@@ -27,6 +28,7 @@ export const EmailVerificationRequests: Model<EmailVerificationRequest> = mongoo
                 required: true,
                 default: () => Date.now() + ONE_DAY
             },
-        })
+        }),
+        modelName
     );
 

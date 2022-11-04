@@ -1,14 +1,13 @@
-export interface HTTPError<D = {
+import type { D } from "."
+
+export interface HTTPError<T = {
     message: string
     status: number
 }> {
-    response: {
-        data: D
-    }
+    response: D<T>
 }
 
 export type ActionError = HTTPError<{ type: 'error', error: { message: string } }>
-
 
 export interface ZodError {
 }

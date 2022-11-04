@@ -1,16 +1,15 @@
 import { auth } from "$lib/auth/lucia";
-import { getSession } from "$lib/auth/server";
-import { passwordSchema } from "$lib/schema";
-import { error, json, type RequestHandler } from "@sveltejs/kit";
+import { validateRequest } from "$lib/auth/server";
+import { parseRequestAs, passwordSchema } from "$lib/schema";
+import { json, type RequestHandler } from "@sveltejs/kit";
+import { z } from "zod";
 
 export const PUT: RequestHandler = async ({ locals, request }) => {
-    const { userId } = getSession(locals);
-    const { newPass } = await request.json();
+    const { userId } = await validateRequest(request);
 
-    const passwordParse = passwordSchema.safeParse(newPass)
-    if (!passwordParse.success) throw error(400, passwordParse.error.issues[0].message)
+    const { newPass } = await parseRequestAs(request, z.object({ newPass: passwordSchema }));
 
-    await auth.updateUserPassword(userId, passwordParse.data);
+    await auth.updateUserPassword(userId, newPass);
 
     return json({ ok: true })
 }

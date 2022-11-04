@@ -33,7 +33,7 @@
   $: if (newPass || confirmPass) err = suc = "";
 </script>
 
-<form on:submit|preventDefault={async () => await resetPassword()}>
+<form on:submit|preventDefault={resetPassword}>
   <Label lbl="New Password">
     <input
       class="input"
