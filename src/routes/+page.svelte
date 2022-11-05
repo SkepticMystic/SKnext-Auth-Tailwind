@@ -1,7 +1,27 @@
 <script lang="ts">
+  import { page } from "$app/stores";
+  import PaginateFetch from "$lib/components/paginateFetch.svelte";
+  import Table from "$lib/components/table.svelte";
+  import { fetchJson } from "$lib/utils";
+
+  let data: any[] = [];
+
+  const pageN = Number($page.url.searchParams.get("page") ?? 1);
+  const limit = Number($page.url.searchParams.get("limit") ?? 10);
 </script>
 
 <h1>Welcome to SvelteKit</h1>
-<p>
-  Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation
-</p>
+<div class="my-3" />
+<PaginateFetch
+  page={pageN}
+  {limit}
+  getData={async (skip, limit) => {
+    const all = await fetchJson(
+      `https://jsonplaceholder.typicode.com/comments`
+    );
+    return all.slice(skip, skip + limit);
+  }}
+  bind:data
+/>
+<div class="my-3" />
+<Table preview={0} rows={data} />

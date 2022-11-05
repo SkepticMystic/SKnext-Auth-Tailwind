@@ -1,15 +1,22 @@
 import type { ObjectId } from "mongoose"
 
-export const getProps = () => ({
+export const getProps = <LoadKey extends string | number = string | number>(): {
+    err: string,
+    suc: string,
+    loading: boolean,
+    loadObj: Partial<Record<LoadKey, boolean>>
+    disabled: boolean,
+} => ({
     err: '',
     suc: '',
     loading: false,
+    loadObj: {},
     disabled: false,
 })
 
 export const fetchJson = async (
     url: string,
-    options: RequestInit & {
+    options?: RequestInit & {
         form?: boolean
     }
 ) => {
