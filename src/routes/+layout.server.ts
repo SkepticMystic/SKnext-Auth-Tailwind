@@ -1,4 +1,4 @@
-import { validateRequestSafe } from "$lib/auth/server";
+import { getUser } from "$lib/auth/server";
 import { handleServerSession } from "@lucia-auth/sveltekit";
 import { redirect } from "@sveltejs/kit";
 
@@ -13,11 +13,12 @@ const anyoneAllowed = [
 
 
 export const load = handleServerSession(
-    async ({ request, url }) => {
-        if (anyoneAllowed.some((route) => url.pathname?.startsWith(route))) return {}
+    async ({ url, locals }) => {
+        const onUnauthedRoute = anyoneAllowed.some((route) => url.pathname.startsWith(route))
+        if (onUnauthedRoute) return {}
 
-        const user = await validateRequestSafe(request);
-        if (!user) throw redirect(302, `/signin?redirect=${encodeURIComponent(request.url)}`)
+        const user = await getUser(locals, { url })
+        console.log({ user })
 
         if (user.emailVerified) return {}
         else throw redirect(302, "/unverified-email")

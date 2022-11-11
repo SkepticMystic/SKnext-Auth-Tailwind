@@ -1,12 +1,11 @@
 import { auth } from "$lib/auth/lucia";
-import { validateRequest } from "$lib/auth/server";
+import { getUser } from "$lib/auth/server";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { json, type RequestHandler } from "@sveltejs/kit";
 
-export const DELETE: RequestHandler = async ({ request }) => {
+export const DELETE: RequestHandler = async ({ locals }) => {
     try {
-        const { userId } = await validateRequest(request);
-
+        const { userId } = await getUser(locals);
         await auth.deleteUser(userId);
 
         return json({ ok: true })

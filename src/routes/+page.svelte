@@ -6,14 +6,14 @@
 
   let data: any[] = [];
 
-  const pageN = Number($page.url.searchParams.get("page") ?? 1);
+  const pageNo = Number($page.url.searchParams.get("page") ?? 1);
   const limit = Number($page.url.searchParams.get("limit") ?? 10);
 </script>
 
 <h1>Welcome to SvelteKit</h1>
 <div class="my-3" />
 <PaginateFetch
-  page={pageN}
+  {pageNo}
   {limit}
   getData={async (skip, limit) => {
     const all = await fetchJson(

@@ -1,16 +1,15 @@
 import { auth } from "$lib/auth/lucia";
-import { isValidEmail } from "$lib/schema";
+import { parseFormRequestAs } from "$lib/schema";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { error, redirect, type Actions } from "@sveltejs/kit";
+import { z } from "zod";
 
 export const actions: Actions = {
     default: async ({ request, locals, url }) => {
-        const form = await request.formData()
-        const email = form.get('email') as string
-        const password = form.get('password') as string
-
-        if (!email || !password) throw error(400, 'Missing email or password')
-        if (!isValidEmail(email)) throw error(400, 'Invalid email')
+        const { email, password } = await parseFormRequestAs(request, z.object({
+            email: z.string().email(),
+            password: z.string()
+        }))
 
         try {
             const user = await auth.authenticateUser(

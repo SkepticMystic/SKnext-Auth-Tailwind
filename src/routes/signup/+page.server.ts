@@ -1,9 +1,10 @@
 import { auth } from "$lib/auth/lucia";
 import { EmailVerificationRequests } from "$lib/models/emailVerificationRequests";
-import { isValidEmail, parseInputAs } from "$lib/schema";
+import { parseFormRequestAs } from "$lib/schema";
 import { passwordSchema } from '$lib/schema/index';
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { error, redirect, type Actions } from "@sveltejs/kit";
+import { z } from "zod";
 
 const sendEmailVerificationLink = async (userId: string, origin: string) => {
     const request = await EmailVerificationRequests.create({ userId })
@@ -14,14 +15,10 @@ const sendEmailVerificationLink = async (userId: string, origin: string) => {
 
 export const actions: Actions = {
     default: async ({ request, locals, url }) => {
-        const form = await request.formData()
-        const email = form.get('email') as string
-        const password = form.get('password') as string
-
-        if (!email || !password) throw error(400, 'Missing email or password')
-        if (!isValidEmail(email)) throw error(400, 'Invalid email')
-
-        const passwordParse = parseInputAs(password, passwordSchema);
+        const { email, password } = await parseFormRequestAs(request, z.object({
+            email: z.string().email(),
+            password: passwordSchema
+        }))
 
         try {
             const { userId } = await auth.createUser("email", email, {

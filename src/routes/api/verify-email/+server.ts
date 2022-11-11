@@ -1,14 +1,14 @@
 import { auth } from "$lib/auth/lucia";
 import { EmailVerificationRequests } from "$lib/models/emailVerificationRequests";
+import { parseParamsAs } from "$lib/schema";
 import { error, redirect, type RequestHandler } from "@sveltejs/kit";
+import { z } from "zod";
 
 export const GET: RequestHandler = async ({ url }) => {
-    const token = url.searchParams.get("token");
-    if (!token) throw error(400, "Missing token");
+    const { token } = parseParamsAs(url, z.object({ token: z.string() }));
 
     const verificationRequest = await EmailVerificationRequests.findOne({ token }).exec();
     if (!verificationRequest) throw error(400, "Invalid token");
-
     const { userId, expiresAt } = verificationRequest;
 
     if (expiresAt < new Date()) throw error(400, "Token expired");

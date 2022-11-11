@@ -1,57 +1,41 @@
-import { auth } from "$lib/auth/lucia";
-import { FORBIDDEN, INTERNAL_SERVER_ERROR, UNAUTHORIZED } from "$lib/utils/errors";
 import { redirect } from "@sveltejs/kit";
 import type { User } from "lucia-auth/types";
+import type { Role } from "./roles";
 
-export const getSession = async (locals: App.Locals) => {
-    const session = await locals.getSession();
-    if (!session) throw redirect(302, '/signin')
-    return session;
+
+const hasRole = (user: User, role: Role) => user.roles.includes(role)
+export const hasSomeRoles = (user: User, ...roles: Role[]) => roles.some(r => hasRole(user, r))
+export const hasAllRoles = (user: User, ...roles: Role[]) => roles.every(r => hasRole(user, r))
+
+
+interface Options {
+    rolesAll?: Role[];
+    rolesSome?: Role[];
+    url?: URL | string,
 }
 
-export const hasSomeRoles = (user: User, ...roles: string[]) => roles.some(
-    role => user.roles.includes(role)
-)
-export const hasAllRoles = (user: User, ...roles: string[]) => roles.every(
-    role => user.roles.includes(role)
-)
-
-const getSessionUser = async (request: Request) => {
-    const sessionId = auth.parseRequest(request);
-    const { user } = await auth.getSessionUser(sessionId);
-    return user
-}
-
-export const validateRequest = async (request: Request) => {
-    try {
-        return await getSessionUser(request);
-    } catch (error) {
-        if ((<Error>error).message === 'AUTH_INVALID_SESSION_ID') throw redirect(302, `/signin?redirect=${request.url}`);
-        else throw INTERNAL_SERVER_ERROR(error)
-    }
-}
-
-export const validateRequestSafe = async (request: Request) => {
-    try {
-        return await getSessionUser(request);
-    } catch (error) {
-        return null
-    }
-}
-
-export const validateRequestByRole = async (
-    request: Request,
-    options?: {
-        roles?: string[],
-    }
+/** The catch-all function to get the current user.
+ * Check roles.
+ * Redirect to signin if not logged in.
+*/
+export const getUser = async (
+    locals: App.Locals,
+    options?: Options
 ) => {
-    const { roles } = Object.assign({
-        roles: ['admin']
-    }, options ?? {})
+    const DEFAULT_OPTIONS: Required<Options> = {
+        rolesAll: [],
+        rolesSome: [],
+        url: "/",
+    }
+    const { rolesAll, rolesSome, url } = Object.assign(DEFAULT_OPTIONS, options ?? {})
 
-    const user = await validateRequestSafe(request);
+    const { user } = await locals.getSessionUser()
 
-    if (!user) throw UNAUTHORIZED()
-    if (!hasSomeRoles(user, ...roles)) throw FORBIDDEN()
+    if (
+        !user ||
+        !hasAllRoles(user, ...rolesAll) ||
+        (rolesSome.length && !hasSomeRoles(user, ...rolesSome))
+    ) throw redirect(302, `/signin?redirect=${encodeURIComponent(url.toString())}`)
+
     return user;
 }

@@ -1,19 +1,16 @@
 import { auth } from "$lib/auth/lucia";
 import { PasswordResetRequests } from "$lib/models/passwordResetRequests";
-import { parseInputAs, passwordSchema } from "$lib/schema";
+import { parseFormRequestAs, parseInputAs, passwordSchema } from "$lib/schema";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { error, type Actions } from "@sveltejs/kit";
+import { z } from "zod";
 
 export const actions: Actions = {
-    default: async ({ request, url }) => {
-        const form = await request.formData()
-        const newPass = form.get("newPass") as string | null
-        const token = url.searchParams.get("token") as string | null;
-
-        if (!newPass) throw error(400, "New password is required")
-        if (!token) throw error(400, "Token is required")
-
-        const passwordParse = parseInputAs(newPass, passwordSchema);
+    default: async ({ request }) => {
+        const { newPass, token } = await parseFormRequestAs(request, z.object({
+            newPass: passwordSchema,
+            token: z.string()
+        }))
 
         const resetRequest = await PasswordResetRequests.findOne({ token }).exec()
         if (!resetRequest) throw error(400, "Invalid token")

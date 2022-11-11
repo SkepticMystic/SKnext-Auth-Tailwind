@@ -1,16 +1,15 @@
 import { auth } from "$lib/auth/lucia";
 import { PasswordResetRequests } from "$lib/models/passwordResetRequests";
+import { parseFormRequestAs } from "$lib/schema";
 import { error, type Actions } from "@sveltejs/kit";
+import { z } from "zod";
 
 export const actions: Actions = {
     default: async ({ request, url }) => {
-        const form = await request.formData()
-        const email = form.get("email") as string | null
-        if (!email) throw error(400, "Email is required")
+        const { email } = await parseFormRequestAs(request, z.object({ email: z.string().email() }))
 
         const user = await auth.getUserByProviderId('email', email)
         if (!user) throw error(400, "User not found")
-
         const { userId } = user
 
         let resetRequest = await PasswordResetRequests.findOne({ userId })

@@ -17,7 +17,7 @@ declare namespace Lucia {
 	type Auth = import('$lib/auth/lucia').Auth;
 	type UserAttributes = {
 		email: string
-		roles: string[]
+		roles: (import('$lib/auth/roles').Role)[]
 		emailVerified: boolean
 	}
 }
