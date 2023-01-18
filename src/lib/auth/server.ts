@@ -29,7 +29,7 @@ export const getUser = async (
     }
     const { rolesAll, rolesSome, url } = Object.assign(DEFAULT_OPTIONS, options ?? {})
 
-    const { user } = await locals.getSessionUser()
+    const { user } = await locals.validateUser()
 
     if (
         !user ||

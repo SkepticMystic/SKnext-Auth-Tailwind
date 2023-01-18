@@ -1,5 +1,5 @@
 import { dev } from "$app/environment";
-import adapter from "@lucia-sveltekit/adapter-mongoose";
+import adapter from "@lucia-auth/adapter-mongoose";
 import lucia, { generateRandomString } from "lucia-auth";
 import mongoose, { Model } from "mongoose";
 
@@ -33,7 +33,7 @@ export const User: Model<DBUser> = mongoose.models['user'] ||
         }, { _id: false })
     );
 
-const Session = mongoose.model(
+mongoose.model(
     "session",
     new mongoose.Schema(
         {
@@ -61,11 +61,11 @@ export const auth = lucia({
     adapter: adapter(mongoose),
     env: dev ? "DEV" : "PROD",
     generateCustomUserId: async () => generateRandomString(8),
-    transformUserData: (user) => ({
-        userId: user.id,
-        email: user.email,
-        roles: user.roles,
-        emailVerified: user.emailVerified,
+    transformUserData: ({ id, email, emailVerified, roles }) => ({
+        userId: id,
+        email,
+        roles,
+        emailVerified,
     })
 });
 

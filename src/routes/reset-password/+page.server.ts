@@ -1,6 +1,6 @@
 import { auth } from "$lib/auth/lucia";
 import { PasswordResetRequests } from "$lib/models/passwordResetRequests";
-import { parseFormRequestAs, parseInputAs, passwordSchema } from "$lib/schema";
+import { parseFormRequestAs, passwordSchema } from "$lib/schema";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { error, type Actions } from "@sveltejs/kit";
 import { z } from "zod";
