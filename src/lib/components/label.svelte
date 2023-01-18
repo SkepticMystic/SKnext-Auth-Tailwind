@@ -5,11 +5,10 @@
   export let alt: string | null = null;
   /** Pass in any classes to the label */
   export let cls = "";
-  export let wFull = true;
 </script>
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
-<div class="form-control max-w-xs" class:w-full={wFull}>
+<div class="flex flex-col gap-1">
   <label class="{cls} label font-semibold">
     <span class="label-text text-base">{lbl}</span>
     {#if alt !== null}
@@ -19,5 +18,7 @@
     {/if}
   </label>
 
-  <slot />
+  <div>
+    <slot />
+  </div>
 </div>

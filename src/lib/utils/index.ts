@@ -16,9 +16,7 @@ export const getProps = <LoadKey extends string | number = string | number>(): {
 
 export const fetchJson = async (
     url: string,
-    options?: RequestInit & {
-        form?: boolean
-    }
+    options?: RequestInit
 ) => {
     const res = await fetch(url, options)
     const json = await res.json()

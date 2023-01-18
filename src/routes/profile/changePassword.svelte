@@ -17,7 +17,7 @@
     err = suc = "";
 
     try {
-      const { data }: DOK = await axios.put("/api/user/changePassword", {
+      const { data }: DOK = await axios.put("/api/user/password", {
         newPass,
       });
 

@@ -5,5 +5,6 @@ export interface Redirect {
 
 export type Primitive = string | number | boolean | null | undefined;
 
+export type OK = { ok: boolean }
 export type D<T> = { data: T }
-export type DOK = D<{ ok: boolean }>
+export type DOK = D<OK>
