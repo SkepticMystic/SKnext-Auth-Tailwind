@@ -1,7 +1,7 @@
 import { auth } from "$lib/auth/lucia";
 import { EmailVerificationRequests } from "$lib/models/emailVerificationRequests";
-import { parseFormRequestAs } from "$lib/schema";
 import { passwordSchema } from '$lib/schema/index';
+import { Parsers } from "$lib/schema/parsers";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { error, redirect, type Actions } from "@sveltejs/kit";
 import { z } from "zod";
@@ -15,7 +15,7 @@ const sendEmailVerificationLink = async (userId: string, origin: string) => {
 
 export const actions: Actions = {
     default: async ({ request, locals, url }) => {
-        const { email, password } = await parseFormRequestAs(request, z.object({
+        const { email, password } = await Parsers.form(request, z.object({
             email: z.string().email(),
             password: passwordSchema
         }))

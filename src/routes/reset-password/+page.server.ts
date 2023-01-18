@@ -1,13 +1,14 @@
 import { auth } from "$lib/auth/lucia";
 import { PasswordResetRequests } from "$lib/models/passwordResetRequests";
-import { parseFormRequestAs, passwordSchema } from "$lib/schema";
+import { passwordSchema } from "$lib/schema";
+import { Parsers } from "$lib/schema/parsers";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { error, type Actions } from "@sveltejs/kit";
 import { z } from "zod";
 
 export const actions: Actions = {
     default: async ({ request }) => {
-        const { newPass, token } = await parseFormRequestAs(request, z.object({
+        const { newPass, token } = await Parsers.form(request, z.object({
             newPass: passwordSchema,
             token: z.string()
         }))

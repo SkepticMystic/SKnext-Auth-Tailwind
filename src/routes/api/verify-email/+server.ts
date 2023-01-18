@@ -1,11 +1,11 @@
 import { auth } from "$lib/auth/lucia";
 import { EmailVerificationRequests } from "$lib/models/emailVerificationRequests";
-import { parseParamsAs } from "$lib/schema";
+import { Parsers } from "$lib/schema/parsers";
 import { error, redirect, type RequestHandler } from "@sveltejs/kit";
 import { z } from "zod";
 
 export const GET: RequestHandler = async ({ url }) => {
-    const { token } = parseParamsAs(url, z.object({ token: z.string() }));
+    const { token } = Parsers.params(url, z.object({ token: z.string() }));
 
     const verificationRequest = await EmailVerificationRequests.findOne({ token }).exec();
     if (!verificationRequest) throw error(400, "Invalid token");
