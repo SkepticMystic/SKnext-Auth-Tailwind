@@ -49,7 +49,7 @@
       bind:value={newPass}
     />
   </Label>
-  <Label lbl="Password">
+  <Label lbl="Confirm Password">
     <input
       class="input input-sm"
       class:input-error={err}

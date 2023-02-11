@@ -1,17 +1,12 @@
 <script lang="ts">
-  import { goto, invalidateAll } from "$app/navigation";
-  import { getUser, signOut } from "@lucia-auth/sveltekit/client";
+  import { invalidateAll } from "$app/navigation";
+  import { getUser } from "@lucia-auth/sveltekit/client";
+  import axios from "axios";
   import { onMount } from "svelte";
   import { themeChange } from "theme-change";
 
   // NOTE: the element that is using one of the theme attributes must be in the DOM on mount
   onMount(() => themeChange(false));
-
-  const mySignOut = async () => {
-    await goto("/signin");
-    await signOut();
-    await invalidateAll();
-  };
 
   const user = getUser();
 </script>
@@ -41,7 +36,14 @@
     {#if $user}
       <li><a class="link" href="/profile">Profile</a></li>
       <li>
-        <button class="link" on:click={mySignOut}> Signout </button>
+        <button
+          type="submit"
+          class="btn btn-sm btn-ghost"
+          on:click={async () => {
+            await axios.post("/api/signout");
+            await invalidateAll();
+          }}>Sign out</button
+        >
       </li>
     {/if}
   </ul>

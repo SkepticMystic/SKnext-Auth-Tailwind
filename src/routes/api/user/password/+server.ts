@@ -6,10 +6,10 @@ import { json, type RequestHandler } from "@sveltejs/kit";
 import { z } from "zod";
 
 export const PUT: RequestHandler = async ({ locals, request }) => {
-    const { userId } = await getUser(locals);
+    const { email } = await getUser(locals);
     const { newPass } = await Parsers.request(request, z.object({ newPass: passwordSchema }));
 
-    await auth.updateUserPassword(userId, newPass);
+    await auth.updateKeyPassword('email', email, newPass);
 
     return json({ ok: true })
 }

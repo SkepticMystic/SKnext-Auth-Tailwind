@@ -12,19 +12,19 @@ export const actions: Actions = {
         }))
 
         try {
-            const user = await auth.authenticateUser(
+            const { userId } = await auth.validateKeyPassword(
                 "email",
                 email,
                 password
             );
 
 
-            const session = await auth.createSession(user.userId)
+            const session = await auth.createSession(userId)
             locals.setSession(session)
         } catch (e) {
             const { message } = e as Error;
             if (
-                message === "AUTH_INVALID_PROVIDER_ID" ||
+                message === "AUTH_INVALID_KEY_ID" ||
                 message === "AUTH_INVALID_PASSWORD"
             ) throw error(400, "Invalid email or password");
 

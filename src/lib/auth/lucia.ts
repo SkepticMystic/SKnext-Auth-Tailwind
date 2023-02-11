@@ -1,12 +1,10 @@
 import { dev } from "$app/environment";
 import adapter from "@lucia-auth/adapter-mongoose";
-import lucia, { generateRandomString } from "lucia-auth";
+import lucia from "lucia-auth";
 import mongoose, { Model } from "mongoose";
 
 export interface DBUser {
     _id: string;
-    hashed_password: string;
-    provider_id: string;
     email: string;
     roles: string[];
     emailVerified: boolean;
@@ -17,12 +15,6 @@ export const User: Model<DBUser> = mongoose.models['user'] ||
         "user",
         new mongoose.Schema({
             _id: String,
-            provider_id: {
-                type: String,
-                unique: true,
-                required: true,
-            },
-            hashed_password: String,
             email: String,
             roles: [String],
             emailVerified: {
@@ -44,7 +36,7 @@ mongoose.model(
                 type: String,
                 required: true,
             },
-            expires: {
+            active_expires: {
                 type: Number,
                 required: true,
             },
@@ -57,10 +49,31 @@ mongoose.model(
     )
 );
 
+mongoose.model(
+    "key",
+    new mongoose.Schema(
+        {
+            _id: {
+                type: String
+            },
+            user_id: {
+                type: String,
+                required: true,
+                ref: "user"
+            },
+            hashed_password: String,
+            primary: {
+                type: Boolean,
+                required: true
+            }
+        },
+        { _id: false }
+    )
+);
+
 export const auth = lucia({
     adapter: adapter(mongoose),
     env: dev ? "DEV" : "PROD",
-    generateCustomUserId: async () => generateRandomString(8),
     transformUserData: ({ id, email, emailVerified, roles }) => ({
         userId: id,
         email,

@@ -21,14 +21,18 @@ export const actions: Actions = {
         }))
 
         try {
-            const { userId } = await auth.createUser("email", email, {
-                password,
+            const { userId } = await auth.createUser({
+                key: {
+                    providerId: "email",
+                    providerUserId: email,
+                    password,
+                },
                 attributes: {
                     email,
                     roles: [],
                     emailVerified: false
                 },
-            });
+            })
 
             await sendEmailVerificationLink(userId, url.origin)
 

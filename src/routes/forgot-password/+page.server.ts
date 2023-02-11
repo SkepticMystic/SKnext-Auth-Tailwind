@@ -8,7 +8,7 @@ export const actions: Actions = {
     default: async ({ request, url }) => {
         const { email } = await Parsers.form(request, z.object({ email: z.string().email() }))
 
-        const user = await auth.getUserByProviderId('email', email)
+        const { user } = await auth.getKeyUser('email', email)
         if (!user) throw error(400, "User not found")
         const { userId } = user
 
