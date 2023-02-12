@@ -37,7 +37,6 @@
       <li><a class="link" href="/profile">Profile</a></li>
       <li>
         <button
-          type="submit"
           class="btn btn-sm btn-ghost"
           on:click={async () => {
             await axios.post("/api/signout");

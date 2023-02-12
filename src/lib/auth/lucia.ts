@@ -59,7 +59,6 @@ mongoose.model(
             user_id: {
                 type: String,
                 required: true,
-                ref: "user"
             },
             hashed_password: String,
             primary: {

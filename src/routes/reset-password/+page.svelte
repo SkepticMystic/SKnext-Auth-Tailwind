@@ -4,6 +4,7 @@
   import ResultText from "$lib/components/resultText.svelte";
   import { getProps } from "$lib/utils";
   import { getActionErrorMsg } from "$lib/utils/errors";
+  import type { ActionResult } from "@sveltejs/kit";
   import axios from "axios";
 
   let newPass: string;
@@ -17,11 +18,11 @@
     err = suc = "";
 
     try {
-      const { data } = await axios.postForm("", { newPass });
-      if (data?.data?.ok) suc = "Password changed successfully";
-      else err = "Something went wrong";
-
-      set_href("/signin");
+      const { data } = await axios.postForm<ActionResult>("", { newPass });
+      if (data.type === "success") {
+        suc = "Password changed successfully";
+        set_href("/signin");
+      } else err = "Something went wrong";
     } catch (error) {
       console.log(error);
       err = getActionErrorMsg(error);

@@ -1,7 +1,8 @@
 import { auth } from "$lib/auth/lucia";
-import { PasswordResetRequests } from "$lib/models/passwordResetRequests";
+import { ONE_DAY_MS } from "$lib/const";
+import { getExistingOrNewOTP } from "$lib/models/OTPs";
 import { Parsers } from "$lib/schema/parsers";
-import { error, type Actions } from "@sveltejs/kit";
+import type { Actions } from "@sveltejs/kit";
 import { z } from "zod";
 
 export const actions: Actions = {
@@ -9,21 +10,20 @@ export const actions: Actions = {
         const { email } = await Parsers.form(request, z.object({ email: z.string().email() }))
 
         const { user } = await auth.getKeyUser('email', email)
-        if (!user) throw error(400, "User not found")
-        const { userId } = user
-
-        let resetRequest = await PasswordResetRequests.findOne({ userId })
-        if (resetRequest) {
-            if (resetRequest.expiresAt < new Date()) {
-                await resetRequest.remove()
-                resetRequest = await PasswordResetRequests.create({ userId })
-            } else throw error(400, "Password reset request already exists")
-        } else {
-            resetRequest = await PasswordResetRequests.create({ userId })
+        if (!user) {
+            // Don't reveal whether the email exists or not
+            return { ok: true }
         }
 
+        const { userId } = user
+        const OTP = await getExistingOrNewOTP({
+            userId,
+            kind: 'password-reset',
+            expiresAt: new Date(Date.now() + ONE_DAY_MS)
+        })
 
-        const href = `${url.origin}/reset-password?token=${resetRequest.token}`
+
+        const href = `${url.origin}/reset-password?token=${OTP.token}`
         console.log(href)
         console.log('TODO: sendEmail')
 

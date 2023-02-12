@@ -1,7 +1,6 @@
 import { error } from "@sveltejs/kit";
 import { z } from "zod";
 
-// TODO: I think these parses should be grouped under some namespace
 const raw = <O, D extends z.ZodTypeDef, I>(input: any, schema: z.ZodSchema<O, D, I>) => {
     const parsed = schema.safeParse(input)
     if (!parsed.success) {
