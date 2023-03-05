@@ -1,5 +1,5 @@
 import { auth } from "$lib/auth/lucia";
-import { validateOTP } from "$lib/models/OTPs";
+import { OTP } from "$lib/models/OTPs";
 import { passwordSchema } from "$lib/schema";
 import { Parsers } from "$lib/schema/parsers";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
@@ -11,7 +11,7 @@ export const actions: Actions = {
         const { newPass } = await Parsers.form(request, z.object({ newPass: passwordSchema, }))
         const { token } = Parsers.params(url, z.object({ token: z.string() }))
 
-        const check = await validateOTP(token, 'password-reset')
+        const check = await OTP.validateUserToken({ token, kind: 'password-reset' })
         if (!check.ok) throw error(400, 'Invalid token')
 
         const { user, otp } = check

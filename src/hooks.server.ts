@@ -6,7 +6,7 @@ import { handleHooks } from "@lucia-auth/sveltekit";
 export const handle = handleHooks(auth);
 
 try {
-    mongoose.connect(MONGO_URI, { autoIndex: false });
+    await mongoose.connect(MONGO_URI, { autoIndex: false });
 } catch (error) {
     console.log(error);
 }

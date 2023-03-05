@@ -10,7 +10,7 @@ export interface DBUser {
     emailVerified: boolean;
 }
 
-export const User: Model<DBUser> = mongoose.models['user'] ||
+export const Users: Model<DBUser> = mongoose.models['user'] ||
     mongoose.model(
         "user",
         new mongoose.Schema({
@@ -67,7 +67,8 @@ mongoose.model(
             }
         },
         { _id: false }
-    )
+    ),
+    "key"
 );
 
 export const auth = lucia({

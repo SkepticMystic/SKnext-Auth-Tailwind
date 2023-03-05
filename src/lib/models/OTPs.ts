@@ -1,112 +1,235 @@
-import { auth } from "$lib/auth/lucia";
-import mongoose from "mongoose";
 
+import { Users } from '$lib/auth/lucia';
+import type { OrgRole } from '$lib/auth/roles';
+import { ONE_DAY_MS } from '$lib/const';
+import mongoose, { Model } from 'mongoose';
+
+const OTP_KINDS = ['email-verification', 'password-reset', 'org-invite'] as const
+type OTPKind = typeof OTP_KINDS[number]
+
+const IDENTIFIER_FIELDS = ['_id', 'email'] as const
+type IdentifierField = typeof IDENTIFIER_FIELDS[number]
+
+// Every OTP has the following properties
 export interface OTPBase {
-    userId: string;
+    // The token that the user will use to verify the OTP
     token: string;
-    expiresAt?: Date;
+    // Milliseconds since createdAt when the OTP expires
+    expiresInMs?: number;
+    createdAt: Date;
+    // The kind of OTP this is
+    kind: OTPKind;
+    // The identifier of the user that this OTP is for
+    identifier: `${IdentifierField}:${string}`;
 }
 
+// OTPs can be of different kinds
+// We use this to prevent one token from being used for multiple purposes
 export interface EmailVerificationOTP extends OTPBase {
-    kind: "email-verification";
+    identifier: `_id:${string}`
+    kind: 'email-verification';
+    data?: undefined
 }
 
 export interface PasswordResetOTP extends OTPBase {
-    kind: "password-reset";
+    identifier: `_id:${string}`
+    kind: 'password-reset';
+    data?: undefined
 }
 
-export type OTP = EmailVerificationOTP | PasswordResetOTP;
-
-const modelName = "OTPs";
-export const OTPs = mongoose.model<OTP>(
-    modelName,
-    new mongoose.Schema({
-        userId: {
-            type: String,
-            required: true,
-            ref: "user",
-        },
-        token: {
-            type: String,
-            required: true,
-            default: () => crypto.randomUUID(),
-        },
-        expiresAt: {
-            type: Date,
-        },
-        kind: {
-            type: String,
-            required: true,
-            enum: ["email-verification", "password-reset"],
-        },
-    }, { timestamps: true }),
-    modelName
-);
-
-
-export const isOPTExpired = <T extends { expiresAt?: Date }>(otp: T) => {
-    if (otp.expiresAt === undefined) return false;
-    else return otp.expiresAt.getTime() < Date.now();
+export interface OrgInviteOTP extends OTPBase {
+    // Some tokens can only identify the user by email, not userId (they might not have signed up yet)
+    identifier: `email:${string}`
+    kind: 'org-invite';
+    data: {
+        org_id: string
+        org_role: OrgRole
+        createdBy: string
+    }
 }
+
+export type OTP = EmailVerificationOTP | PasswordResetOTP | OrgInviteOTP;
+
+const modelName = 'OTPs';
+export const OTPs: Model<OTP> =
+    mongoose.models[modelName] ||
+    mongoose.model<OTP>(
+        modelName,
+        new mongoose.Schema(
+            {
+                identifier: {
+                    type: String,
+                    required: true
+                },
+                token: {
+                    type: String,
+                    required: true,
+                    // Use the crypto Web API to generate a random token
+                    default: () => crypto.randomUUID()
+                },
+                expiresInMs: {
+                    type: Number,
+                    default: ONE_DAY_MS
+                },
+                kind: {
+                    type: String,
+                    required: true,
+                    enum: OTP_KINDS
+                },
+                data: {
+                    type: mongoose.Schema.Types.Mixed
+                }
+            },
+            { timestamps: true }
+        ),
+        modelName
+    );
+
 
 /**
- * Return an existing OTP if it exists and is not expired, or create a new one if it doesn't exist or is expired.
+* Check if an OTP is expired.
+*   If it doesn't have an expiry date, it's never expired
+*/
+const isExpired = <T extends Pick<OTP, 'expiresInMs' | 'createdAt'>>(
+    { createdAt, expiresInMs }: T
+) => {
+    if (expiresInMs === undefined) return false;
+
+    const expiresAt = new Date(createdAt.getTime() + expiresInMs);
+    return expiresAt < new Date();
+};
+
+/** A more type-safe option than OTPs.create */
+const create = async (options: Omit<OTP, 'token' | 'createdAt'>) => OTPs.create(options)
+
+/**
+ * Return an existing OTP if it exists and is not expired,
+ *   or create a new one if it doesn't exist or is expired.
  */
-export const getExistingOrNewOTP = async (options: {
-    userId: string,
-    kind: OTP["kind"],
-    expiresAt?: Date,
-}) => {
-    const { userId, kind, expiresAt } = options;
+const getOrCreate = async (options: Omit<OTP, 'token' | 'createdAt'>): Promise<OTP> => {
+    const { identifier, kind } = options;
 
     // Check if there is an existing OTP for that user of that kind
-    const existing = await OTPs.findOne({ userId, kind }).exec();
+    const existing = await OTPs.findOne({ identifier, kind }).exec();
 
     if (existing) {
-        if (isOPTExpired(existing)) {
-            console.log("Existing OTP expired, creating new one")
+        if (isExpired(existing)) {
+            console.log('Existing OTP expired, creating new one');
             const [newOTP, _removeOld] = await Promise.all([
-                OTPs.create({ userId, kind, expiresAt }),
-                existing.remove(),
+                create(options),
+                existing.remove()
             ]);
 
             return newOTP;
         } else {
-            console.log("Existing OTP not expired, returning it")
+            console.log('Existing OTP not expired, returning it');
             return existing;
         }
     } else {
-        console.log("No existing OTP, creating new one")
-        return OTPs.create({ userId, kind, expiresAt });
+        console.log('No existing OTP, creating new one');
+        return create(options);
     }
+};
+
+
+/**
+ * Given a token, and the kind of OTP, returns the OTP if it exists and is not expired.
+ *
+ * If the OTP is expired, it will be deleted.
+ */
+const validateToken = async <T extends OTP = OTP>(input: Pick<T, 'token' | 'kind'>) => {
+    const { token, kind } = input;
+
+    const otp = await OTPs.findOne({ token, kind }).exec() as (mongoose.Document<unknown, any, T> & T) | null;
+    if (!otp) {
+        console.log('OTP not found');
+        return { ok: <const>false };
+    }
+
+    if (isExpired(otp)) {
+        console.log('OTP expired');
+        await otp.remove();
+        return { ok: <const>false };
+    }
+
+    return { ok: <const>true, otp };
+};
+
+/** Given an OTP,
+ *   parse the identifier,
+ *   find the user,
+ *   make sure the identifier value matches,
+ *   and return the user in Lucia format.
+ * 
+ * If the user is not found, 
+ *   or the identifier value doesn't match, 
+ *   it will return an error, but it **won't** delete the OTP.
+ * 
+ * Use this to check if a user exists to decide how to handle their OTP.
+ */
+const getTokenUser = async <T extends OTP = OTP>(otp: T) => {
+    // Parse the identifier
+    const [idField, ...rest1] = otp.identifier.split(':') as [IdentifierField, ...string[]]
+    if (!IDENTIFIER_FIELDS.includes(idField))
+        return { ok: false, error: 'invalid_identifier_field' } as const
+
+    const id = { field: idField, value: rest1.join(':') }
+
+    // Find the user
+    const rawUser = await Users.findOne({ [id.field]: id.value }).lean()
+    if (!rawUser)
+        return {
+            ok: false,
+            id,
+            error: 'user_not_found',
+        } as const
+
+    // Make sure the identifier value matches
+    // NOTE: Mongo will just find the first user in the db if either of these are undefined
+    //  so we need to check for that
+    if (rawUser[id.field] !== id.value)
+        return {
+            ok: false,
+            id,
+            error: 'identifier_value_mismatch',
+        } as const
+
+    // Convert to the shape auth.getUser would return
+    const { _id, ...rest2 } = rawUser
+    return {
+        ok: <const>true,
+        id,
+        user: { userId: _id, ...rest2 },
+    };
 }
 
 /**
  * Given a token, and the kind of OTP, returns the user and the OTP if it exists and is not expired.
- * 
- * If the OTP is expired, it will be deleted if `deleteIfExpired` is true.
- * 
- * If the user is not found, the OTP will be deleted.
+ *
+ * If the OTP is expired, or the user is not found, it will be deleted.
  */
-export const validateOTP = async (token: string, kind: OTP["kind"]) => {
-    const otp = await OTPs.findOne({ token, kind }).exec();
-    if (!otp) {
-        console.log("OTP not found")
-        return { ok: <const>false };
-    }
+const validateUserToken = async (input: Pick<OTP, 'token' | 'kind'>) => {
+    const { ok, otp } = await validateToken(input);
+    if (!ok) return { ok: <const>false };
 
-    if (isOPTExpired(otp)) {
-        console.log("OTP expired")
+    const userCheck = await getTokenUser(otp);
+    if (!userCheck.ok) {
         await otp.remove();
         return { ok: <const>false };
     }
 
-    const user = await auth.getUser(otp.userId);
-    if (!user) {
-        console.log("User not found")
-        await otp.remove();
-        return { ok: <const>false };
-    }
+    return {
+        ok: <const>true,
+        user: userCheck.user,
+        otp
+    };
+};
 
-    return { ok: <const>true, user, otp };
+export const OTP = {
+    isExpired,
+    create,
+    getOrCreate,
+    validateToken,
+    getTokenUser,
+    validateUserToken,
 }

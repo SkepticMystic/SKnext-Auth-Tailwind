@@ -11,8 +11,7 @@
   let { err, suc, loading } = getProps();
 
   const forgotPassword = async () => {
-    loading = true;
-    err = suc = "";
+    (loading = true), (err = suc = "");
 
     try {
       const { data }: D<ActionResult> = await axios.postForm("", { email });

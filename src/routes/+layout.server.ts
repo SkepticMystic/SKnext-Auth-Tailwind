@@ -15,12 +15,21 @@ const anyoneAllowed = [
 
 export const load = handleServerSession(
     (async ({ url, locals }) => {
-        const onUnauthedRoute = anyoneAllowed.some((route) => url.pathname.startsWith(route))
+        const { pathname } = url;
+
+        const onUnauthedRoute = anyoneAllowed.some((route) => pathname.startsWith(route))
         if (onUnauthedRoute) return {}
 
-        const user = await getUser(locals, { url })
+        const { user } = await locals.validateUser();
 
-        if (user.emailVerified) return {}
-        else throw redirect(302, "/unverified-email")
+        if (!user) throw redirect(302, `/signin?redirect=${encodeURIComponent(url.toString())}`)
+        const { emailVerified } = user;
+
+        if (!emailVerified) {
+            if (pathname.startsWith('/unverified-email')) return {}
+            else throw redirect(302, "/unverified-email");
+        }
+
+        return {}
     }) satisfies LayoutServerLoad
 )

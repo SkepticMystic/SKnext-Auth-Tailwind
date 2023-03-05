@@ -1,6 +1,5 @@
 import { auth } from "$lib/auth/lucia";
-import { ONE_DAY_MS } from "$lib/const";
-import { OTPs } from "$lib/models/OTPs";
+import { OTP } from "$lib/models/OTPs";
 import { passwordSchema } from '$lib/schema/index';
 import { Parsers } from "$lib/schema/parsers";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
@@ -32,10 +31,9 @@ export const actions: Actions = {
             // If successful, we know there no existing email-verification OTPs,
             //   since we just created the user
             //   so we can create a new one without checking for existing
-            const otp = await OTPs.create({
-                userId,
+            const otp = await OTP.create({
+                identifier: `_id:${userId}`,
                 kind: 'email-verification',
-                expiresAt: new Date(Date.now() + ONE_DAY_MS)
             });
             const href = `${url.origin}/api/verify-email?token=${otp.token}`
             console.log(href)
