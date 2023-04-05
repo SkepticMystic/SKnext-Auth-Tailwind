@@ -12,7 +12,7 @@ export const actions: Actions = {
         }))
 
         try {
-            const { userId } = await auth.validateKeyPassword(
+            const { userId } = await auth.useKey(
                 "email",
                 email,
                 password

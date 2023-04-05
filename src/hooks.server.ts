@@ -1,9 +1,12 @@
 import { MONGO_URI } from '$env/static/private';
-import mongoose from "mongoose";
 import { auth } from '$lib/auth/lucia';
-import { handleHooks } from "@lucia-auth/sveltekit";
+import type { Handle } from "@sveltejs/kit";
+import mongoose from "mongoose";
 
-export const handle = handleHooks(auth);
+export const handle: Handle = async ({ event, resolve }) => {
+    event.locals = auth.handleRequest(event);
+    return await resolve(event);
+};
 
 try {
     await mongoose.connect(MONGO_URI, { autoIndex: false });

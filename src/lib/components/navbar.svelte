@@ -1,19 +1,17 @@
 <script lang="ts">
   import { invalidateAll } from "$app/navigation";
-  import { getUser } from "@lucia-auth/sveltekit/client";
+  import { page } from "$app/stores";
   import axios from "axios";
   import { onMount } from "svelte";
   import { themeChange } from "theme-change";
 
   // NOTE: the element that is using one of the theme attributes must be in the DOM on mount
   onMount(() => themeChange(false));
-
-  const user = getUser();
 </script>
 
 <nav class="px-4 navbar shadow bg-base-200">
   <ul class="navbar-start flex flex-row gap-4">
-    {#if $user}
+    {#if $page.data.user}
       <li>
         <a class="link" href="/">Home</a>
       </li>
@@ -33,7 +31,7 @@
       {/each}
     </select>
 
-    {#if $user}
+    {#if $page.data.user}
       <li><a class="link" href="/profile">Profile</a></li>
       <li>
         <button

@@ -1,7 +1,7 @@
 import { redirect } from "@sveltejs/kit";
-import type { User } from "lucia-auth/types";
+import type { User } from "lucia-auth";
+import { Users } from "./lucia";
 import type { Role } from "./roles";
-import { auth } from "./lucia";
 
 
 const hasRole = (user: User, role: Role) => user.roles.includes(role)
@@ -41,13 +41,10 @@ export const getUser = async (
     return user;
 }
 
-export const safeGetKeyUser = async (
-    email: string,
-    providerId = "email"
-) => {
-    let user: User | null = null;
+export const getUserByEmail = async (email: string) => {
+    let user = null
     try {
-        user = (await auth.getKeyUser(providerId, email)).user;
+        user = await Users.findOne({ email }).lean()
     } catch {
         user = null;
     }

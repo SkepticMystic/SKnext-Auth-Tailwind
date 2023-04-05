@@ -199,7 +199,7 @@ const getTokenUser = async <T extends OTP = OTP>(otp: T) => {
     return {
         ok: <const>true,
         id,
-        user: { userId: _id, ...rest2 },
+        user: { userId: _id.toString(), ...rest2 },
     };
 }
 

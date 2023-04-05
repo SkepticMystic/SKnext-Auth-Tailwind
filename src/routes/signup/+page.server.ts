@@ -16,16 +16,16 @@ export const actions: Actions = {
 
         try {
             const { userId } = await auth.createUser({
-                key: {
-                    providerId: "email",
-                    providerUserId: email,
-                    password,
-                },
                 attributes: {
                     email,
-                    roles: [],
-                    emailVerified: false
+                    emailVerified: false,
+                    roles: ['user']
                 },
+                primaryKey: {
+                    password,
+                    providerId: "email",
+                    providerUserId: email
+                }
             })
 
             // If successful, we know there no existing email-verification OTPs,

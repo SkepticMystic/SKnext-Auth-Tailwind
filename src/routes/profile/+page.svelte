@@ -1,14 +1,13 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
   import ResultText from "$lib/components/resultText.svelte";
   import type { DOK } from "$lib/interfaces";
   import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
-  import { getUser } from "@lucia-auth/sveltekit/client";
   import axios from "axios";
   import ChangePassword from "./changePassword.svelte";
 
-  const user = getUser();
   let { err, loading } = getProps();
 
   const deleteUser = async () => {
@@ -32,8 +31,8 @@
 <h1 class="text-2xl">Profile</h1>
 <div class="my-3" />
 
-{#if $user}
-  <p class="text-lg">Welcome {$user.email.split("@")[0]}</p>
+{#if $page.data.user}
+  <p class="text-lg">Welcome {$page.data.user.email.split("@")[0]}</p>
 
   <div class="my-5">
     <ChangePassword />
