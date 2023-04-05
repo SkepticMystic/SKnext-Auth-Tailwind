@@ -8,6 +8,3 @@ export interface HTTPError<T = {
 }
 
 export type ActionError = HTTPError<{ type: 'error', error: { message: string } }>
-
-export interface ZodError {
-}

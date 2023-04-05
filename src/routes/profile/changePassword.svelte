@@ -1,7 +1,7 @@
 <script lang="ts">
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
-  import type { DOK } from "$lib/interfaces";
+  import type { OK } from "$lib/interfaces";
   import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
@@ -13,11 +13,10 @@
   const changePassword = async () => {
     if (newPass !== confirmPass) return (err = "Passwords do not match");
 
-    loading = true;
-    err = suc = "";
+    (loading = true), (err = suc = "");
 
     try {
-      const { data }: DOK = await axios.put("/api/user/password", {
+      const { data } = await axios.put<OK>("/api/user/password", {
         newPass,
       });
 

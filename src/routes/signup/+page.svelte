@@ -12,8 +12,7 @@
   let { err, loading, suc } = getProps();
 
   const signup = async () => {
-    loading = true;
-    err = suc = "";
+    (loading = true), (err = suc = "");
 
     try {
       const { data } = await axios.postForm<ActionResult>("", {

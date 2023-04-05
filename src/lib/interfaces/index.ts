@@ -9,4 +9,6 @@ export type OK = { ok: boolean }
 export type D<T> = { data: T }
 export type DOK = D<OK>
 
-export type Maybe<T> = { ok: true, data: T } | { ok: false, error: string }
+export type Err<E extends unknown = undefined> = { ok: false, error?: E }
+export type Suc<D extends unknown = undefined> = { ok: true, data?: D }
+export type Result<D extends unknown = undefined, E extends unknown = undefined> = Suc<D> | Err<E>

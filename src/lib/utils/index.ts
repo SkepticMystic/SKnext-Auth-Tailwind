@@ -1,3 +1,4 @@
+import type { Err, Suc } from "$lib/interfaces"
 import type { ObjectId } from "mongoose"
 
 export const getProps = <LoadKey extends string | number = string | number>(): {
@@ -31,3 +32,14 @@ export const _idToString = <T extends { _id: string | ObjectId }>(doc: T) => {
     if (doc?._id) doc._id = doc._id.toString()
     return doc
 }
+
+export const err = <E = undefined>(e?: E): Err<E> => {
+    const res: Err<E> = { ok: false }
+    if (e) res['error'] = e
+    return res
+};
+export const suc = <D = undefined>(d?: D): Suc<D> => {
+    const res: Suc<D> = { ok: true }
+    if (d) res['data'] = d
+    return res
+};

@@ -4,8 +4,9 @@ import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { json, type RequestHandler } from "@sveltejs/kit";
 
 export const DELETE: RequestHandler = async ({ locals }) => {
+    const { userId } = await getUser(locals);
+
     try {
-        const { userId } = await getUser(locals);
         await auth.deleteUser(userId);
 
         return json({ ok: true })

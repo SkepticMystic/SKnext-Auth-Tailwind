@@ -1,23 +1,21 @@
 <script lang="ts">
   import { set_href } from "$lib/auth/client";
-  import ResultText from "$lib/components/resultText.svelte";
   import Label from "$lib/components/label.svelte";
-  import { getActionErrorMsg } from "$lib/utils/errors";
-  import axios from "axios";
+  import ResultText from "$lib/components/resultText.svelte";
   import { getProps } from "$lib/utils";
-  import type { D } from "$lib/interfaces";
+  import { getActionErrorMsg } from "$lib/utils/errors";
   import type { ActionResult } from "@sveltejs/kit";
+  import axios from "axios";
 
   let email: string;
   let password: string;
   let { err, loading, suc } = getProps();
 
   const signin = async () => {
-    loading = true;
-    err = suc = "";
+    (loading = true), (err = suc = "");
 
     try {
-      const { data }: D<ActionResult> = await axios.postForm("", {
+      const { data } = await axios.postForm<ActionResult>("", {
         email,
         password,
       });
@@ -29,6 +27,7 @@
       console.log(error);
       err = getActionErrorMsg(error);
     }
+
     loading = false;
   };
 

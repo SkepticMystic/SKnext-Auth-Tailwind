@@ -6,6 +6,7 @@ import { z } from "zod";
 
 export const GET: RequestHandler = async ({ url }) => {
     const { token } = Parsers.params(url, z.object({ token: z.string() }));
+
     const check = await OTP.validateUserToken({ token, kind: 'email-verification' });
     if (!check.ok) throw error(400, "Invalid token");
 

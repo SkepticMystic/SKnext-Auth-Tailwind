@@ -4,11 +4,11 @@ export enum UserRoleEnum {
 }
 export type UserRole = keyof typeof UserRoleEnum
 
-export enum OrgRoleEnum {
-    'org:member',
-    'org:admin',
-    'org:owner',
-}
-export type OrgRole = keyof typeof OrgRoleEnum
+export const OrgRoleHierarchy = {
+    "org:member": 0,
+    "org:admin": 1,
+    "org:owner": 2,
+} as const;
+export type OrgRole = keyof typeof OrgRoleHierarchy
 
 export type Role = UserRole | OrgRole;

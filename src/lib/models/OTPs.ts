@@ -2,6 +2,7 @@
 import { Users } from '$lib/auth/lucia';
 import type { OrgRole } from '$lib/auth/roles';
 import { ONE_DAY_MS } from '$lib/const';
+import { err } from '$lib/utils';
 import mongoose, { Model } from 'mongoose';
 
 const OTP_KINDS = ['email-verification', 'password-reset', 'org-invite'] as const
@@ -143,13 +144,13 @@ const validateToken = async <T extends OTP = OTP>(input: Pick<T, 'token' | 'kind
     const otp = await OTPs.findOne({ token, kind }).exec() as (mongoose.Document<unknown, any, T> & T) | null;
     if (!otp) {
         console.log('OTP not found');
-        return { ok: <const>false };
+        return err();
     }
 
     if (isExpired(otp)) {
         console.log('OTP expired');
         await otp.remove();
-        return { ok: <const>false };
+        return err();
     }
 
     return { ok: <const>true, otp };
@@ -171,7 +172,7 @@ const getTokenUser = async <T extends OTP = OTP>(otp: T) => {
     // Parse the identifier
     const [idField, ...rest1] = otp.identifier.split(':') as [IdentifierField, ...string[]]
     if (!IDENTIFIER_FIELDS.includes(idField))
-        return { ok: false, error: 'invalid_identifier_field' } as const
+        return err('invalid_identifier_field')
 
     const id = { field: idField, value: rest1.join(':') }
 
@@ -209,13 +210,14 @@ const getTokenUser = async <T extends OTP = OTP>(otp: T) => {
  * If the OTP is expired, or the user is not found, it will be deleted.
  */
 const validateUserToken = async (input: Pick<OTP, 'token' | 'kind'>) => {
-    const { ok, otp } = await validateToken(input);
-    if (!ok) return { ok: <const>false };
+    const validate = await validateToken(input);
+    if (!validate.ok) return err();
+    const { otp } = validate;
 
     const userCheck = await getTokenUser(otp);
     if (!userCheck.ok) {
         await otp.remove();
-        return { ok: <const>false };
+        return err();
     }
 
     return {
