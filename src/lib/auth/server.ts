@@ -30,8 +30,7 @@ export const getUser = async (locals: App.Locals, options?: GetUserOptions) => {
     options ?? {},
   );
 
-  //@ts-expect-error
-  const { user } = await locals.validateUser() as { user: User };
+  const { user } = await locals.auth.validateUser();
 
   if (!user) throw redirect(302, `/signin?redirect=${url?.pathname ?? "/"}`);
 

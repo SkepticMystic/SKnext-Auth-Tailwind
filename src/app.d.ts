@@ -1,15 +1,25 @@
 /// <reference types="@sveltejs/kit" />
-declare namespace App {
-  type Locals = import("lucia-auth").AuthRequest;
+declare global {
+  namespace App {
+    interface Locals {
+      auth: import("lucia-auth").AuthRequest;
+    }
+  }
 }
 
 /// <reference types="lucia-auth" />
-declare namespace Lucia {
-  type Auth = import("$lib/auth/lucia").Auth;
-  type UserAttributes = {
-    email: string;
-    role: import("$lib/auth/roles").Role;
-    emailVerified: boolean;
-    admin?: boolean;
-  };
+declare global {
+  namespace Lucia {
+    type Auth = import("$lib/auth/lucia").Auth;
+    type UserAttributes = {
+      email: string;
+      team_id: string;
+      role: import("$lib/auth/roles").Role;
+      emailVerified: boolean;
+      admin?: boolean;
+    };
+  }
 }
+
+// THIS IS IMPORTANT!!!
+export {};

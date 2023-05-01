@@ -6,6 +6,9 @@
   .input {
     @apply input-bordered;
   }
+  .select {
+    @apply select-bordered;
+  }
 
   .btn {
   }

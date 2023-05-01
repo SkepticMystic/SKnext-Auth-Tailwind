@@ -6,8 +6,12 @@
   import axios from "axios";
   import { getProps } from "$lib/utils";
   import type { ActionResult } from "@sveltejs/kit";
+  import { page } from "$app/stores";
 
-  let email: string;
+  const teamToken = $page.url.searchParams.get("team_token");
+  const emailHint = $page.url.searchParams.get("email_hint");
+
+  let email: string | undefined = emailHint ?? undefined;
   let password: string;
   let { err, loading, suc } = getProps();
 
@@ -35,22 +39,25 @@
   $: if (email || password) err = "";
 </script>
 
+{#if teamToken}
+  <p class="my-3">
+    You've been invited to join a team. Please signup to continue.
+  </p>
+{/if}
+
 <form on:submit|preventDefault={signup}>
   <Label lbl="Email">
     <input
       class="input"
-      class:input-err={err}
-      class:input-success={suc}
       type="email"
       autocomplete="email"
+      disabled={!!emailHint}
       bind:value={email}
     />
   </Label>
   <Label lbl="Password">
     <input
       class="input"
-      class:input-err={err}
-      class:input-success={suc}
       type="password"
       autocomplete="new-password"
       bind:value={password}

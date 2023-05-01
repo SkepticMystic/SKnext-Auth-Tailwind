@@ -7,7 +7,7 @@ import mongoose, { Model } from "mongoose";
 const OTP_KINDS = [
   "email-verification",
   "password-reset",
-  "org-invite",
+  "team-invite",
 ] as const;
 type OTPKind = typeof OTP_KINDS[number];
 
@@ -41,18 +41,18 @@ export interface PasswordResetOTP extends OTPBase {
   data?: undefined;
 }
 
-export interface OrgInviteOTP extends OTPBase {
+export interface TeamInviteOTP extends OTPBase {
   // Some tokens can only identify the user by email, not userId (they might not have signed up yet)
   identifier: `email:${string}`;
-  kind: "org-invite";
+  kind: "team-invite";
   data: {
-    org_id: string;
+    team_id: string;
     role: Role;
     createdBy: string;
   };
 }
 
-export type OTP = EmailVerificationOTP | PasswordResetOTP | OrgInviteOTP;
+export type OTP = EmailVerificationOTP | PasswordResetOTP | TeamInviteOTP;
 
 const modelName = "OTPs";
 export const OTPs: Model<OTP> = mongoose.models[modelName] ||
@@ -100,8 +100,8 @@ const isExpired = (
 };
 
 /** A more type-safe option than OTPs.create */
-const create = async (
-  options: Omit<OTP, "token" | "createdAt">,
+const create = async <T extends OTP>(
+  options: Omit<T, "token" | "createdAt">,
 ) => OTPs.create(options);
 
 /**
@@ -186,20 +186,20 @@ const getTokenUser = async (otp: Pick<OTP, "identifier">) => {
   const id = { field: idField, value: rest1.join(":") };
 
   if (!IDENTIFIER_FIELDS.includes(id.field)) {
-    return err({ id, message: "invalid_identifier_field" });
+    return err({ id, message: "invalid_identifier_field" as const });
   }
 
   // Find the user
   const rawUser = await Users.findOne({ [id.field]: id.value }).lean();
   if (!rawUser) {
-    return err({ id, message: "user_not_found" });
+    return err({ id, message: "user_not_found" as const });
   }
 
   // Make sure the identifier value matches
   // NOTE: Mongo will just find the first user in the db if either of these are undefined
   //  so we need to check for that
   if (rawUser[id.field] !== id.value) {
-    return err({ id, message: "identifier_value_mismatch" });
+    return err({ id, message: "identifier_value_mismatch" as const });
   }
 
   // Convert to the shape auth.getUser would return

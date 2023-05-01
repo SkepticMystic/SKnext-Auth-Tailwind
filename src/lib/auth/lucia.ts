@@ -3,6 +3,7 @@ import adapter from "@lucia-auth/adapter-mongoose";
 import lucia from "lucia-auth";
 import { sveltekit } from "lucia-auth/middleware";
 import mongoose, { Model } from "mongoose";
+import { ROLES } from "./roles";
 
 export const Users: Model<Lucia.UserAttributes> =
   mongoose.models["auth_user"] ||
@@ -15,9 +16,15 @@ export const Users: Model<Lucia.UserAttributes> =
           type: String,
           required: true,
         },
+        team_id: {
+          type: String,
+          required: true,
+          ref: "Teams",
+        },
         role: {
           type: String,
           required: true,
+          enum: ROLES,
         },
         emailVerified: {
           type: Boolean,
@@ -88,12 +95,15 @@ export const auth = lucia({
   adapter: adapter(mongoose),
   env: dev ? "DEV" : "PROD",
   middleware: sveltekit(),
-  transformDatabaseUser: ({ id, email, emailVerified, role, admin }) => ({
+  transformDatabaseUser: (
+    { id, email, emailVerified, team_id, role, admin },
+  ) => ({
     userId: id,
     admin,
     email,
-    role,
     emailVerified,
+    role,
+    team_id,
   }),
 });
 

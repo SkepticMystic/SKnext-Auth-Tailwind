@@ -8,10 +8,11 @@ const anyoneAllowed = [
   "/reset-password",
   "/verify-email",
   "/unverified-email",
+  "/api/team/join",
 ];
 
 export const load: LayoutServerLoad = async ({ url, locals }) => {
-  const { user } = await locals.validateUser();
+  const { user } = await locals.auth.validateUser();
 
   const { pathname } = url;
 
