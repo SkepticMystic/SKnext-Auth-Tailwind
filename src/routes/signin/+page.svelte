@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import { set_href } from "$lib/auth/client";
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
@@ -7,7 +8,10 @@
   import type { ActionResult } from "@sveltejs/kit";
   import axios from "axios";
 
-  let email: string;
+  const emailHint = $page.url.searchParams.get("email_hint");
+  const previous = $page.url.searchParams.get("previous");
+
+  let email: string | undefined = emailHint ?? undefined;
   let password: string;
   let { err, loading, suc } = getProps();
 
@@ -33,6 +37,16 @@
 
   $: if (email || password) err = suc = "";
 </script>
+
+{#if previous === "team-invite"}
+  <p class="my-3 text-success">
+    Team invite accepted, please sign in to continue.
+  </p>
+{:else if previous === "reset-password"}
+  <p class="my-3 text-success">
+    Password reset successful, please sign in to continue.
+  </p>
+{/if}
 
 <form on:submit|preventDefault={signin}>
   <Label lbl="Email">
@@ -66,8 +80,11 @@
   </button>
 
   <ResultText {err} />
-
-  <p class="my-3">
-    <a class="link" href="/forgot-password">Forgot Password?</a>
-  </p>
 </form>
+
+<p class="my-3">
+  <a class="link" href="/forgot-password">Forgot Password?</a>
+</p>
+<p class="my-3">
+  <a class="link" href="/signup">Don't have an account? Sign up</a>
+</p>

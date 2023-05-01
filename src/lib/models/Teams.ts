@@ -1,7 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
+
+export interface Team {
+  _id: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 const modelName = "Teams";
-export const Teams = mongoose.models[modelName] ||
+export const Teams: Model<Team> = mongoose.models[modelName] ||
   mongoose.model(
     modelName,
     new mongoose.Schema(

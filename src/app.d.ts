@@ -4,6 +4,10 @@ declare global {
     interface Locals {
       auth: import("lucia-auth").AuthRequest;
     }
+
+    interface PageData {
+      user: import("lucia-auth").User;
+    }
   }
 }
 

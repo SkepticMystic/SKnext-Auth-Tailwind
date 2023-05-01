@@ -33,6 +33,7 @@
 
     {#if $page.data.user}
       <li><a class="link" href="/profile">Profile</a></li>
+      <li><a class="link" href="/team">Team</a></li>
       <li>
         <button
           class="btn btn-ghost"

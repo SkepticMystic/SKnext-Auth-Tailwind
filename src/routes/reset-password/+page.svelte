@@ -21,7 +21,7 @@
       const { data } = await axios.postForm<ActionResult>("", { newPass });
       if (data.type === "success") {
         suc = "Password changed successfully";
-        set_href("/signin");
+        set_href("/signin?previous=reset-password");
       } else err = "Something went wrong";
     } catch (error) {
       console.log(error);

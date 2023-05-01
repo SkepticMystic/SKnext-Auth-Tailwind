@@ -10,5 +10,5 @@
 <h2 class="text-xl mb-3">Members</h2>
 <Members members={data.members} />
 
-<h2 class="text-xl mb-3">Invite a member</h2>
+<h2 class="text-xl mt-7 mb-3">Invite a member</h2>
 <Invite />

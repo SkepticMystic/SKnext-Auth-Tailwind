@@ -74,8 +74,8 @@
   </button>
 
   <ResultText {err} />
-
-  <p class="my-3">
-    <a class="link" href="/forgot-password">Forgot Password?</a>
-  </p>
 </form>
+
+<p class="my-3">
+  <a class="link" href="/signin">Sign in instead</a>
+</p>
