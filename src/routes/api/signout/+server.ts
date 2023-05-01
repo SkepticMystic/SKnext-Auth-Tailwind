@@ -3,11 +3,11 @@ import { error, redirect } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const POST: RequestHandler = async ({ locals }) => {
-    const session = await locals.validate();
-    if (!session) throw error(401, "Not logged in");
+  const session = await locals.validate();
+  if (!session) throw error(401, "Not logged in");
 
-    await auth.invalidateSession(session.sessionId); // invalidate session
-    locals.setSession(null); // remove cookie
+  await auth.invalidateSession(session.sessionId); // invalidate session
+  locals.setSession(null); // remove cookie
 
-    throw redirect(302, "/signin");
-}
+  throw redirect(302, "/signin");
+};

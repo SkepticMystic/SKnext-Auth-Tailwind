@@ -7,22 +7,28 @@ import { error, type Actions } from "@sveltejs/kit";
 import { z } from "zod";
 
 export const actions: Actions = {
-    default: async ({ request, url }) => {
-        const { newPass } = await Parsers.form(request, z.object({ newPass: passwordSchema, }))
-        const { token } = Parsers.params(url, z.object({ token: z.string() }))
+  default: async ({ request, url }) => {
+    const { newPass } = await Parsers.form(
+      request,
+      z.object({ newPass: passwordSchema })
+    );
+    const { token } = Parsers.params(url, z.object({ token: z.string() }));
 
-        const check = await OTP.validateUserToken({ token, kind: 'password-reset' })
-        if (!check.ok) throw error(400, 'Invalid token')
+    const check = await OTP.validateUserToken({
+      token,
+      kind: "password-reset",
+    });
+    if (!check.ok) throw error(400, "Invalid token");
 
-        const { user, otp } = check
-        try {
-            await auth.updateKeyPassword('email', user.email, newPass)
-            await otp.remove()
+    const { user, otp } = check;
+    try {
+      await auth.updateKeyPassword("email", user.email, newPass);
+      await otp.remove();
 
-            return { ok: true }
-        } catch (err) {
-            console.log(err)
-            throw INTERNAL_SERVER_ERROR(err)
-        }
+      return { ok: true };
+    } catch (err) {
+      console.log(err);
+      throw INTERNAL_SERVER_ERROR(err);
     }
-}
+  },
+};

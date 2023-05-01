@@ -1,1 +1,3 @@
-export const set_href = (href = '/') => { window.location.href = href };
+export const set_href = (href = "/") => {
+  window.location.href = href;
+};
