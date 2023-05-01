@@ -8,9 +8,7 @@
   export let preview: number = ROW_PREVIEW_LIMIT;
   export let indexCol: boolean = false;
 
-  $: {
-    headers = headers.length ? headers : Object.keys(rows[0] ?? {});
-  }
+  $: headers = headers.length ? headers : Object.keys(rows[0] ?? {});
 </script>
 
 <div>

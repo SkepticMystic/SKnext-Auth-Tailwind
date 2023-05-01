@@ -11,20 +11,21 @@ const anyoneAllowed = [
 ];
 
 export const load: LayoutServerLoad = async ({ url, locals }) => {
+  const { user } = await locals.validateUser();
+
   const { pathname } = url;
 
   const onUnauthedRoute = anyoneAllowed.some((route) =>
     pathname.startsWith(route)
   );
-  if (onUnauthedRoute) return { user: null };
+  if (onUnauthedRoute) return { user };
 
-  const { user } = await locals.validateUser();
-
-  if (!user)
+  if (!user) {
     throw redirect(
       302,
-      `/signin?redirect=${encodeURIComponent(url.toString())}`
+      `/signin?redirect=${encodeURIComponent(pathname)}`,
     );
+  }
   const { emailVerified } = user;
 
   if (!emailVerified) {

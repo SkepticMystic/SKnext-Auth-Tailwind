@@ -8,7 +8,8 @@ declare namespace Lucia {
   type Auth = import("$lib/auth/lucia").Auth;
   type UserAttributes = {
     email: string;
-    roles: import("$lib/auth/roles").Role[];
+    role: import("$lib/auth/roles").Role;
     emailVerified: boolean;
+    admin?: boolean;
   };
 }

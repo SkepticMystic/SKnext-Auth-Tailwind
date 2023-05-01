@@ -3,7 +3,7 @@ import { OTP } from "$lib/models/OTPs";
 import { passwordSchema } from "$lib/schema/index";
 import { Parsers } from "$lib/schema/parsers";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
-import { error, redirect, type Actions } from "@sveltejs/kit";
+import { type Actions, error, redirect } from "@sveltejs/kit";
 import { z } from "zod";
 
 export const actions: Actions = {
@@ -13,7 +13,7 @@ export const actions: Actions = {
       z.object({
         email: z.string().email(),
         password: passwordSchema,
-      })
+      }),
     );
 
     try {
@@ -21,7 +21,7 @@ export const actions: Actions = {
         attributes: {
           email,
           emailVerified: false,
-          roles: ["user"],
+          role: "member",
         },
         primaryKey: {
           password,
@@ -30,7 +30,7 @@ export const actions: Actions = {
         },
       });
 
-      // If successful, we know there no existing email-verification OTPs,
+      // If successful, we know there were no existing email-verification OTPs,
       //   since we just created the user
       //   so we can create a new one without checking for existing
       const otp = await OTP.create({
@@ -48,8 +48,9 @@ export const actions: Actions = {
       if (
         message === "AUTH_DUPLICATE_KEY_ID" ||
         message === "AUTH_DUPLICATE_USER_DATA"
-      )
+      ) {
         throw error(400, "Email already in use");
+      }
 
       throw INTERNAL_SERVER_ERROR(e);
     }

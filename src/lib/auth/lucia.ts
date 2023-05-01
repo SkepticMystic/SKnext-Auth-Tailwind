@@ -11,20 +11,29 @@ export const Users: Model<Lucia.UserAttributes> =
     new mongoose.Schema(
       {
         _id: String,
-        email: String,
-        roles: [String],
+        email: {
+          type: String,
+          required: true,
+        },
+        role: {
+          type: String,
+          required: true,
+        },
         emailVerified: {
           type: Boolean,
           required: true,
           default: false,
         },
+        admin: {
+          type: Boolean,
+          default: false,
+        },
       },
-      { _id: false }
-    )
+      { _id: false },
+    ),
   );
 
-const Sessions: Model<Lucia.UserAttributes> =
-  mongoose.models["auth_session"] ||
+const Sessions: Model<Lucia.UserAttributes> = mongoose.models["auth_session"] ||
   mongoose.model(
     "auth_session",
     new mongoose.Schema(
@@ -45,12 +54,11 @@ const Sessions: Model<Lucia.UserAttributes> =
           required: true,
         },
       },
-      { _id: false }
-    )
+      { _id: false },
+    ),
   );
 
-const Keys: Model<Lucia.UserAttributes> =
-  mongoose.models["auth_key"] ||
+const Keys: Model<Lucia.UserAttributes> = mongoose.models["auth_key"] ||
   mongoose.model(
     "auth_key",
     new mongoose.Schema(
@@ -72,18 +80,19 @@ const Keys: Model<Lucia.UserAttributes> =
           default: null,
         },
       },
-      { _id: false }
-    )
+      { _id: false },
+    ),
   );
 
 export const auth = lucia({
   adapter: adapter(mongoose),
   env: dev ? "DEV" : "PROD",
   middleware: sveltekit(),
-  transformUserData: ({ id, email, emailVerified, roles }) => ({
+  transformDatabaseUser: ({ id, email, emailVerified, role, admin }) => ({
     userId: id,
+    admin,
     email,
-    roles,
+    role,
     emailVerified,
   }),
 });

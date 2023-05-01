@@ -1,7 +1,7 @@
 <script lang="ts">
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
-  import type { OK } from "$lib/interfaces";
+  import type { Result } from "$lib/interfaces";
   import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
@@ -16,7 +16,7 @@
     (loading = true), (err = suc = "");
 
     try {
-      const { data } = await axios.put<OK>("/api/user/password", {
+      const { data } = await axios.put<Result>("/api/user/password", {
         newPass,
       });
 

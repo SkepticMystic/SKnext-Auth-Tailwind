@@ -2,11 +2,11 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import ResultText from "$lib/components/resultText.svelte";
-  import type { OK } from "$lib/interfaces";
   import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
   import ChangePassword from "./changePassword.svelte";
+  import type { Result } from "$lib/interfaces";
 
   let { err, loading } = getProps();
 
@@ -16,7 +16,7 @@
     (loading = true), (err = "");
 
     try {
-      const { data } = await axios.delete<OK>("/api/user");
+      const { data } = await axios.delete<Result>("/api/user");
       if (data.ok) await goto("/signin");
     } catch (error) {
       console.log(error);

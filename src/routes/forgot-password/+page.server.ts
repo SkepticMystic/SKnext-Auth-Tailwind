@@ -1,4 +1,4 @@
-import { getUserByEmail } from "$lib/auth/server";
+import { Users } from "$lib/auth/lucia";
 import { OTP } from "$lib/models/OTPs";
 import { Parsers } from "$lib/schema/parsers";
 import type { Actions } from "@sveltejs/kit";
@@ -8,10 +8,10 @@ export const actions: Actions = {
   default: async ({ request, url }) => {
     const { email } = await Parsers.form(
       request,
-      z.object({ email: z.string().email() })
+      z.object({ email: z.string().email() }),
     );
 
-    const user = await getUserByEmail(email);
+    const user = await Users.findOne({ email }).lean();
 
     // Don't reveal whether the email exists or not
     if (!user) return { ok: true };

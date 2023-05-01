@@ -18,7 +18,5 @@
     {/if}
   </label>
 
-  <div>
-    <slot />
-  </div>
+  <slot />
 </div>

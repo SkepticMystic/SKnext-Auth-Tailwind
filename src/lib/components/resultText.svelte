@@ -4,13 +4,9 @@
 </script>
 
 {#if err}
-  <div class="my-4">
-    <p class="text-error text-sm">{err}</p>
-  </div>
+  <p class="text-error text-sm">{err}</p>
 {/if}
 
 {#if suc}
-  <div class="my-4">
-    <p class="text-success text-sm">{suc}</p>
-  </div>
+  <p class="text-success text-sm">{suc}</p>
 {/if}

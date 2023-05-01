@@ -13,13 +13,12 @@ export const GET: RequestHandler = async ({ url }) => {
   });
   if (!check.ok) throw error(400, "Invalid token");
 
-  const { user, otp } = check;
+  const { user, otp } = check.data;
 
-  await auth.updateUserAttributes(user.userId, {
-    emailVerified: true,
-  });
-
-  await otp.remove();
+  await Promise.all([
+    auth.updateUserAttributes(user.userId, { emailVerified: true }),
+    otp.deleteOne(),
+  ]);
 
   throw redirect(302, "/");
 };
