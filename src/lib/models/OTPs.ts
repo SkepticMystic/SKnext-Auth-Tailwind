@@ -230,6 +230,58 @@ const validateUserToken = async (input: Pick<OTP, "token" | "kind">) => {
   return suc({ user, otp });
 };
 
+const handleLinks = {
+  "email-verification": async (input: { idValue: string; url: URL }) => {
+    const { url, idValue } = input;
+
+    // We know there were no existing email-verification OTPs,
+    //   since we just created the user
+    //   so we can create a new one without checking for existing
+    const otp = await OTP.create({
+      identifier: `_id:${idValue}`,
+      kind: "email-verification",
+    });
+
+    const href =
+      `${url.origin}/api/verify-email?token=${otp.token}&_id=${idValue}`;
+    console.log(href);
+    console.log("TODO: sendEmail");
+  },
+
+  "password-reset": async (input: { idValue: string; url: URL }) => {
+    const { url, idValue } = input;
+
+    const otp = await OTP.getOrCreate({
+      identifier: `_id:${idValue}`,
+      kind: "password-reset",
+    });
+
+    const href = `${url.origin}/reset-password?token=${otp.token}`;
+    console.log(href);
+    console.log("TODO: sendEmail");
+  },
+
+  "team-invite": async (
+    input: { idValue: string; url: URL; data: TeamInviteOTP["data"] },
+  ) => {
+    const { url, idValue, data } = input;
+
+    const otp = await OTP.create<TeamInviteOTP>({
+      identifier: `email:${idValue}`,
+      kind: "team-invite",
+      data,
+    });
+
+    const href =
+      `${url.origin}/api/team/join?token=${otp.token}&team_id=${data.team_id}`;
+    console.log(href);
+    console.log("TODO: sendEmail");
+  },
+} satisfies Record<
+  OTPKind,
+  (input: any) => Promise<void>
+>;
+
 export const OTP = {
   isExpired,
   create,
@@ -237,4 +289,5 @@ export const OTP = {
   validateToken,
   getTokenUser,
   validateUserToken,
+  handleLinks,
 };

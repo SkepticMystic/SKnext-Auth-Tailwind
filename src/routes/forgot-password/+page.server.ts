@@ -19,15 +19,10 @@ export const actions: Actions = {
       return { ok: true };
     }
 
-    const { _id } = user;
-    const otp = await OTP.getOrCreate({
-      identifier: `_id:${_id.toString()}`,
-      kind: "password-reset",
+    await OTP.handleLinks["password-reset"]({
+      url,
+      idValue: user._id.toString(),
     });
-
-    const href = `${url.origin}/reset-password?token=${otp.token}`;
-    console.log(href);
-    console.log("TODO: sendEmail");
 
     return { ok: true };
   },

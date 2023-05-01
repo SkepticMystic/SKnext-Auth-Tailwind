@@ -68,17 +68,10 @@ export const actions: Actions = {
       });
 
       if (!attributes.emailVerified) {
-        // If successful, we know there were no existing email-verification OTPs,
-        //   since we just created the user
-        //   so we can create a new one without checking for existing
-        const otp = await OTP.create({
-          identifier: `_id:${userId}`,
-          kind: "email-verification",
+        await OTP.handleLinks["email-verification"]({
+          url,
+          idValue: userId,
         });
-        const href =
-          `${url.origin}/api/verify-email?token=${otp.token}&_id=${userId}`;
-        console.log(href);
-        console.log("TODO: sendEmail");
       }
 
       const session = await auth.createSession(userId);

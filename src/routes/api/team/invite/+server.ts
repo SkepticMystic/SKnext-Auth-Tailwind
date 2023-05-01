@@ -28,20 +28,15 @@ export const POST: RequestHandler = async ({ locals, request, url }) => {
     throw error(403, "You cannot invite someone with a higher role than you");
   }
 
-  const otp = await OTP.create<TeamInviteOTP>({
-    identifier: `email:${invite.email}`,
-    kind: "team-invite",
+  await OTP.handleLinks["team-invite"]({
+    url,
+    idValue: invite.email,
     data: {
-      createdBy: user.userId,
       role: invite.role,
       team_id: user.team_id,
+      createdBy: user.userId,
     },
   });
-
-  const href =
-    `${url.origin}/api/team/join?token=${otp.token}&team_id=${user.team_id}`;
-  console.log(href);
-  console.log("TODO: sendEmail");
 
   return json({ ok: true });
 };

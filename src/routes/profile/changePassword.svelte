@@ -37,7 +37,10 @@
 
 <h2 class="text-xl">Change Password</h2>
 
-<form on:submit|preventDefault={changePassword}>
+<form
+  class="flex flex-wrap gap-3 items-end"
+  on:submit|preventDefault={changePassword}
+>
   <Label lbl="New Password">
     <input
       class="input"
@@ -59,14 +62,15 @@
     />
   </Label>
 
-  <button
-    class="my-4 btn btn-primary"
-    class:loading
-    type="submit"
-    disabled={!newPass || !confirmPass || loading}
-  >
-    Change Password
-  </button>
-
-  <ResultText {err} {suc} />
+  <div class="flex flex-wrap gap-3 items-center">
+    <button
+      class="btn btn-primary"
+      class:loading
+      type="submit"
+      disabled={!newPass || !confirmPass || loading}
+    >
+      Change Password
+    </button>
+    <ResultText {err} {suc} />
+  </div>
 </form>

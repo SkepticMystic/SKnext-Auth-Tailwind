@@ -12,14 +12,18 @@
 
   export let member: OID<Pick<User, "email" | "role">>;
 
-  let { loading, suc, err } = getProps();
+  const memberIsUser = $page.data.user.userId === member._id.toString();
+
+  let { loadObj, suc, err } = getProps();
+
+  let newRole = member.role;
 
   const removeFromTeam = async () => {
     if (
       !confirm(`Are you sure you want to remove ${member.email} from the team?`)
     )
       return;
-    (loading = true), (err = suc = "");
+    (loadObj["remove"] = true), (err = suc = "");
 
     try {
       const { data } = await axios.delete<Result>(
@@ -35,17 +39,15 @@
       alert(getHTTPErrorMsg(error));
     }
 
-    loading = false;
+    loadObj = {};
   };
 
-  const changeRole = async (e: Event) => {
+  const changeRole = async () => {
     if (!confirm(`Are you sure you want to change ${member.email}'s role?`)) {
-      (e.target as HTMLSelectElement).value = member.role;
+      newRole = member.role;
       return;
     }
-    (loading = true), (err = suc = "");
-
-    const newRole = (e.target as HTMLSelectElement).value as Role;
+    (loadObj["changeRole"] = true), (err = suc = "");
 
     try {
       const { data } = await axios.put<Result>(
@@ -62,8 +64,10 @@
       alert(getHTTPErrorMsg(error));
     }
 
-    loading = false;
+    loadObj = {};
   };
+
+  $: anyLoading = Object.keys(loadObj).length > 0;
 </script>
 
 <div
@@ -72,20 +76,29 @@
   <span class="text-sm">{member.email}</span>
   <span class="text-sm">{member.role}</span>
 
-  <div>
+  <div class="flex gap-2 items-end">
     <Label lbl="Change Role">
-      <select class="select" value={member.role} on:change={changeRole}>
+      <select class="select" bind:value={newRole}>
         {#each ROLES as role}
           <option value={role}>{role}</option>
         {/each}
       </select>
     </Label>
+
+    <button
+      class="btn btn-secondary"
+      class:loading={loadObj["changeRole"]}
+      disabled={memberIsUser || anyLoading || newRole === member.role}
+      on:click={changeRole}
+    >
+      Change
+    </button>
   </div>
 
   <button
     class="btn btn-error"
-    class:loading
-    disabled={loading || $page.data.user.userId === member._id.toString()}
+    class:loading={loadObj["remove"]}
+    disabled={memberIsUser || anyLoading}
     on:click={removeFromTeam}
   >
     Remove
