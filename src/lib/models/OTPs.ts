@@ -152,13 +152,13 @@ const validateToken = async <T extends OTP = OTP>(
 
   if (!otp) {
     console.log("OTP not found");
-    return err();
+    return err("otp_not_found");
   }
 
   if (isExpired(otp)) {
     console.log("OTP expired");
     await otp.deleteOne();
-    return err();
+    return err("otp_expired");
   }
 
   return suc(otp);
@@ -176,7 +176,7 @@ const validateToken = async <T extends OTP = OTP>(
  *
  * Use this to check if a user exists to decide how to handle their OTP.
  */
-const getTokenUser = async <T extends OTP = OTP>(otp: T) => {
+const getTokenUser = async (otp: Pick<OTP, "identifier">) => {
   // Parse the identifier
   const [idField, ...rest1] = otp.identifier.split(":") as [
     IdentifierField,
@@ -216,14 +216,14 @@ const getTokenUser = async <T extends OTP = OTP>(otp: T) => {
  */
 const validateUserToken = async (input: Pick<OTP, "token" | "kind">) => {
   const validate = await validateToken(input);
-  if (!validate.ok) return err();
+  if (!validate.ok) return err(validate.error);
 
   const otp = validate.data;
 
   const userCheck = await getTokenUser(otp);
   if (!userCheck.ok) {
     await otp.deleteOne();
-    return err();
+    return err(userCheck.error);
   }
 
   const { user } = userCheck.data;

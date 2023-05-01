@@ -14,7 +14,10 @@ export const actions: Actions = {
     const user = await Users.findOne({ email }).lean();
 
     // Don't reveal whether the email exists or not
-    if (!user) return { ok: true };
+    if (!user) {
+      console.log("User not found");
+      return { ok: true };
+    }
 
     const { _id } = user;
     const otp = await OTP.getOrCreate({

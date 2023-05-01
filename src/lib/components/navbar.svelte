@@ -25,7 +25,7 @@
     {/if}
   </ul>
   <ul class="navbar-end flex flex-row gap-4">
-    <select class="select select-sm text-xs" data-choose-theme>
+    <select class="select text-xs" data-choose-theme>
       {#each ["light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "synthwave", "retro", "cyberpunk", "valentine", "halloween", "garden", "forest", "aqua", "lofi", "pastel", "fantasy", "wireframe", "black", "luxury", "dracula", "cmyk", "autumn", "business", "acid", "lemonade", "night", "coffee", "winter"] as theme}
         <option value={theme}>{theme}</option>
       {/each}
@@ -35,7 +35,7 @@
       <li><a class="link" href="/profile">Profile</a></li>
       <li>
         <button
-          class="btn btn-sm btn-ghost"
+          class="btn btn-ghost"
           on:click={async () => {
             await axios.post("/api/signout");
             await invalidateAll();

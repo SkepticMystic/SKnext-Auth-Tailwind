@@ -8,7 +8,7 @@
 </script>
 
 <!-- svelte-ignore a11y-label-has-associated-control -->
-<div class="flex flex-col gap-1">
+<div class="flex flex-col">
   <label class="{cls} label font-semibold">
     <span class="label-text text-base">{lbl}</span>
     {#if alt !== null}
@@ -18,5 +18,7 @@
     {/if}
   </label>
 
-  <slot />
+  <div>
+    <slot />
+  </div>
 </div>

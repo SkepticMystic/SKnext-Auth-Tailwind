@@ -40,7 +40,7 @@
 <form on:submit|preventDefault={changePassword}>
   <Label lbl="New Password">
     <input
-      class="input input-sm"
+      class="input"
       class:input-error={err}
       class:input-success={suc}
       type="password"
@@ -50,7 +50,7 @@
   </Label>
   <Label lbl="Confirm Password">
     <input
-      class="input input-sm"
+      class="input"
       class:input-error={err}
       class:input-success={suc}
       type="password"

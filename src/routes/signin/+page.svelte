@@ -37,7 +37,7 @@
 <form on:submit|preventDefault={signin}>
   <Label lbl="Email">
     <input
-      class="input input-sm"
+      class="input"
       class:input-error={err}
       class:input-success={suc}
       type="email"
@@ -47,7 +47,7 @@
   </Label>
   <Label lbl="Password">
     <input
-      class="input input-sm"
+      class="input"
       class:input-error={err}
       class:input-success={suc}
       type="password"

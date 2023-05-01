@@ -37,7 +37,8 @@ export const actions: Actions = {
         identifier: `_id:${userId}`,
         kind: "email-verification",
       });
-      const href = `${url.origin}/api/verify-email?token=${otp.token}`;
+      const href =
+        `${url.origin}/api/verify-email?token=${otp.token}&_id=${userId}`;
       console.log(href);
       console.log("TODO: sendEmail");
 

@@ -57,7 +57,7 @@
 <div>
   <div class="flex">
     <button
-      class="btn btn-secondary btn-square btn-sm border-0 rounded-none"
+      class="btn btn-secondary btn-square border-0 rounded-none"
       class:loading={loadObj[-2]}
       disabled={anyLoading || skip === 0}
       title="First"
@@ -66,7 +66,7 @@
       {#if !loadObj[-2]} ≪ {/if}
     </button>
     <button
-      class="btn btn-secondary btn-square btn-sm border-0 rounded-none"
+      class="btn btn-secondary btn-square border-0 rounded-none"
       class:loading={loadObj[-1]}
       disabled={anyLoading || skip === 0}
       title="Previous"
@@ -76,7 +76,7 @@
     </button>
 
     <button
-      class="btn btn-ghost btn-sm border-0 rounded-none font-bold"
+      class="btn btn-ghost border-0 rounded-none font-bold"
       class:loading={loadObj[0]}
       disabled={anyLoading}
       title="Refresh"
@@ -88,7 +88,7 @@
     </button>
 
     <button
-      class="btn btn-secondary btn-square btn-sm border-0 rounded-none"
+      class="btn btn-secondary btn-square border-0 rounded-none"
       class:loading={loadObj[1]}
       title="Next"
       disabled={anyLoading ||
@@ -99,7 +99,7 @@
     </button>
     {#if total}
       <button
-        class="btn btn-secondary btn-square btn-sm border-0 rounded-none"
+        class="btn btn-secondary btn-square border-0 rounded-none"
         class:loading={loadObj[2]}
         disabled={anyLoading || currPage === totalPages}
         title="Last"
@@ -110,7 +110,7 @@
     {/if}
     <div class="mx-2" />
     <select
-      class="select select-sm"
+      class="select"
       bind:value={currLimit}
       on:change={async () => {
         skip = 0;
