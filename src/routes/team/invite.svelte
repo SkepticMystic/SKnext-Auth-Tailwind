@@ -31,12 +31,12 @@
 </script>
 
 <form class="flex flex-col gap-3">
-  <div class="flex flex-wrap gap-3 items-center">
+  <div class="flex flex-wrap gap-3 items-end">
     <Label lbl="Email">
       <input
         type="email"
-        autocomplete="email"
         class="input"
+        autocomplete="email"
         bind:value={email}
       />
     </Label>
@@ -48,18 +48,18 @@
         {/each}
       </select>
     </Label>
-  </div>
 
-  <div class="flex flex-wrap gap-3 items-center">
-    <button
-      class="btn btn-secondary"
-      class:loading
-      disabled={!email || !role || loading}
-      on:click={inviteToTeam}
-    >
-      Invite to Team
-    </button>
+    <div class="flex flex-wrap gap-3 items-center">
+      <button
+        class="btn btn-secondary"
+        class:loading
+        disabled={!email || !role || loading}
+        on:click={inviteToTeam}
+      >
+        Invite to Team
+      </button>
 
-    <ResultText {err} {suc} />
+      <ResultText {err} {suc} />
+    </div>
   </div>
 </form>

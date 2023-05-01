@@ -1,5 +1,5 @@
 import type { Err, Suc } from "$lib/interfaces";
-import type { ObjectId } from "mongoose";
+import type { ObjectId } from "mongodb";
 
 export const getProps = <LoadKey extends string | number = string | number>(): {
   err: string;

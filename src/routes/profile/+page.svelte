@@ -7,7 +7,6 @@
   import axios from "axios";
   import ChangePassword from "./changePassword.svelte";
   import type { Result } from "$lib/interfaces";
-  import Team from "./team.svelte";
 
   let { err, loading } = getProps();
 
@@ -33,10 +32,6 @@
 
 {#if $page.data.user}
   <p class="text-lg">Welcome {$page.data.user.email.split("@")[0]}</p>
-
-  <div class="my-7">
-    <Team />
-  </div>
 
   <div class="my-5">
     <ChangePassword />
