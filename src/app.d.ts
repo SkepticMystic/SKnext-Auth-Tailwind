@@ -6,7 +6,7 @@ declare global {
     }
 
     interface PageData {
-      user: import("lucia-auth").User;
+      user: import("lucia-auth").User | null;
     }
   }
 }
