@@ -15,6 +15,13 @@ export const PUT: RequestHandler = async ({ locals, request, params }) => {
     ),
   ]);
 
+  if (newRole === "owner") {
+    throw error(
+      400,
+      "You cannot change a member's role to owner. Use the transfer ownership button instead.",
+    );
+  }
+
   const { member_id } = params;
 
   if (user.userId === member_id) {
@@ -39,7 +46,7 @@ export const PUT: RequestHandler = async ({ locals, request, params }) => {
   if (RoleHierarchy[user.role] < RoleHierarchy[member.role]) {
     throw error(
       403,
-      "You cannot change a member's role to a higher role than your own.",
+      "You cannot change the role of a member with a higher role than your own.",
     );
   }
 
