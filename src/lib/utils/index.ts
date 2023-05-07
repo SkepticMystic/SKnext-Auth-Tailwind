@@ -1,4 +1,4 @@
-import type { Err, Suc } from "$lib/interfaces";
+import type { Err, SID, Suc } from "$lib/interfaces";
 import type { ObjectId } from "mongodb";
 
 export const getProps = <LoadKey extends string | number = string | number>(): {
@@ -26,9 +26,11 @@ export const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 export const trimISODate = (date: Date | undefined) =>
   date ? date.toISOString().slice(0, 10) : "";
 
-export const _idToString = <T extends { _id: string | ObjectId }>(doc: T) => {
+export const _idToString = <T extends { _id: string | ObjectId | unknown }>(
+  doc: T,
+) => {
   if (doc?._id) doc._id = doc._id.toString();
-  return doc;
+  return doc as SID<T>;
 };
 
 export const err = <E = undefined>(e?: E): Err<E> => {
