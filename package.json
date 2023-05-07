@@ -35,6 +35,7 @@
     "axios": "^1.4.0",
     "lucia-auth": "^1.5.0",
     "mongoose": "^7.1.0",
+    "nanoid": "^4.0.2",
     "theme-change": "^2.5.0",
     "zod": "^3.21.4"
   }

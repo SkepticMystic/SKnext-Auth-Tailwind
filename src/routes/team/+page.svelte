@@ -7,8 +7,8 @@
 
 <h1 class="text-2xl mb-7">Team</h1>
 
-<h2 class="text-xl mb-3">Members</h2>
-<Members members={data.members} />
-
-<h2 class="text-xl mt-7 mb-3">Invite a member</h2>
+<h2 class="text-xl mt-7 mb-3">Invite a new member</h2>
 <Invite />
+
+<h2 class="text-xl mt-7 mb-3">Team Members</h2>
+<Members members={data.members} />
