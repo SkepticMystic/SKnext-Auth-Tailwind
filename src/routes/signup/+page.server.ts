@@ -48,7 +48,7 @@ export const actions: Actions = {
       attributes = {
         emailVerified: false,
         role: "owner",
-        team_id: team._id,
+        team_id: team._id.toString(),
       };
     }
     console.log({ email, password, attributes });

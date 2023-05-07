@@ -1,7 +1,6 @@
 import mongoose, { Model } from "mongoose";
 
 export interface Team {
-  _id: string;
   createdAt: Date;
   updatedAt: Date;
 }
