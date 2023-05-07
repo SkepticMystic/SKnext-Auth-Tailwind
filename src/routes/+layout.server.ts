@@ -34,5 +34,9 @@ export const load: LayoutServerLoad = async ({ url, locals }) => {
     else throw redirect(302, "/unverified-email");
   }
 
+  if (pathname.startsWith("/admin") && !user.admin) {
+    throw redirect(302, "/");
+  }
+
   return { user };
 };

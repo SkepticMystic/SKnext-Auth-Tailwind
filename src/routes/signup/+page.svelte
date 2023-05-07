@@ -64,16 +64,18 @@
     />
   </Label>
 
-  <button
-    class="my-4 btn btn-primary"
-    class:loading
-    type="submit"
-    disabled={!email || !password || loading}
-  >
-    Signup
-  </button>
+  <div class="flex flex-wrap gap-3 items-center">
+    <button
+      class="my-4 btn btn-primary"
+      class:loading
+      type="submit"
+      disabled={!email || !password || loading}
+    >
+      Signup
+    </button>
 
-  <ResultText {err} />
+    <ResultText {err} />
+  </div>
 </form>
 
 <p class="my-3">

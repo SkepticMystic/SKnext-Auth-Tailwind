@@ -7,13 +7,18 @@
 
   onMount(() => themeChange(false));
 
-  const routes: {
+  $: ({ user } = $page.data);
+
+  interface Route {
     side: "center" | "right";
     label: string;
     href: string;
     /** Only show if user is authenticated */
     authed: boolean;
-  }[] = [
+    admin?: boolean;
+  }
+
+  const routes: Route[] = [
     {
       side: "center",
       label: "Tasks",
@@ -40,6 +45,13 @@
     },
     {
       side: "right",
+      label: "Admin",
+      href: "/admin",
+      authed: true,
+      admin: true,
+    },
+    {
+      side: "right",
       label: "Sign in",
       href: "/signin",
       authed: false,
@@ -51,6 +63,18 @@
       authed: false,
     },
   ];
+
+  const showRoute = (
+    user: App.PageData["user"],
+    route: Route,
+    side?: Route["side"]
+  ) => {
+    if (side && route.side !== side) return false;
+    if (route.authed !== !!user) return false;
+    if (route.admin && !user?.admin) return false;
+
+    return true;
+  };
 </script>
 
 <nav class="navbar bg-base-100 px-5">
@@ -60,8 +84,9 @@
 
   <div class="navbar-center hidden lg:flex">
     <ul class="flex gap-5 items-center">
-      {#each routes as { side, authed, href, label }}
-        {#if side === "center" && authed === !!$page.data.user}
+      {#each routes as r}
+        {#if showRoute(user, r, "center")}
+          {@const { href, label } = r}
           <li>
             <a class="link" {href}>{label}</a>
           </li>
@@ -84,15 +109,16 @@
         class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-40"
       >
         <!-- Shows all routes, not just those for a given `side` -->
-        {#each routes as { authed, href, label }}
-          {#if authed === !!$page.data.user}
+        {#each routes as r}
+          {#if showRoute(user, r)}
+            {@const { href, label } = r}
             <li>
               <a class="link" {href}>{label}</a>
             </li>
           {/if}
         {/each}
 
-        {#if $page.data.user}
+        {#if user}
           <li>
             <button class="link" on:click={signout}> Sign out </button>
           </li>
@@ -112,15 +138,16 @@
         {/each}
       </select>
 
-      {#each routes as { side, authed, href, label }}
-        {#if side === "right" && authed === !!$page.data.user}
+      {#each routes as r}
+        {#if showRoute(user, r, "right")}
+          {@const { href, label } = r}
           <li>
             <a class="link" {href}>{label}</a>
           </li>
         {/if}
       {/each}
 
-      {#if $page.data.user}
+      {#if user}
         <li>
           <button class="btn btn-sm btn-ghost" on:click={signout}>
             Sign out
