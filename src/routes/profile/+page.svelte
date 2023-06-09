@@ -7,6 +7,7 @@
   import axios from "axios";
   import ChangePassword from "./changePassword.svelte";
   import type { Result } from "$lib/interfaces";
+  import Loading from "$lib/components/Loading.svelte";
 
   let { err, loading } = getProps();
 
@@ -38,12 +39,8 @@
   </div>
 
   <div class="my-5">
-    <button
-      class="btn btn-error"
-      class:loading
-      disabled={loading}
-      on:click={deleteUser}
-    >
+    <button class="btn btn-error" disabled={loading} on:click={deleteUser}>
+      <Loading {loading} />
       Delete Account
     </button>
   </div>

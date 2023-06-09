@@ -97,7 +97,7 @@
 
   <!-- Mobile menu -->
   <div class="navbar-end flex lg:hidden">
-    <div class="dropdown dropdown-left">
+    <div class="dropdown dropdown-left z-50">
       <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
       <!-- svelte-ignore a11y-label-has-associated-control -->
       <label tabindex="0" class="btn btn-ghost">

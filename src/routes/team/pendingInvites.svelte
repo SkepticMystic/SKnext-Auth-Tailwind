@@ -1,5 +1,6 @@
 <script lang="ts">
   import { invalidateAll } from "$app/navigation";
+  import Loading from "$lib/components/Loading.svelte";
   import type { Result, SID } from "$lib/interfaces";
   import type { TeamInviteOTP } from "$lib/models/OTPs";
   import { addToast } from "$lib/stores/toast";
@@ -48,10 +49,10 @@
 
       <button
         class="btn btn-error"
-        class:loading={loadObj["delete" + _id]}
         disabled={loadObj["delete" + _id]}
         on:click={() => deletePendingInvite(_id)}
       >
+        <Loading loading={loadObj["delete" + _id]} />
         Delete
       </button>
     </div>

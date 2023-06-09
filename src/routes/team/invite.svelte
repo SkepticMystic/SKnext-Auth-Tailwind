@@ -1,6 +1,7 @@
 <script lang="ts">
   import { invalidateAll } from "$app/navigation";
   import { ROLES, type Role } from "$lib/auth/roles";
+  import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
   import { addToast } from "$lib/stores/toast";
@@ -60,10 +61,10 @@
     <div class="flex flex-wrap gap-3 items-center">
       <button
         class="btn btn-secondary"
-        class:loading
         disabled={!email || !role || loading}
         on:click={inviteToTeam}
       >
+        <Loading {loading} />
         Invite to Team
       </button>
 

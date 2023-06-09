@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { set_href } from "$lib/auth/client";
+  import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
   import { getProps } from "$lib/utils";
@@ -73,10 +74,10 @@
   <div class="flex flex-wrap gap-3 items-center">
     <button
       class="my-4 btn btn-primary"
-      class:loading
       type="submit"
       disabled={!email || !password || loading}
     >
+      <Loading {loading} />
       Sign in
     </button>
 

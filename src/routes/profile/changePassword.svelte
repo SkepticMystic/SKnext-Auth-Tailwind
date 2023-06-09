@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
   import type { Result } from "$lib/interfaces";
@@ -65,10 +66,10 @@
   <div class="flex flex-wrap gap-3 items-center">
     <button
       class="btn btn-primary"
-      class:loading
       type="submit"
       disabled={!newPass || !confirmPass || loading}
     >
+      <Loading {loading} />
       Change Password
     </button>
     <ResultText {err} {suc} />

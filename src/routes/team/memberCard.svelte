@@ -2,6 +2,7 @@
   import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
   import { ROLES } from "$lib/auth/roles";
+  import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
   import type { Result, SID } from "$lib/interfaces";
   import { addToast } from "$lib/stores/toast";
@@ -13,7 +14,7 @@
   export let member: SID<Pick<User, "email" | "role">>;
 
   const { user } = $page.data;
-  const memberIsUser = user.userId === member._id;
+  const memberIsUser = user?.userId === member._id;
 
   let { loadObj } = getProps();
 
@@ -140,35 +141,26 @@
 
     <button
       class="btn btn-secondary"
-      class:loading={loadObj["changeRole"]}
       disabled={newRole === member.role || memberIsUser || anyLoading}
       on:click={changeRole}
     >
-      {#if !loadObj["changeRole"]}
-        Change
-      {/if}
+      <Loading loading={loadObj["changeRole"]}>Change</Loading>
     </button>
   </div>
 
   <button
     class="btn btn-warning"
-    class:loading={loadObj["transferOwnership"]}
-    disabled={user.role !== "owner" || memberIsUser || anyLoading}
+    disabled={user?.role !== "owner" || memberIsUser || anyLoading}
     on:click={transferOwnership}
   >
-    {#if !loadObj["transferOwnership"]}
-      Transfer Ownership
-    {/if}
+    <Loading loading={loadObj["transferOwnership"]}>Transfer Ownership</Loading>
   </button>
 
   <button
     class="btn btn-error"
-    class:loading={loadObj["remove"]}
     disabled={memberIsUser || anyLoading}
     on:click={removeFromTeam}
   >
-    {#if !loadObj["remove"]}
-      Remove
-    {/if}
+    <Loading loading={loadObj["remove"]}>Remove</Loading>
   </button>
 </div>

@@ -19,7 +19,7 @@
       </div>
     {/if}
 
-    <table class="table table-zebra">
+    <table class="table">
       <thead>
         <tr>
           {#if indexCol} <th>Index</th> {/if}
@@ -30,7 +30,7 @@
       </thead>
       <tbody>
         {#each rows.slice(0, preview || rows.length) ?? [] as row, i}
-          <tr>
+          <tr class="hover:bg-base-200">
             {#if indexCol} <td>{i + 1}</td> {/if}
             {#each headers as header}
               <td>{row[header]}</td>

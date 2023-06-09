@@ -7,6 +7,7 @@
   import { getProps } from "$lib/utils";
   import type { ActionResult } from "@sveltejs/kit";
   import { page } from "$app/stores";
+  import Loading from "$lib/components/Loading.svelte";
 
   const teamToken = $page.url.searchParams.get("team_token");
   const emailHint = $page.url.searchParams.get("email_hint");
@@ -67,10 +68,10 @@
   <div class="flex flex-wrap gap-3 items-center">
     <button
       class="my-4 btn btn-primary"
-      class:loading
       type="submit"
       disabled={!email || !password || loading}
     >
+      <Loading {loading} />
       Signup
     </button>
 

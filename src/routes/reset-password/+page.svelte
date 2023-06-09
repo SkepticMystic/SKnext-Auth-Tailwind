@@ -1,5 +1,6 @@
 <script lang="ts">
   import { set_href } from "$lib/auth/client";
+  import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
   import { getProps } from "$lib/utils";
@@ -54,10 +55,10 @@
 
   <button
     class="my-4 btn btn-primary"
-    class:loading
     type="submit"
     disabled={!newPass || !confirmPass || loading}
   >
+    <Loading {loading} />
     Reset Password
   </button>
 

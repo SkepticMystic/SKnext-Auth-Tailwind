@@ -5,6 +5,7 @@
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import { onMount } from "svelte";
   import ResultText from "./resultText.svelte";
+  import Loading from "./Loading.svelte";
 
   export let data: any[];
   export let fetchOnMount: boolean = true;
@@ -58,54 +59,49 @@
   <div class="flex">
     <button
       class="btn btn-secondary btn-square border-0 rounded-none"
-      class:loading={loadObj[-2]}
       disabled={anyLoading || skip === 0}
       title="First"
       on:click={async () => await getMore(-2)}
     >
-      {#if !loadObj[-2]} ≪ {/if}
+      <Loading loading={loadObj[-2]}>≪</Loading>
     </button>
     <button
       class="btn btn-secondary btn-square border-0 rounded-none"
-      class:loading={loadObj[-1]}
       disabled={anyLoading || skip === 0}
       title="Previous"
       on:click={async () => await getMore(-1)}
     >
-      {#if !loadObj[-1]} ← {/if}
+      <Loading loading={loadObj[-1]}>←</Loading>
     </button>
 
     <button
       class="btn btn-ghost border-0 rounded-none font-bold"
-      class:loading={loadObj[0]}
       disabled={anyLoading}
       title="Refresh"
       on:click={async () => await getMore(0)}
     >
-      {#if !loadObj[0]}
+      <Loading loading={loadObj[0]}>
         {currPage}{total ? ` / ${totalPages}` : ""}
-      {/if}
+      </Loading>
     </button>
 
     <button
       class="btn btn-secondary btn-square border-0 rounded-none"
-      class:loading={loadObj[1]}
       title="Next"
       disabled={anyLoading ||
         (total ? currPage === totalPages : data.length < currLimit)}
       on:click={async () => await getMore(1)}
     >
-      {#if !loadObj[1]} → {/if}
+      <Loading loading={loadObj[1]}>→</Loading>
     </button>
     {#if total}
       <button
         class="btn btn-secondary btn-square border-0 rounded-none"
-        class:loading={loadObj[2]}
         disabled={anyLoading || currPage === totalPages}
         title="Last"
         on:click={async () => await getMore(2)}
       >
-        {#if !loadObj[2]} ≫ {/if}
+        <Loading loading={loadObj[2]}>≫</Loading>
       </button>
     {/if}
     <div class="mx-2" />
