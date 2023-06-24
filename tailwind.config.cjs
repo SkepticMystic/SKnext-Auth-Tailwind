@@ -9,4 +9,9 @@ module.exports = {
     require("@tailwindcss/typography"),
     require("daisyui"),
   ],
+
+  daisyui: {
+    // TODO: List specific themes here for prod
+    themes: true,
+  },
 };

@@ -1,9 +1,8 @@
 <script lang="ts">
   import { ROW_PREVIEW_LIMIT } from "$lib/const/index";
-  import type { Primitive } from "$lib/interfaces";
   import RowCount from "./rowCount.svelte";
 
-  export let rows: { [col: string]: Primitive | Primitive[] }[];
+  export let rows: Record<string, any>[];
   export let headers: string[] = [];
   export let preview: number = ROW_PREVIEW_LIMIT;
   export let indexCol: boolean = false;
