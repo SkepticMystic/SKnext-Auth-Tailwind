@@ -12,14 +12,16 @@ const anyoneAllowed = [
 ];
 
 export const load: LayoutServerLoad = async ({ url, locals }) => {
-  const { user } = await locals.auth.validateUser();
+  const session = await locals.auth.validate();
+  const user = session?.user ?? null;
 
   const { pathname } = url;
-
   const onUnauthedRoute = anyoneAllowed.some((route) =>
     pathname.startsWith(route)
   );
-  if (onUnauthedRoute) return { user };
+  if (onUnauthedRoute) {
+    return { user };
+  }
 
   if (!user) {
     throw redirect(

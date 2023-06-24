@@ -1,9 +1,19 @@
 import { error, redirect } from "@sveltejs/kit";
-import type { User } from "lucia-auth";
-import { type Role, RoleHierarchy } from "./roles";
+import { type Role, ROLES } from "./roles";
 
-export const hasAtleastRole = (user: User, role: Role) =>
-  RoleHierarchy[user.role] >= RoleHierarchy[role];
+export const hasAtleastRole = (
+  user: Lucia.DatabaseUserAttributes,
+  role: Role,
+) => {
+  const hasRoleIndex = ROLES.indexOf(user.role);
+  const atleastRoleIndex = ROLES.indexOf(role);
+
+  if (hasRoleIndex === -1 || atleastRoleIndex === -1) {
+    throw new Error(`Role ${role} not found in ROLES`);
+  }
+
+  return hasRoleIndex >= atleastRoleIndex;
+};
 
 export interface GetUserOptions {
   /** Must have atleast this orgRole */
@@ -30,9 +40,9 @@ export const getUser = async (locals: App.Locals, options?: GetUserOptions) => {
     options ?? {},
   );
 
-  const { user } = await locals.auth.validateUser();
-
-  if (!user) throw redirect(302, `/signin?redirect=${url?.pathname ?? "/"}`);
+  const session = await locals.auth.validate();
+  if (!session) throw redirect(302, `/signin?redirect=${url?.pathname ?? "/"}`);
+  const { user } = session;
 
   if (admin && !user.admin) throw error(403, "Forbidden");
 

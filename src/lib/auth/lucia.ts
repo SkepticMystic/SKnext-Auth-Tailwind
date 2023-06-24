@@ -1,13 +1,14 @@
 import { dev } from "$app/environment";
-import adapter from "@lucia-auth/adapter-mongoose";
-import lucia from "lucia-auth";
-import { sveltekit } from "lucia-auth/middleware";
+import type { SID } from "$lib/interfaces";
+import { mongoose as luciaMongooseAdapter } from "@lucia-auth/adapter-mongoose";
+import { lucia } from "lucia";
+import { sveltekit } from "lucia/middleware";
 import mongoose, { Model } from "mongoose";
 import { ROLES } from "./roles";
 
-export const Users: Model<Lucia.UserAttributes> =
-  mongoose.models["auth_user"] ||
-  mongoose.model(
+export const Users =
+  <Model<SID<Lucia.DatabaseUserAttributes>>> mongoose.models["auth_user"] ||
+  mongoose.model<Model<SID<Lucia.DatabaseUserAttributes>>>(
     "auth_user",
     new mongoose.Schema(
       {
@@ -29,18 +30,16 @@ export const Users: Model<Lucia.UserAttributes> =
         emailVerified: {
           type: Boolean,
           required: true,
-          default: false,
         },
         admin: {
           type: Boolean,
-          default: false,
         },
       },
       { _id: false },
     ),
   );
 
-const Sessions: Model<Lucia.UserAttributes> = mongoose.models["auth_session"] ||
+const Sessions = mongoose.models["auth_session"] ||
   mongoose.model(
     "auth_session",
     new mongoose.Schema(
@@ -65,7 +64,7 @@ const Sessions: Model<Lucia.UserAttributes> = mongoose.models["auth_session"] ||
     ),
   );
 
-const Keys: Model<Lucia.UserAttributes> = mongoose.models["auth_key"] ||
+const Keys = mongoose.models["auth_key"] ||
   mongoose.model(
     "auth_key",
     new mongoose.Schema(
@@ -77,14 +76,8 @@ const Keys: Model<Lucia.UserAttributes> = mongoose.models["auth_key"] ||
           type: String,
           required: true,
         },
-        hashed_password: String,
-        primary_key: {
-          type: Boolean,
-          required: true,
-        },
-        expires: {
-          type: mongoose.Schema.Types.Mixed,
-          default: null,
+        hashed_password: {
+          type: String,
         },
       },
       { _id: false },
@@ -92,13 +85,20 @@ const Keys: Model<Lucia.UserAttributes> = mongoose.models["auth_key"] ||
   );
 
 export const auth = lucia({
-  adapter: adapter(mongoose),
   env: dev ? "DEV" : "PROD",
   middleware: sveltekit(),
-  transformDatabaseUser: (
-    { id, email, emailVerified, team_id, role, admin },
+
+  adapter: luciaMongooseAdapter({
+    User: Users,
+    Session: Sessions,
+    Key: Keys,
+  }),
+
+  getUserAttributes: (
+    { email, emailVerified, team_id, role, admin },
   ) => ({
-    userId: id,
+    // Included by default:
+    // userId: id,
     admin,
     email,
     emailVerified,

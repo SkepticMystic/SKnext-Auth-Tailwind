@@ -29,11 +29,11 @@
     "vite": "next"
   },
   "dependencies": {
-    "@lucia-auth/adapter-mongoose": "^2.0.0",
+    "@lucia-auth/adapter-mongoose": "^3.0.0-beta.2",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
     "axios": "^1.4.0",
-    "lucia-auth": "^1.5.0",
+    "lucia": "^2.0.0-beta.2",
     "mongoose": "^7.3.1",
     "nanoid": "^4.0.2",
     "theme-change": "^2.5.0",

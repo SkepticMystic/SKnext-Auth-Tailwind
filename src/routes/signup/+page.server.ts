@@ -5,7 +5,7 @@ import { passwordSchema } from "$lib/schema/index";
 import { Parsers } from "$lib/schema/parsers";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { type Actions, error, redirect } from "@sveltejs/kit";
-import type { User } from "lucia-auth";
+import type { User } from "lucia";
 import { z } from "zod";
 
 export const actions: Actions = {
@@ -60,7 +60,7 @@ export const actions: Actions = {
           email,
           ...attributes,
         },
-        primaryKey: {
+        key: {
           password,
           providerId: "email",
           providerUserId: email,

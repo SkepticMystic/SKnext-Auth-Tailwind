@@ -67,7 +67,7 @@ export const OTPs: Model<OTP> = mongoose.models[modelName] ||
         token: {
           type: String,
           // Use the crypto Web API to generate a random token
-          default: crypto.randomUUID,
+          default: () => crypto.randomUUID(),
         },
         expiresInMs: {
           type: Number,
