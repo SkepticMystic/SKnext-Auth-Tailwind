@@ -1,12 +1,12 @@
-import type { D } from ".";
-
 export interface HTTPError<
   T = {
     message: string;
     status: number;
-  }
+  },
 > {
-  response: D<T>;
+  response: {
+    data: T;
+  };
 }
 
 export type ActionError = HTTPError<{

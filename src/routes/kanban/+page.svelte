@@ -1,5 +1,5 @@
 <script>
-  import { dropzone, draggable } from "$lib/components/actions/dragndrop.ts";
+  import { draggable, dropzone } from "$lib/components/actions/dragndrop";
 
   export let data;
 </script>

@@ -9,7 +9,7 @@
   import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
-  import type { User } from "lucia-auth";
+  import type { User } from "lucia";
 
   export let member: SID<Pick<User, "email" | "role">>;
 

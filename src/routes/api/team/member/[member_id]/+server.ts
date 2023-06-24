@@ -1,9 +1,8 @@
-import { getUser } from "$lib/auth/server";
+import { auth, Users } from "$lib/auth/lucia";
+import { getUser, hasAtleastRole } from "$lib/auth/server";
+import { Teams } from "$lib/models/Teams";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
-import { auth, Users } from "$lib/auth/lucia";
-import { Teams } from "$lib/models/Teams";
-import { RoleHierarchy } from "$lib/auth/roles";
 
 export const DELETE: RequestHandler = async ({ locals, params }) => {
   const user = await getUser(locals);
@@ -22,7 +21,7 @@ export const DELETE: RequestHandler = async ({ locals, params }) => {
     throw error(404, "Member not found.");
   }
 
-  if (RoleHierarchy[user.role] < RoleHierarchy[member.role]) {
+  if (!hasAtleastRole(user, member.role)) {
     throw error(403, "You cannot remove a member with a higher role than you.");
   }
 
@@ -34,8 +33,8 @@ export const DELETE: RequestHandler = async ({ locals, params }) => {
   const newTeam = new Teams();
   await Promise.all([
     auth.updateUserAttributes(member_id, {
-      team_id: newTeam._id,
       role: "owner",
+      team_id: newTeam._id.toString(),
     }),
     newTeam.save(),
   ]);

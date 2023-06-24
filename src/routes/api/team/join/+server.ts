@@ -20,9 +20,9 @@ export const GET: RequestHandler = async ({ url, locals }) => {
   );
 
   if (team_id) {
-    const { user } = await locals.auth.validateUser();
+    const session = await locals.auth.validate();
     // Check if they've already accepted this invite
-    if (user?.team_id === team_id) {
+    if (session?.user?.team_id === team_id) {
       console.log("User already on this team");
       // They are already a member of this org
       throw redirect(302, "/");

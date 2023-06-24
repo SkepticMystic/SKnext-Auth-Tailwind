@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { SID } from "$lib/interfaces";
-  import type { User } from "lucia-auth";
+  import type { User } from "lucia";
   import MemberCard from "./memberCard.svelte";
 
   export let members: SID<Pick<User, "email" | "role">>[];
