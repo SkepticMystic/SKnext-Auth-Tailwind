@@ -57,8 +57,9 @@ export const actions: Actions = {
     try {
       const { userId } = await auth.createUser({
         attributes: {
-          email,
           ...attributes,
+          email,
+          admin: false,
         },
         key: {
           password,
@@ -67,14 +68,18 @@ export const actions: Actions = {
         },
       });
 
+      const promises: Promise<any>[] = [
+        auth.createSession({ userId, attributes: {} }),
+      ];
+
       if (!attributes.emailVerified) {
-        await OTP.handleLinks["email-verification"]({
+        promises.push(OTP.handleLinks["email-verification"]({
           url,
           idValue: userId,
-        });
+        }));
       }
 
-      const session = await auth.createSession(userId);
+      const [session] = await Promise.all(promises);
       locals.auth.setSession(session);
     } catch (e) {
       const { message } = e as Error;

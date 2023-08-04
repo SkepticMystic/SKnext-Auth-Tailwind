@@ -12,6 +12,7 @@ export const Users =
     "auth_user",
     new mongoose.Schema(
       {
+        //@ts-expect-error
         _id: String,
         email: {
           type: String,
@@ -33,6 +34,7 @@ export const Users =
         },
         admin: {
           type: Boolean,
+          required: true,
         },
       },
       { _id: false },

@@ -21,7 +21,7 @@ declare global {
       team_id: string;
       role: import("$lib/auth/roles").Role;
       emailVerified: boolean;
-      admin?: boolean;
+      admin: boolean;
     };
 
     type DatabaseSessionAttributes = {};
@@ -29,4 +29,5 @@ declare global {
 }
 
 // THIS IS IMPORTANT!!!
-export {};
+export { };
+
