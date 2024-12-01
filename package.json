@@ -32,11 +32,11 @@
     "@lucia-auth/adapter-mongoose": "^3.0.0",
     "@tailwindcss/forms": "^0.5.4",
     "@tailwindcss/typography": "^0.5.9",
-    "axios": "^1.4.0",
+    "axios": "^1.7.8",
     "lucia": "^2.0.0",
     "mongoose": "^7.4.2",
-    "nanoid": "^4.0.2",
+    "nanoid": "^5.0.9",
     "theme-change": "^2.5.0",
-    "zod": "^3.21.4"
+    "zod": "^3.23.8"
   }
 }
