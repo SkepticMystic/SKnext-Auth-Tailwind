@@ -12,7 +12,7 @@ export const actions: Actions = {
       request,
       z.object({ newPass: passwordSchema }),
     );
-    const { token } = Parsers.params(url, z.object({ token: z.string() }));
+    const { token } = Parsers.url(url, z.object({ token: z.string() }));
 
     const check = await OTP.validateUserToken({
       token,

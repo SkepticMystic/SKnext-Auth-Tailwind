@@ -1,17 +1,14 @@
+import type { OID, Timestamps } from "$lib/interfaces";
 import mongoose, { Model } from "mongoose";
 
-export interface Team {
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type Team = {} & Timestamps;
 
 const modelName = "Teams";
-export const Teams: Model<Team> = mongoose.models[modelName] ||
+
+export const Teams: Model<OID<Team>> =
+  mongoose.models[modelName] ||
   mongoose.model(
     modelName,
-    new mongoose.Schema(
-      {},
-      { timestamps: true },
-    ),
+    new mongoose.Schema({}, { timestamps: true }),
     modelName,
   );

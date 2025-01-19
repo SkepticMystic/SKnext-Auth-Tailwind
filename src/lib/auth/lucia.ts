@@ -7,7 +7,7 @@ import mongoose, { Model } from "mongoose";
 import { ROLES } from "./roles";
 
 export const Users =
-  <Model<SID<Lucia.DatabaseUserAttributes>>> mongoose.models["auth_user"] ||
+  <Model<SID<Lucia.DatabaseUserAttributes>>>mongoose.models["auth_user"] ||
   mongoose.model<Model<SID<Lucia.DatabaseUserAttributes>>>(
     "auth_user",
     new mongoose.Schema(
@@ -41,7 +41,8 @@ export const Users =
     ),
   );
 
-const Sessions = mongoose.models["auth_session"] ||
+const Sessions =
+  mongoose.models["auth_session"] ||
   mongoose.model(
     "auth_session",
     new mongoose.Schema(
@@ -66,7 +67,8 @@ const Sessions = mongoose.models["auth_session"] ||
     ),
   );
 
-const Keys = mongoose.models["auth_key"] ||
+const Keys =
+  mongoose.models["auth_key"] ||
   mongoose.model(
     "auth_key",
     new mongoose.Schema(
@@ -96,9 +98,7 @@ export const auth = lucia({
     Key: Keys,
   }),
 
-  getUserAttributes: (
-    { email, emailVerified, team_id, role, admin },
-  ) => ({
+  getUserAttributes: ({ email, emailVerified, team_id, role, admin }) => ({
     // Included by default:
     // userId: id,
     admin,

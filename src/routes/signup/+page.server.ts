@@ -18,7 +18,7 @@ export const actions: Actions = {
       }),
     );
 
-    const { team_token } = Parsers.params(
+    const { team_token } = Parsers.url(
       url,
       z.object({
         team_token: z.string().optional(),
@@ -31,11 +31,11 @@ export const actions: Actions = {
 
     if (team_token) {
       // Find and delete the OTP
-      const otp = await OTPs.findOneAndDelete({
+      const otp = (await OTPs.findOneAndDelete({
         token: team_token,
         kind: "team-invite",
         identifier: `email:${email}`,
-      }).lean() as TeamInviteOTP | null;
+      }).lean()) as TeamInviteOTP | null;
       if (!otp) throw error(400, "Invalid team token");
 
       attributes = {
@@ -73,10 +73,12 @@ export const actions: Actions = {
       ];
 
       if (!attributes.emailVerified) {
-        promises.push(OTP.handleLinks["email-verification"]({
-          url,
-          idValue: userId,
-        }));
+        promises.push(
+          OTP.handleLinks["email-verification"]({
+            url,
+            idValue: userId,
+          }),
+        );
       }
 
       const [session] = await Promise.all(promises);

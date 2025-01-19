@@ -11,7 +11,7 @@ const invalidTokenError = error(
 );
 
 export const GET: RequestHandler = async ({ url, locals }) => {
-  const { team_id, token } = Parsers.params(
+  const { team_id, token } = Parsers.url(
     url,
     z.object({
       token: z.string().min(1),
@@ -46,11 +46,9 @@ export const GET: RequestHandler = async ({ url, locals }) => {
       // Create a new user
       throw redirect(
         302,
-        `/signup?email_hint=${
-          encodeURIComponent(
-            checkUser.error.id.value,
-          )
-        }&team_token=${encodeURIComponent(token)}`,
+        `/signup?email_hint=${encodeURIComponent(
+          checkUser.error.id.value,
+        )}&team_token=${encodeURIComponent(token)}`,
       );
     } else {
       console.log("getTokenUser failed", checkUser.error);

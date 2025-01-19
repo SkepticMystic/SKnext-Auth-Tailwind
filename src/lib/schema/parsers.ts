@@ -39,7 +39,7 @@ const form = async <O, D extends z.ZodTypeDef, I>(
   const input = Object.fromEntries(form);
   return raw(input, schema);
 };
-const params = <O, D extends z.ZodTypeDef, I>(
+const url = <O, D extends z.ZodTypeDef, I>(
   params: URLSearchParams | URL,
   schema: z.ZodSchema<O, D, I>,
 ) => {
@@ -50,8 +50,8 @@ const params = <O, D extends z.ZodTypeDef, I>(
 };
 
 export const Parsers = {
+  url,
   raw,
-  request,
   form,
-  params,
+  request,
 };

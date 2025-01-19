@@ -5,7 +5,7 @@ import { error, redirect, type RequestHandler } from "@sveltejs/kit";
 import { z } from "zod";
 
 export const GET: RequestHandler = async ({ url }) => {
-  const { _id, token } = Parsers.params(
+  const { _id, token } = Parsers.url(
     url,
     z.object({
       _id: z.string(),
