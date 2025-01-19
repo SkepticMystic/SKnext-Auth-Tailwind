@@ -16,14 +16,6 @@ export const getProps = <LoadKey extends string | number = string | number>(): {
   disabled: false,
 });
 
-export const fetch_json = async (url: string, options?: RequestInit) => {
-  const res = await fetch(url, options);
-  const json = await res.json();
-  return json;
-};
-
-export const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
-
 export const _id_to_string = <T extends { _id: string | ObjectId | unknown }>(
   doc: T,
 ) => {

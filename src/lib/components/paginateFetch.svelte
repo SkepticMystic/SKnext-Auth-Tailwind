@@ -1,16 +1,14 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { fetch_json, getProps } from "$lib/utils";
+  import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import { onMount } from "svelte";
-  import ResultText from "./resultText.svelte";
   import Loading from "./Loading.svelte";
+  import ResultText from "./resultText.svelte";
 
   export let data: any[];
   export let fetchOnMount: boolean = true;
-  export let getUrl: ((skip: number, limit: number) => string) | null = null;
-  export let getData: ((skip: number, limit: number) => Promise<any[]>) | null =
-    null;
+  export let getData: (skip: number, limit: number) => Promise<any[]>;
   export let total: number | null = null;
   export let pageNo: number | null = null;
   export let limit: number | null = null;
@@ -35,9 +33,7 @@
     } else skip += dir * currLimit;
 
     try {
-      if (getUrl) data = await fetch_json(getUrl(skip, currLimit));
-      else if (getData) data = await getData(skip, currLimit);
-      else throw new Error("No data source provided");
+      data = await getData(skip, currLimit);
 
       // Set page after completing fetch
       currPage = Math.floor(skip / currLimit) + 1;

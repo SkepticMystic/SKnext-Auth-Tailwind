@@ -6,11 +6,11 @@
   .input {
     @apply input-bordered;
   }
+  .textarea {
+    @apply textarea-bordered;
+  }
   .select {
     @apply select-bordered;
-  }
-
-  .btn {
   }
 
   .link {
