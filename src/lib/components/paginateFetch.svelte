@@ -58,7 +58,7 @@
 <div>
   <div class="flex">
     <button
-      class="btn btn-secondary btn-square border-0 rounded-none"
+      class="btn btn-square btn-secondary rounded-none border-0"
       disabled={anyLoading || skip === 0}
       title="First"
       on:click={async () => await getMore(-2)}
@@ -66,7 +66,7 @@
       <Loading loading={loadObj[-2]}>≪</Loading>
     </button>
     <button
-      class="btn btn-secondary btn-square border-0 rounded-none"
+      class="btn btn-square btn-secondary rounded-none border-0"
       disabled={anyLoading || skip === 0}
       title="Previous"
       on:click={async () => await getMore(-1)}
@@ -75,7 +75,7 @@
     </button>
 
     <button
-      class="btn btn-ghost border-0 rounded-none font-bold"
+      class="btn btn-ghost rounded-none border-0 font-bold"
       disabled={anyLoading}
       title="Refresh"
       on:click={async () => await getMore(0)}
@@ -86,7 +86,7 @@
     </button>
 
     <button
-      class="btn btn-secondary btn-square border-0 rounded-none"
+      class="btn btn-square btn-secondary rounded-none border-0"
       title="Next"
       disabled={anyLoading ||
         (total ? currPage === totalPages : data.length < currLimit)}
@@ -96,7 +96,7 @@
     </button>
     {#if total}
       <button
-        class="btn btn-secondary btn-square border-0 rounded-none"
+        class="btn btn-square btn-secondary rounded-none border-0"
         disabled={anyLoading || currPage === totalPages}
         title="Last"
         on:click={async () => await getMore(2)}

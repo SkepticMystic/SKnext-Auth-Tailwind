@@ -9,10 +9,10 @@ const OTP_KINDS = [
   "password-reset",
   "team-invite",
 ] as const;
-type OTPKind = typeof OTP_KINDS[number];
+type OTPKind = (typeof OTP_KINDS)[number];
 
 const IDENTIFIER_FIELDS = ["_id", "email"] as const;
-type IdentifierField = typeof IDENTIFIER_FIELDS[number];
+type IdentifierField = (typeof IDENTIFIER_FIELDS)[number];
 
 // Every OTP has the following properties
 export interface OTPBase {
@@ -55,7 +55,8 @@ export interface TeamInviteOTP extends OTPBase {
 export type OTP = EmailVerificationOTP | PasswordResetOTP | TeamInviteOTP;
 
 const modelName = "OTPs";
-export const OTPs: Model<OTP> = mongoose.models[modelName] ||
+export const OTPs: Model<OTP> =
+  mongoose.models[modelName] ||
   mongoose.model<OTP>(
     modelName,
     new mongoose.Schema(
@@ -91,26 +92,24 @@ export const OTPs: Model<OTP> = mongoose.models[modelName] ||
  * Check if an OTP is expired.
  *   If it doesn't have an expiry date, it's never expired
  */
-const isExpired = (
-  { createdAt, expiresInMs }: Pick<OTP, "expiresInMs" | "createdAt">,
-) => {
+const isExpired = ({
+  createdAt,
+  expiresInMs,
+}: Pick<OTP, "expiresInMs" | "createdAt">) => {
   if (expiresInMs === undefined) return false;
 
-  return (createdAt.getTime() + expiresInMs) < Date.now();
+  return createdAt.getTime() + expiresInMs < Date.now();
 };
 
 /** A more type-safe option than OTPs.create */
-const create = async <T extends OTP>(
-  options: Omit<T, "token" | "createdAt">,
-) => OTPs.create(options);
+const create = async <T extends OTP>(options: Omit<T, "token" | "createdAt">) =>
+  OTPs.create(options);
 
 /**
  * Return an existing OTP if it exists and is not expired,
  *   or create a new one if it doesn't exist or is expired.
  */
-const getOrCreate = async (
-  options: Omit<OTP, "token" | "createdAt">,
-) => {
+const getOrCreate = async (options: Omit<OTP, "token" | "createdAt">) => {
   const { identifier, kind } = options;
 
   // Check if there is an existing OTP for that user of that kind
@@ -242,8 +241,7 @@ const handleLinks = {
       kind: "email-verification",
     });
 
-    const href =
-      `${url.origin}/api/verify-email?token=${otp.token}&_id=${idValue}`;
+    const href = `${url.origin}/api/verify-email?token=${otp.token}&_id=${idValue}`;
     console.log(href);
     console.log("TODO: sendEmail");
   },
@@ -261,9 +259,11 @@ const handleLinks = {
     console.log("TODO: sendEmail");
   },
 
-  "team-invite": async (
-    input: { idValue: string; url: URL; data: TeamInviteOTP["data"] },
-  ) => {
+  "team-invite": async (input: {
+    idValue: string;
+    url: URL;
+    data: TeamInviteOTP["data"];
+  }) => {
     const { url, idValue, data } = input;
 
     const otp = await OTP.create<TeamInviteOTP>({
@@ -272,15 +272,11 @@ const handleLinks = {
       data,
     });
 
-    const href =
-      `${url.origin}/api/team/join?token=${otp.token}&team_id=${data.team_id}`;
+    const href = `${url.origin}/api/team/join?token=${otp.token}&team_id=${data.team_id}`;
     console.log(href);
     console.log("TODO: sendEmail");
   },
-} satisfies Record<
-  OTPKind,
-  (input: any) => Promise<void>
->;
+} satisfies Record<OTPKind, (input: any) => Promise<void>>;
 
 export const OTP = {
   isExpired,

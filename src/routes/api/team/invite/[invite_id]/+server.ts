@@ -8,11 +8,11 @@ export const DELETE: RequestHandler = async ({ locals, params }) => {
 
   const { invite_id } = params;
 
-  const invite = await OTPs.findOne({
+  const invite = (await OTPs.findOne({
     _id: invite_id,
     kind: "team-invite",
     "data.team_id": user.team_id,
-  }).lean() as TeamInviteOTP | null;
+  }).lean()) as TeamInviteOTP | null;
 
   if (!invite) {
     throw error(404, "Invite not found");

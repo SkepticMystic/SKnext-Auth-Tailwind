@@ -39,7 +39,7 @@
 <h2 class="text-xl">Change Password</h2>
 
 <form
-  class="flex flex-wrap gap-3 items-end"
+  class="flex flex-wrap items-end gap-3"
   on:submit|preventDefault={changePassword}
 >
   <Label lbl="New Password">
@@ -63,7 +63,7 @@
     />
   </Label>
 
-  <div class="flex flex-wrap gap-3 items-center">
+  <div class="flex flex-wrap items-center gap-3">
     <button
       class="btn btn-primary"
       type="submit"

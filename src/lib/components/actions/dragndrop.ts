@@ -23,11 +23,14 @@ export const draggable = (node: HTMLElement, data: any) => {
   };
 };
 
-export const dropzone = (node: HTMLElement, options: {
-  dropEffect?: "copy" | "move" | "link";
-  dragoverClass?: string;
-  onDrop: (data: any, e: DragEvent) => void;
-}) => {
+export const dropzone = (
+  node: HTMLElement,
+  options: {
+    dropEffect?: "copy" | "move" | "link";
+    dragoverClass?: string;
+    onDrop: (data: any, e: DragEvent) => void;
+  },
+) => {
   let state = {
     dropEffect: "move" as const,
     dragoverClass: "droppable",

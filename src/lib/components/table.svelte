@@ -21,7 +21,9 @@
     <table class="table">
       <thead>
         <tr>
-          {#if indexCol} <th>Index</th> {/if}
+          {#if indexCol}
+            <th>Index</th>
+          {/if}
           {#each headers as header}
             <th class="capitalize">{header}</th>
           {/each}
@@ -30,7 +32,9 @@
       <tbody>
         {#each rows.slice(0, preview || rows.length) ?? [] as row, i}
           <tr class="hover:bg-base-200">
-            {#if indexCol} <td>{i + 1}</td> {/if}
+            {#if indexCol}
+              <td>{i + 1}</td>
+            {/if}
             {#each headers as header}
               <td>{row[header]}</td>
             {/each}

@@ -16,7 +16,7 @@ export const takeShot = async (page: Page, name: string) =>
 export const signin = async (
   page: Page,
   email = "email@gmail.com",
-  password = <string>process.env.TEST_PASSWORD
+  password = <string>process.env.TEST_PASSWORD,
 ) => {
   await page.goto("/signin");
   await page.fill("input[name=email]", email);

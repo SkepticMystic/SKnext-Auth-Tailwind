@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "playwright test",
-    "prettier": "prettier --write .",
+    "format": "prettier --write .",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
   },

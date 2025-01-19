@@ -65,9 +65,9 @@
     />
   </Label>
 
-  <div class="flex flex-wrap gap-3 items-center">
+  <div class="flex flex-wrap items-center gap-3">
     <button
-      class="my-4 btn btn-primary"
+      class="btn btn-primary my-4"
       type="submit"
       disabled={!email || !password || loading}
     >

@@ -9,10 +9,7 @@ import type { RequestHandler } from "./$types";
 export const PUT: RequestHandler = async ({ locals, request, params }) => {
   const [user, { newRole }] = await Promise.all([
     getUser(locals),
-    Parsers.request(
-      request,
-      z.object({ newRole: z.enum(ROLES) }),
-    ),
+    Parsers.request(request, z.object({ newRole: z.enum(ROLES) })),
   ]);
 
   if (newRole === "owner") {

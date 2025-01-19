@@ -4,9 +4,9 @@
 </script>
 
 {#if err}
-  <p class="text-error text-sm">{err}</p>
+  <p class="text-sm text-error">{err}</p>
 {/if}
 
 {#if suc}
-  <p class="text-success text-sm">{suc}</p>
+  <p class="text-sm text-success">{suc}</p>
 {/if}

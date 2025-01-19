@@ -6,7 +6,7 @@
     <div class="max-w-lg">
       <h1 class="text-5xl font-bold">Generic App</h1>
 
-      <div class="flex flex-wrap justify-center gap-5 my-14">
+      <div class="my-14 flex flex-wrap justify-center gap-5">
         <a href="/projects">
           <button class="btn btn-primary">Projects</button>
         </a>

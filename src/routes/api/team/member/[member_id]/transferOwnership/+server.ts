@@ -4,9 +4,7 @@ import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const PUT: RequestHandler = async ({ locals, params }) => {
-  const [user] = await Promise.all([
-    getUser(locals),
-  ]);
+  const [user] = await Promise.all([getUser(locals)]);
 
   if (user.role !== "owner") {
     throw error(

@@ -54,7 +54,7 @@
   </Label>
 
   <button
-    class="my-4 btn btn-primary"
+    class="btn btn-primary my-4"
     type="submit"
     disabled={!newPass || !confirmPass || loading}
   >
