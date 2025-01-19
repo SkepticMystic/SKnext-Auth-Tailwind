@@ -1,7 +1,9 @@
 <script lang="ts">
   import Navbar from "$lib/components/navbar.svelte";
-  import ToastList from "$lib/components/toastList.svelte";
+  import { toast, Toaster } from "svelte-daisyui-toast";
   import "../app.css";
+
+  toast.defaults.set({ clear_on_navigate: true, duration_ms: 10_000 });
 </script>
 
 <header>
@@ -12,4 +14,4 @@
   <slot />
 </main>
 
-<ToastList />
+<Toaster />

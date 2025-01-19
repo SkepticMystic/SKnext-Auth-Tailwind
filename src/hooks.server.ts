@@ -4,6 +4,7 @@ import type { Handle } from "@sveltejs/kit";
 import mongoose from "mongoose";
 
 export const handle: Handle = async ({ event, resolve }) => {
+  //@ts-expect-error: TODO Will handle with the Lucia upgrade
   event.locals.auth = auth.handleRequest(event);
   return await resolve(event);
 };

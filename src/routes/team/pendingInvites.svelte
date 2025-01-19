@@ -3,9 +3,9 @@
   import Loading from "$lib/components/Loading.svelte";
   import type { Result, SID } from "$lib/interfaces";
   import type { TeamInviteOTP } from "$lib/models/OTPs";
-  import { addToast } from "$lib/stores/toast";
   import { getProps } from "$lib/utils";
   import axios from "axios";
+  import { toast } from "svelte-daisyui-toast";
 
   export let pendingInvites: SID<
     Pick<TeamInviteOTP, "createdAt" | "data" | "expiresInMs" | "identifier">
@@ -23,11 +23,7 @@
     if (data.ok) {
       await invalidateAll();
 
-      addToast({
-        message: "Invite deleted",
-        type: "success",
-        duration_ms: 3_000,
-      });
+      toast.success("Invite deleted");
     }
 
     loadObj = {};
@@ -36,7 +32,7 @@
 
 <div class="flex gap-3">
   {#each pendingInvites as { _id, createdAt, data, identifier, expiresInMs }}
-    <div class="flex flex-col gap-2 border p-3 bg-base-100 rounded-box">
+    <div class="flex flex-col gap-2 rounded-box border bg-base-100 p-3">
       <span>
         <span>{identifier.split("email:")[1]}</span> -
         <span class="capitalize">{data.role}</span>

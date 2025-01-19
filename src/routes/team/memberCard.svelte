@@ -5,11 +5,11 @@
   import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
   import type { Result, SID } from "$lib/interfaces";
-  import { addToast } from "$lib/stores/toast";
   import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
   import type { User } from "lucia";
+  import { toast } from "svelte-daisyui-toast";
 
   export let member: SID<Pick<User, "email" | "role">>;
 
@@ -29,24 +29,17 @@
 
     try {
       const { data } = await axios.delete<Result>(
-        `/api/team/member/${member._id}`
+        `/api/team/member/${member._id}`,
       );
 
       if (data.ok) {
         await invalidateAll();
 
-        addToast({
-          message: "Member removed from team",
-          type: "success",
-          duration_ms: 3_000,
-        });
+        toast.success("Member removed from team");
       }
     } catch (error) {
       console.log(error);
-      addToast({
-        message: getHTTPErrorMsg(error),
-        type: "error",
-      });
+      toast.error(getHTTPErrorMsg(error));
     }
 
     loadObj = {};
@@ -62,24 +55,17 @@
     try {
       const { data } = await axios.put<Result>(
         `/api/team/member/${member._id}/role`,
-        { newRole }
+        { newRole },
       );
 
       if (data.ok) {
         await invalidateAll();
 
-        addToast({
-          message: "Member role changed",
-          type: "success",
-          duration_ms: 3_000,
-        });
+        toast.success("Member role changed");
       }
     } catch (error) {
       console.log(error);
-      addToast({
-        message: getHTTPErrorMsg(error),
-        type: "error",
-      });
+      toast.error(getHTTPErrorMsg(error));
     }
 
     loadObj = {};
@@ -94,25 +80,18 @@
 
     try {
       const { data } = await axios.put<Result>(
-        `/api/team/member/${member._id}/transferOwnership`
+        `/api/team/member/${member._id}/transferOwnership`,
       );
 
       if (data.ok) {
         // Must hard reload for auth changes to take effect
         location.reload();
 
-        addToast({
-          message: "Ownership transferred",
-          type: "success",
-          duration_ms: 3_000,
-        });
+        toast.success("Ownership transferred");
       }
     } catch (error) {
       console.log(error);
-      addToast({
-        message: getHTTPErrorMsg(error),
-        type: "error",
-      });
+      toast.error(getHTTPErrorMsg(error));
     }
 
     loadObj = {};
@@ -122,7 +101,7 @@
 </script>
 
 <div
-  class="p-3 border bg-base-100 rounded-box flex flex-col gap-3 min-w-[200px]"
+  class="flex min-w-[200px] flex-col gap-3 rounded-box border bg-base-100 p-3"
 >
   <span class="text-sm" class:font-semibold={memberIsUser}>{member.email}</span>
   <span class="text-sm capitalize">
@@ -130,7 +109,7 @@
     {member.role}
   </span>
 
-  <div class="flex gap-2 items-end">
+  <div class="flex items-end gap-2">
     <Label lbl="Change Role">
       <select class="select" disabled={memberIsUser} bind:value={newRole}>
         {#each ROLES.filter((r) => r != "owner") as role}

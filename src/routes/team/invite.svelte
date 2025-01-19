@@ -4,10 +4,10 @@
   import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
   import ResultText from "$lib/components/resultText.svelte";
-  import { addToast } from "$lib/stores/toast";
   import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
+  import { toast } from "svelte-daisyui-toast";
 
   let { loading, err } = getProps();
   let email: string;
@@ -19,11 +19,7 @@
     try {
       const { data } = await axios.post("/api/team/invite", { email, role });
       if (data.ok) {
-        addToast({
-          type: "success",
-          message: "Invite sent!",
-          duration_ms: 3000,
-        });
+        toast.success("Invite sent!");
         (email = ""), (role = "member");
 
         await invalidateAll();
@@ -40,7 +36,7 @@
 </script>
 
 <form class="flex flex-col gap-3">
-  <div class="flex flex-wrap gap-3 items-end">
+  <div class="flex flex-wrap items-end gap-3">
     <Label lbl="Email">
       <input
         type="email"
@@ -58,7 +54,7 @@
       </select>
     </Label>
 
-    <div class="flex flex-wrap gap-3 items-center">
+    <div class="flex flex-wrap items-center gap-3">
       <button
         class="btn btn-secondary"
         disabled={!email || !role || loading}

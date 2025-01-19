@@ -34,12 +34,12 @@ export const _idToString = <T extends { _id: string | ObjectId | unknown }>(
 };
 
 export const err = <E = undefined>(e?: E): Err<E> => {
-  const res: Err<E> = { ok: false };
+  const res = { ok: false } as Err<E>;
   if (e) res["error"] = e;
   return res;
 };
 export const suc = <D = undefined>(d?: D): Suc<D> => {
-  const res: Suc<D> = { ok: true };
+  const res = { ok: true } as Suc<D>;
   if (d) res["data"] = d;
   return res;
 };
