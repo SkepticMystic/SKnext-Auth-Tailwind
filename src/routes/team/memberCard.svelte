@@ -1,10 +1,10 @@
 <script lang="ts">
   import { invalidateAll } from "$app/navigation";
-  import { page } from "$app/stores";
   import { ROLES } from "$lib/auth/roles";
   import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
   import type { Result, SID } from "$lib/interfaces";
+  import { user } from "$lib/stores/user";
   import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
@@ -13,8 +13,7 @@
 
   export let member: SID<Pick<User, "email" | "role">>;
 
-  const { user } = $page.data;
-  const memberIsUser = user?.userId === member._id;
+  const memberIsUser = $user?.userId === member._id;
 
   let { loadObj } = getProps();
 
@@ -129,7 +128,7 @@
 
   <button
     class="btn btn-warning"
-    disabled={user?.role !== "owner" || memberIsUser || anyLoading}
+    disabled={$user?.role !== "owner" || memberIsUser || anyLoading}
     on:click={transferOwnership}
   >
     <Loading loading={loadObj["transferOwnership"]}>Transfer Ownership</Loading>

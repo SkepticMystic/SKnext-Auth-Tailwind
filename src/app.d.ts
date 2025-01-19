@@ -5,9 +5,7 @@ declare global {
       auth: import("lucia").AuthRequest;
     }
 
-    interface PageData {
-      user: import("lucia").User | null;
-    }
+    interface PageData {}
   }
 }
 
@@ -29,5 +27,4 @@ declare global {
 }
 
 // THIS IS IMPORTANT!!!
-export { };
-
+export {};

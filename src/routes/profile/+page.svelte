@@ -1,13 +1,13 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
+  import Loading from "$lib/components/Loading.svelte";
   import ResultText from "$lib/components/resultText.svelte";
+  import type { Result } from "$lib/interfaces";
+  import { user } from "$lib/stores/user";
   import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import axios from "axios";
   import ChangePassword from "./changePassword.svelte";
-  import type { Result } from "$lib/interfaces";
-  import Loading from "$lib/components/Loading.svelte";
 
   let { err, loading } = getProps();
 
@@ -31,8 +31,8 @@
 <h1 class="text-2xl">Profile</h1>
 <div class="my-3" />
 
-{#if $page.data.user}
-  <p class="text-lg">Welcome {$page.data.user.email.split("@")[0]}</p>
+{#if $user}
+  <p class="text-lg">Welcome {$user.email.split("@")[0]}</p>
 
   <div class="my-5">
     <ChangePassword />

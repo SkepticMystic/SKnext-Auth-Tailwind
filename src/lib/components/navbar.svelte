@@ -1,13 +1,11 @@
 <script lang="ts">
-  import { page } from "$app/stores";
   import { signout } from "$lib/auth/client";
+  import { user } from "$lib/stores/user";
   import { onMount } from "svelte";
-  import Bars3 from "./icons/bars3.svelte";
   import { themeChange } from "theme-change";
+  import Bars3 from "./icons/bars3.svelte";
 
   onMount(() => themeChange(false));
-
-  $: ({ user } = $page.data);
 
   interface Route {
     side: "center" | "right";
@@ -65,9 +63,9 @@
   ];
 
   const showRoute = (
-    user: App.PageData["user"],
+    user: typeof $user,
     route: Route,
-    side?: Route["side"]
+    side?: Route["side"],
   ) => {
     if (side && route.side !== side) return false;
     if (route.authed !== !!user) return false;
@@ -79,13 +77,13 @@
 
 <nav class="navbar bg-base-100 px-5">
   <div class="navbar-start">
-    <a href="/" class="btn btn-ghost normal-case text-xl">Generic App</a>
+    <a href="/" class="btn btn-ghost text-xl normal-case">Generic App</a>
   </div>
 
   <div class="navbar-center hidden lg:flex">
-    <ul class="flex gap-5 items-center">
+    <ul class="flex items-center gap-5">
       {#each routes as r}
-        {#if showRoute(user, r, "center")}
+        {#if showRoute($user, r, "center")}
           {@const { href, label } = r}
           <li>
             <a class="link" {href}>{label}</a>
@@ -106,11 +104,11 @@
       <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
       <ul
         tabindex="0"
-        class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-40"
+        class="menu-compact menu dropdown-content mt-3 w-40 rounded-box bg-base-100 p-2 shadow"
       >
         <!-- Shows all routes, not just those for a given `side` -->
         {#each routes as r}
-          {#if showRoute(user, r)}
+          {#if showRoute($user, r)}
             {@const { href, label } = r}
             <li>
               <a class="link" {href}>{label}</a>
@@ -118,7 +116,7 @@
           {/if}
         {/each}
 
-        {#if user}
+        {#if $user}
           <li>
             <button class="link" on:click={signout}> Sign out </button>
           </li>
@@ -128,7 +126,7 @@
   </div>
 
   <div class="navbar-end hidden lg:flex">
-    <ul class="flex gap-5 items-center">
+    <ul class="flex items-center gap-5">
       <select
         class="select select-bordered select-sm text-xs"
         data-choose-theme
@@ -139,7 +137,7 @@
       </select>
 
       {#each routes as r}
-        {#if showRoute(user, r, "right")}
+        {#if showRoute($user, r, "right")}
           {@const { href, label } = r}
           <li>
             <a class="link" {href}>{label}</a>
@@ -147,9 +145,9 @@
         {/if}
       {/each}
 
-      {#if user}
+      {#if $user}
         <li>
-          <button class="btn btn-sm btn-ghost" on:click={signout}>
+          <button class="btn btn-ghost btn-sm" on:click={signout}>
             Sign out
           </button>
         </li>

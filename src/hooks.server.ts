@@ -10,7 +10,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 };
 
 try {
-  await mongoose.connect(MONGO_URI, { autoIndex: false });
+  await mongoose.connect(MONGO_URI, {
+    autoIndex: false,
+    dbName: "generic-app",
+  });
 } catch (error) {
   console.log(error);
 }
