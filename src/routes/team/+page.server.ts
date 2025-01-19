@@ -2,7 +2,7 @@ import { Users } from "$lib/auth/lucia";
 import { getUser } from "$lib/auth/server";
 import type { SID } from "$lib/interfaces";
 import { OTPs, type TeamInviteOTP } from "$lib/models/OTPs";
-import { _idToString } from "$lib/utils";
+import { _id_to_string } from "$lib/utils";
 import type { PageServerLoad } from "./$types";
 
 export const load = (async ({ locals }) => {
@@ -17,7 +17,7 @@ export const load = (async ({ locals }) => {
   ]);
 
   return {
-    members: members.map(_idToString),
-    pendingInvites: pendingInvites.map(_idToString) as SID<TeamInviteOTP>[],
+    members: members.map(_id_to_string),
+    pendingInvites: pendingInvites.map(_id_to_string) as SID<TeamInviteOTP>[],
   };
 }) satisfies PageServerLoad;

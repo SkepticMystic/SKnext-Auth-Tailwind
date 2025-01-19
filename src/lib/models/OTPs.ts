@@ -1,6 +1,6 @@
 import { Users } from "$lib/auth/lucia";
 import type { Role } from "$lib/auth/roles";
-import { ONE_DAY_MS } from "$lib/const";
+import { TIME } from "$lib/const/time";
 import { err, suc } from "$lib/utils";
 import mongoose, { Model } from "mongoose";
 
@@ -72,7 +72,7 @@ export const OTPs: Model<OTP> =
         },
         expiresInMs: {
           type: Number,
-          default: ONE_DAY_MS,
+          default: TIME.DAY,
         },
         kind: {
           type: String,

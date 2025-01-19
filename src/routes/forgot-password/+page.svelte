@@ -1,33 +1,34 @@
 <script lang="ts">
   import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
-  import ResultText from "$lib/components/resultText.svelte";
-  import { getProps } from "$lib/utils";
   import { getActionErrorMsg } from "$lib/utils/errors";
+  import { any_loading, Loader } from "$lib/utils/loader";
   import type { ActionResult } from "@sveltejs/kit";
   import axios from "axios";
+  import { toast } from "svelte-daisyui-toast";
 
   let email: string;
-  let { err, suc, loading } = getProps();
+
+  const loader = Loader<"forgot-password">();
 
   const forgotPassword = async () => {
-    (loading = true), (err = suc = "");
+    loader.load("forgot-password");
 
     try {
       const { data } = await axios.postForm<ActionResult>("", { email });
 
-      if (data.type === "success")
-        suc = "Check your email for a link to reset your password.";
-      else err = "There was an error sending the email.";
+      if (data.type === "success") {
+        toast.success("Check your email for a link to reset your password.");
+      } else {
+        toast.warning("There was an error sending the email.");
+      }
     } catch (error) {
       console.log(error);
-      err = getActionErrorMsg(error);
+      toast.error(getActionErrorMsg(error));
     }
 
-    loading = false;
+    loader.reset();
   };
-
-  $: if (email) err = suc = "";
 </script>
 
 <form on:submit|preventDefault={forgotPassword}>
@@ -38,11 +39,9 @@
   <button
     class="btn btn-primary my-4"
     type="submit"
-    disabled={!email || loading}
+    disabled={!email || any_loading($loader)}
   >
-    <Loading {loading} />
+    <Loading loading={$loader["forgot-password"]} />
     Send Password Reset Email
   </button>
-
-  <ResultText {err} {suc} />
 </form>

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { DEFAULT_LIMIT } from "$lib/const";
-  import { fetchJson, getProps } from "$lib/utils";
+  import { fetch_json, getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import { onMount } from "svelte";
   import ResultText from "./resultText.svelte";
@@ -17,8 +16,7 @@
   export let limit: number | null = null;
 
   let currPage = pageNo ?? Number($page.url.searchParams.get("page") ?? 1);
-  let currLimit =
-    limit ?? Number($page.url.searchParams.get("limit") ?? DEFAULT_LIMIT);
+  let currLimit = limit ?? Number($page.url.searchParams.get("limit") ?? 50);
 
   $: totalPages = total ? Math.ceil(total / currLimit) : null;
   let skip = (currPage - 1) * currLimit;
@@ -37,7 +35,7 @@
     } else skip += dir * currLimit;
 
     try {
-      if (getUrl) data = await fetchJson(getUrl(skip, currLimit));
+      if (getUrl) data = await fetch_json(getUrl(skip, currLimit));
       else if (getData) data = await getData(skip, currLimit);
       else throw new Error("No data source provided");
 

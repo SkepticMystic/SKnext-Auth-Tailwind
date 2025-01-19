@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { ROW_PREVIEW_LIMIT } from "$lib/const/index";
   import RowCount from "./rowCount.svelte";
 
   export let rows: Record<string, any>[];
   export let headers: string[] = [];
-  export let preview: number = ROW_PREVIEW_LIMIT;
+  export let preview: number = 30;
   export let indexCol: boolean = false;
 
   $: headers = headers.length ? headers : Object.keys(rows[0] ?? {});
