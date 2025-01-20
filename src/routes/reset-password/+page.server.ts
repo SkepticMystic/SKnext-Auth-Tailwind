@@ -1,6 +1,6 @@
 import { auth } from "$lib/auth/lucia";
 import { OTP } from "$lib/models/OTPs";
-import { passwordSchema } from "$lib/schema";
+import { password_schema } from "$lib/schema";
 import { Parsers } from "$lib/schema/parsers";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { type Actions, error } from "@sveltejs/kit";
@@ -10,7 +10,7 @@ export const actions: Actions = {
   default: async ({ request, url }) => {
     const { newPass } = await Parsers.form(
       request,
-      z.object({ newPass: passwordSchema }),
+      z.object({ newPass: password_schema }),
     );
     const { token } = Parsers.url(url, z.object({ token: z.string() }));
 
@@ -18,7 +18,7 @@ export const actions: Actions = {
       token,
       kind: "password-reset",
     });
-    if (!check.ok) throw error(400, "Invalid token");
+    if (!check.ok) error(400, "Invalid token");
 
     const { user, otp } = check.data;
     try {

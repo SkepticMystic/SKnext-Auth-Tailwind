@@ -25,12 +25,12 @@ export const actions: Actions = {
         message === "AUTH_INVALID_KEY_ID" ||
         message === "AUTH_INVALID_PASSWORD"
       ) {
-        throw error(400, "Invalid email or password");
+        error(400, "Invalid email or password");
       }
 
-      throw INTERNAL_SERVER_ERROR(e);
+      INTERNAL_SERVER_ERROR(e);
     }
 
-    throw redirect(302, url.searchParams.get("redirect") ?? "/");
+    redirect(302, url.searchParams.get("redirect") ?? "/");
   },
 };

@@ -1,20 +1,18 @@
 import { auth, Users } from "$lib/auth/lucia";
-import { getUser } from "$lib/auth/server";
+import { get_user } from "$lib/auth/server";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const PUT: RequestHandler = async ({ locals, params }) => {
-  const [user] = await Promise.all([getUser(locals)]);
+  const [user] = await Promise.all([get_user(locals)]);
 
   if (user.role !== "owner") {
-    throw error(
+    error(
       403,
       "You cannot transfer ownership of a team if you are not the owner.",
     );
-  }
-
-  if (user.userId === params.member_id) {
-    throw error(400, "You cannot transfer ownership to yourself.");
+  } else if (user.userId === params.member_id) {
+    error(400, "You cannot transfer ownership to yourself.");
   }
 
   const member = await Users.findOne({
@@ -22,7 +20,7 @@ export const PUT: RequestHandler = async ({ locals, params }) => {
     team_id: user.team_id,
   }).lean();
   if (!member) {
-    throw error(404, "Member not found.");
+    error(404, "Member not found.");
   }
 
   // At this point, we know

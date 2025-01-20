@@ -1,12 +1,12 @@
 import { Users } from "$lib/auth/lucia";
-import { getUser } from "$lib/auth/server";
+import { get_user } from "$lib/auth/server";
 import type { SID } from "$lib/interfaces";
 import { OTPs, type TeamInviteOTP } from "$lib/models/OTPs";
 import { _id_to_string } from "$lib/utils";
 import type { PageServerLoad } from "./$types";
 
 export const load = (async ({ locals }) => {
-  const { team_id } = await getUser(locals);
+  const { team_id } = await get_user(locals);
 
   const [members, pendingInvites] = await Promise.all([
     Users.find({ team_id }, { email: 1, email_verified: 1, role: 1 }).lean(),

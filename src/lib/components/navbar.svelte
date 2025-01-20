@@ -3,7 +3,7 @@
   import { user } from "$lib/stores/user";
   import { onMount } from "svelte";
   import { themeChange } from "theme-change";
-  import Bars3 from "./icons/bars3.svelte";
+  import IconBars3 from "./icons/IconBarThree.svelte";
 
   onMount(() => themeChange(false));
 
@@ -62,7 +62,7 @@
     },
   ];
 
-  const showRoute = (
+  const show_route = (
     user: typeof $user,
     route: Route,
     side?: Route["side"],
@@ -83,7 +83,7 @@
   <div class="navbar-center hidden lg:flex">
     <ul class="flex items-center gap-5">
       {#each routes as r}
-        {#if showRoute($user, r, "center")}
+        {#if show_route($user, r, "center")}
           {@const { href, label } = r}
           <li>
             <a class="link" {href}>{label}</a>
@@ -99,7 +99,7 @@
       <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
       <!-- svelte-ignore a11y-label-has-associated-control -->
       <label tabindex="0" class="btn btn-ghost">
-        <Bars3 />
+        <IconBars3 />
       </label>
       <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
       <ul
@@ -108,7 +108,7 @@
       >
         <!-- Shows all routes, not just those for a given `side` -->
         {#each routes as r}
-          {#if showRoute($user, r)}
+          {#if show_route($user, r)}
             {@const { href, label } = r}
             <li>
               <a class="link" {href}>{label}</a>
@@ -137,7 +137,7 @@
       </select>
 
       {#each routes as r}
-        {#if showRoute($user, r, "right")}
+        {#if show_route($user, r, "right")}
           {@const { href, label } = r}
           <li>
             <a class="link" {href}>{label}</a>

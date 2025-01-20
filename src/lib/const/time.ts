@@ -10,6 +10,6 @@ export const TIME = {
   HOUR,
   DAY,
   WEEK,
-  YEAR,
   MONTH,
+  YEAR,
 };

@@ -1,7 +1,7 @@
 import { auth } from "$lib/auth/lucia";
 import { OTP, OTPs, type TeamInviteOTP } from "$lib/models/OTPs";
 import { Teams } from "$lib/models/Teams";
-import { passwordSchema } from "$lib/schema/index";
+import { password_schema } from "$lib/schema/index";
 import { Parsers } from "$lib/schema/parsers";
 import { INTERNAL_SERVER_ERROR } from "$lib/utils/errors";
 import { type Actions, error, redirect } from "@sveltejs/kit";
@@ -14,7 +14,7 @@ export const actions: Actions = {
       request,
       z.object({
         email: z.string().email(),
-        password: passwordSchema,
+        password: password_schema,
       }),
     );
 
@@ -36,7 +36,7 @@ export const actions: Actions = {
         kind: "team-invite",
         identifier: `email:${email}`,
       }).lean()) as TeamInviteOTP | null;
-      if (!otp) throw error(400, "Invalid team token");
+      if (!otp) error(400, "Invalid team token");
 
       attributes = {
         email_verified: true,
@@ -89,12 +89,12 @@ export const actions: Actions = {
         message === "AUTH_DUPLICATE_KEY_ID" ||
         message === "AUTH_DUPLICATE_USER_DATA"
       ) {
-        throw error(400, "Email already in use");
+        error(400, "Email already in use");
       }
 
       throw INTERNAL_SERVER_ERROR(e);
     }
 
-    throw redirect(302, "/");
+    redirect(302, "/");
   },
 };

@@ -1,19 +1,20 @@
 import { auth, Users } from "$lib/auth/lucia";
 import { ROLES } from "$lib/auth/roles";
-import { getUser, hasAtleastRole } from "$lib/auth/server";
+import { get_user } from "$lib/auth/server";
 import { Parsers } from "$lib/schema/parsers";
+import { Roles } from "$lib/utils/roles";
 import { error, json } from "@sveltejs/kit";
 import { z } from "zod";
 import type { RequestHandler } from "./$types";
 
 export const PUT: RequestHandler = async ({ locals, request, params }) => {
   const [user, { newRole }] = await Promise.all([
-    getUser(locals),
+    get_user(locals),
     Parsers.request(request, z.object({ newRole: z.enum(ROLES) })),
   ]);
 
   if (newRole === "owner") {
-    throw error(
+    error(
       400,
       "You cannot change a member's role to owner. Use the transfer ownership button instead.",
     );
@@ -22,11 +23,9 @@ export const PUT: RequestHandler = async ({ locals, request, params }) => {
   const { member_id } = params;
 
   if (user.userId === member_id) {
-    throw error(400, "You cannot change your own role.");
-  }
-
-  if (!hasAtleastRole(user, newRole)) {
-    throw error(
+    error(400, "You cannot change your own role.");
+  } else if (!Roles.has_atleast(user, newRole)) {
+    error(
       403,
       "You cannot change a member's role to a higher role than your own.",
     );
@@ -37,11 +36,9 @@ export const PUT: RequestHandler = async ({ locals, request, params }) => {
     team_id: user.team_id,
   }).lean();
   if (!member) {
-    throw error(404, "Member not found.");
-  }
-
-  if (!hasAtleastRole(user, member.role)) {
-    throw error(
+    error(404, "Member not found.");
+  } else if (!Roles.has_atleast(user, member.role)) {
+    error(
       403,
       "You cannot change the role of a member with a higher role than your own.",
     );

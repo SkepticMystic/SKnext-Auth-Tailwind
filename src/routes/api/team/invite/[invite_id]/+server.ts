@@ -1,10 +1,12 @@
-import { getUser, hasAtleastRole } from "$lib/auth/server";
+import { get_user } from "$lib/auth/server";
 import { OTPs, type TeamInviteOTP } from "$lib/models/OTPs";
+import { Roles } from "$lib/utils/roles";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const DELETE: RequestHandler = async ({ locals, params }) => {
-  const user = await getUser(locals);
+  // TODO: Promise.all
+  const user = await get_user(locals);
 
   const { invite_id } = params;
 
@@ -15,14 +17,9 @@ export const DELETE: RequestHandler = async ({ locals, params }) => {
   }).lean()) as TeamInviteOTP | null;
 
   if (!invite) {
-    throw error(404, "Invite not found");
-  }
-
-  if (!hasAtleastRole(user, invite.data.role)) {
-    throw error(
-      403,
-      "You cannot delete invites for roles higher than your own",
-    );
+    error(404, "Invite not found");
+  } else if (!Roles.has_atleast(user, invite.data.role)) {
+    error(403, "You cannot delete invites for roles higher than your own");
   }
 
   const { acknowledged } = await OTPs.deleteOne({

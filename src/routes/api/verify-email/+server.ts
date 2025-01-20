@@ -19,21 +19,21 @@ export const GET: RequestHandler = async ({ url }) => {
   }).lean();
   if (verifiedUser) {
     console.log("User already verified");
-    throw redirect(302, "/");
+    redirect(302, "/");
   }
 
   const check = await OTP.validateUserToken({
     token,
     kind: "email-verification",
   });
-  if (!check.ok) throw error(400, "Invalid token");
+  if (!check.ok) error(400, "Invalid token");
 
   const { user, otp } = check.data;
 
   await Promise.all([
-    auth.updateUserAttributes(user.userId, { email_verified: true }),
     otp.deleteOne(),
+    auth.updateUserAttributes(user.userId, { email_verified: true }),
   ]);
 
-  throw redirect(302, "/");
+  redirect(302, "/");
 };

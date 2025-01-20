@@ -1,14 +1,10 @@
 import { auth } from "$lib/auth/lucia";
 import { OTP, type TeamInviteOTP } from "$lib/models/OTPs";
 import { Parsers } from "$lib/schema/parsers";
+import { App } from "$lib/utils/app";
 import { error, redirect } from "@sveltejs/kit";
 import { z } from "zod";
 import type { RequestHandler } from "./$types";
-
-const invalidTokenError = error(
-  400,
-  "Invalid token. Please request a new invite link.",
-);
 
 export const GET: RequestHandler = async ({ url, locals }) => {
   const { team_id, token } = Parsers.url(
@@ -25,7 +21,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
     if (session?.user?.team_id === team_id) {
       console.log("User already on this team");
       // They are already a member of this org
-      throw redirect(302, "/");
+      redirect(302, "/");
     }
   }
 
@@ -35,7 +31,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
   });
   if (!checkToken.ok) {
     console.log("validateToken failed", token);
-    throw invalidTokenError;
+    error(400, "Invalid token. Please request a new invite link.");
   }
   const otp = checkToken.data;
 
@@ -44,16 +40,18 @@ export const GET: RequestHandler = async ({ url, locals }) => {
     if (checkUser.error.message === "user_not_found") {
       console.log("Valid token, no existing user");
       // Create a new user
-      throw redirect(
+
+      redirect(
         302,
-        `/signup?email_hint=${encodeURIComponent(
-          checkUser.error.id.value,
-        )}&team_token=${encodeURIComponent(token)}`,
+        App.url("/signup", {
+          team_token: token,
+          email_hint: checkUser.error.id.value,
+        }),
       );
     } else {
       console.log("getTokenUser failed", checkUser.error);
       await otp.deleteOne();
-      throw invalidTokenError;
+      error(400, "Invalid token. Please request a new invite link.");
     }
   }
 
@@ -77,8 +75,8 @@ export const GET: RequestHandler = async ({ url, locals }) => {
     otp.deleteOne(),
   ]);
 
-  throw redirect(
+  redirect(
     302,
-    `/signin?email_hint=${encodeURIComponent(user.email)}&previous=team-invite`,
+    App.url("/signin", { email_hint: user.email, previous: "team-invite" }),
   );
 };

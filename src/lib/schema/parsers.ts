@@ -13,10 +13,10 @@ const raw = <O, D extends z.ZodTypeDef, I>(
     switch (code) {
       case z.ZodIssueCode.invalid_enum_value: {
         const { options } = issue;
-        throw error(400, `${message} (options: ${options.join(", ")})`);
+        error(400, `${message} (options: ${options.join(", ")})`);
       }
       default:
-        throw error(400, `${message} at ${path.join(".")}`);
+        error(400, `${message} at ${path.join(".")}`);
     }
   } else return parsed.data;
 };
