@@ -72,7 +72,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
       team_id: otp.data.team_id,
       role: otp.data.role,
       // If they are an existing user, but haven't verified their email, it is verified now
-      emailVerified: true,
+      email_verified: true,
     }),
     otp.deleteOne(),
   ]);

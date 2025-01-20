@@ -9,7 +9,7 @@ export const load = (async ({ locals }) => {
   const { team_id } = await getUser(locals);
 
   const [members, pendingInvites] = await Promise.all([
-    Users.find({ team_id }, { email: 1, emailVerified: 1, role: 1 }).lean(),
+    Users.find({ team_id }, { email: 1, email_verified: 1, role: 1 }).lean(),
     OTPs.find(
       { kind: "team-invite", "data.team_id": team_id },
       { token: 0 },

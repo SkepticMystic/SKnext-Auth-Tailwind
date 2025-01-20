@@ -7,7 +7,7 @@ export const load = (async ({ locals }) => {
     getUser(locals, { admin: true }),
     Users.find(
       {},
-      { admin: 1, email: 1, emailVerified: 1, role: 1, team_id: 1 },
+      { admin: 1, email: 1, email_verified: 1, role: 1, team_id: 1 },
     ).lean(),
   ]);
 

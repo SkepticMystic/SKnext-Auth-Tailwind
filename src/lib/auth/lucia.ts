@@ -28,7 +28,7 @@ export const Users =
           required: true,
           enum: ROLES,
         },
-        emailVerified: {
+        email_verified: {
           type: Boolean,
           required: true,
         },
@@ -98,12 +98,12 @@ export const auth = lucia({
     Key: Keys,
   }),
 
-  getUserAttributes: ({ email, emailVerified, team_id, role, admin }) => ({
+  getUserAttributes: ({ email, email_verified, team_id, role, admin }) => ({
     // Included by default:
     // userId: id,
     admin,
     email,
-    emailVerified,
+    email_verified,
     role,
     team_id,
   }),

@@ -15,7 +15,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
   const verifiedUser = await Users.findOne({
     _id,
-    emailVerified: true,
+    email_verified: true,
   }).lean();
   if (verifiedUser) {
     console.log("User already verified");
@@ -31,7 +31,7 @@ export const GET: RequestHandler = async ({ url }) => {
   const { user, otp } = check.data;
 
   await Promise.all([
-    auth.updateUserAttributes(user.userId, { emailVerified: true }),
+    auth.updateUserAttributes(user.userId, { email_verified: true }),
     otp.deleteOne(),
   ]);
 

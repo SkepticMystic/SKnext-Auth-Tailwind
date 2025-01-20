@@ -18,7 +18,7 @@ declare global {
       email: string;
       team_id: string;
       role: import("$lib/auth/roles").Role;
-      emailVerified: boolean;
+      email_verified: boolean;
       admin: boolean;
     };
 

@@ -27,7 +27,7 @@ export const actions: Actions = {
 
     // SECTION: Team
 
-    let attributes: Pick<User, "emailVerified" | "role" | "team_id">;
+    let attributes: Pick<User, "email_verified" | "role" | "team_id">;
 
     if (team_token) {
       // Find and delete the OTP
@@ -39,14 +39,14 @@ export const actions: Actions = {
       if (!otp) throw error(400, "Invalid team token");
 
       attributes = {
-        emailVerified: true,
+        email_verified: true,
         role: otp.data.role,
         team_id: otp.data.team_id,
       };
     } else {
       const team = await Teams.create({});
       attributes = {
-        emailVerified: false,
+        email_verified: false,
         role: "owner",
         team_id: team._id.toString(),
       };
@@ -72,7 +72,7 @@ export const actions: Actions = {
         auth.createSession({ userId, attributes: {} }),
       ];
 
-      if (!attributes.emailVerified) {
+      if (!attributes.email_verified) {
         promises.push(
           OTP.handleLinks["email-verification"]({
             url,
