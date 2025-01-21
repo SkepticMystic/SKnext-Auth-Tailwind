@@ -13,10 +13,7 @@ export const POST: RequestHandler = async ({ locals, request, url }) => {
     get_user(locals),
     Parsers.request(
       request,
-      z.object({
-        email: z.string().email(),
-        role: z.enum(ROLES),
-      }),
+      z.object({ role: z.enum(ROLES), email: z.string().email() }),
     ),
   ]);
 
@@ -30,7 +27,6 @@ export const POST: RequestHandler = async ({ locals, request, url }) => {
   }
 
   await OTP.handleLinks["team-invite"]({
-    url,
     idValue: invite.email,
     data: {
       role: invite.role,

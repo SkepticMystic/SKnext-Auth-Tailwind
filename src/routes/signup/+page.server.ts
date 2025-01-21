@@ -74,10 +74,7 @@ export const actions: Actions = {
 
       if (!attributes.email_verified) {
         promises.push(
-          OTP.handleLinks["email-verification"]({
-            url,
-            idValue: userId,
-          }),
+          OTP.handleLinks["email-verification"]({ idValue: userId }),
         );
       }
 

@@ -2,6 +2,7 @@ import { Users } from "$lib/auth/lucia";
 import type { Role } from "$lib/auth/roles";
 import { TIME } from "$lib/const/time";
 import { err, suc } from "$lib/utils";
+import { App } from "$lib/utils/app";
 import mongoose, { Model } from "mongoose";
 
 const OTP_KINDS = [
@@ -67,7 +68,6 @@ export const OTPs: Model<OTP> =
         },
         token: {
           type: String,
-          // Use the crypto Web API to generate a random token
           default: () => crypto.randomUUID(),
         },
         expiresInMs: {
@@ -152,11 +152,10 @@ const validateToken = async <T extends OTP = OTP>(
   if (!otp) {
     console.log("OTP not found");
     return err("otp_not_found");
-  }
-
-  if (isExpired(otp)) {
+  } else if (isExpired(otp)) {
     console.log("OTP expired");
     await otp.deleteOne();
+
     return err("otp_expired");
   }
 
@@ -230,8 +229,8 @@ const validateUserToken = async (input: Pick<OTP, "token" | "kind">) => {
 };
 
 const handleLinks = {
-  "email-verification": async (input: { idValue: string; url: URL }) => {
-    const { url, idValue } = input;
+  "email-verification": async (input: { idValue: string }) => {
+    const { idValue } = input;
 
     // We know there were no existing email-verification OTPs,
     //   since we just created the user
@@ -241,30 +240,32 @@ const handleLinks = {
       kind: "email-verification",
     });
 
-    const href = `${url.origin}/api/verify-email?token=${otp.token}&_id=${idValue}`;
+    const href = App.full_url("/api/verify-email", {
+      token: otp.token,
+      _id: idValue,
+    });
     console.log(href);
     console.log("TODO: sendEmail");
   },
 
-  "password-reset": async (input: { idValue: string; url: URL }) => {
-    const { url, idValue } = input;
+  "password-reset": async (input: { idValue: string }) => {
+    const { idValue } = input;
 
     const otp = await OTP.getOrCreate({
       identifier: `_id:${idValue}`,
       kind: "password-reset",
     });
 
-    const href = `${url.origin}/reset-password?token=${otp.token}`;
+    const href = App.full_url("/api/reset-password", { token: otp.token });
     console.log(href);
     console.log("TODO: sendEmail");
   },
 
   "team-invite": async (input: {
     idValue: string;
-    url: URL;
     data: TeamInviteOTP["data"];
   }) => {
-    const { url, idValue, data } = input;
+    const { idValue, data } = input;
 
     const otp = await OTP.create<TeamInviteOTP>({
       identifier: `email:${idValue}`,
@@ -272,7 +273,10 @@ const handleLinks = {
       data,
     });
 
-    const href = `${url.origin}/api/team/join?token=${otp.token}&team_id=${data.team_id}`;
+    const href = App.full_url("/api/team/join", {
+      token: otp.token,
+      team_id: data.team_id,
+    });
     console.log(href);
     console.log("TODO: sendEmail");
   },
