@@ -5,6 +5,6 @@ export const set_href = (href = "/") => {
 };
 
 export const signout = async () => {
-  await axios.post("/api/signout");
+  await axios.post("/api/auth/signout");
   set_href("/");
 };

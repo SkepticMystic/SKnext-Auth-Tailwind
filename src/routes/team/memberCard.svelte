@@ -14,21 +14,21 @@
   export let member: SID<Pick<User, "email" | "role">>;
 
   const loader = Loader<
-    "remove-member" | "change-role" | "transfer-ownership"
+    "remove_member" | "change_role" | "transfer_ownership"
   >();
 
-  const memberIsUser = $user?.userId === member._id;
+  const member_is_user = $user?.userId === member._id;
 
-  let newRole = member.role;
+  let newRole = member.role.slice();
 
-  const removeFromTeam = async () => {
+  const remove_member = async () => {
     if (
       !confirm(`Are you sure you want to remove ${member.email} from the team?`)
     ) {
       return;
     }
 
-    loader.load("remove-member");
+    loader.load("remove_member");
 
     try {
       const { data } = await axios.delete<Result>(
@@ -48,13 +48,13 @@
     loader.reset();
   };
 
-  const changeRole = async () => {
+  const change_role = async () => {
     if (!confirm(`Are you sure you want to change ${member.email}'s role?`)) {
       newRole = member.role;
       return;
     }
 
-    loader.load("change-role");
+    loader.load("change_role");
 
     try {
       const { data } = await axios.put<Result>(
@@ -75,17 +75,17 @@
     loader.reset();
   };
 
-  const transferOwnership = async () => {
+  const transfer_ownership = async () => {
     if (!confirm(`Are you sure you want to make ${member.email} the owner?`)) {
       newRole = member.role;
       return;
     }
 
-    loader.load("transfer-ownership");
+    loader.load("transfer_ownership");
 
     try {
       const { data } = await axios.put<Result>(
-        `/api/team/member/${member._id}/transferOwnership`,
+        `/api/team/member/${member._id}/transfer_ownership`,
       );
 
       if (data.ok) {
@@ -106,7 +106,9 @@
 <div
   class="flex min-w-[200px] flex-col gap-3 rounded-box border bg-base-100 p-3"
 >
-  <span class="text-sm" class:font-semibold={memberIsUser}>{member.email}</span>
+  <span class="text-sm" class:font-semibold={member_is_user}
+    >{member.email}</span
+  >
   <span class="text-sm capitalize">
     {member.role === "owner" ? "👑" : ""}
     {member.role}
@@ -114,7 +116,7 @@
 
   <div class="flex items-end gap-2">
     <Label lbl="Change Role">
-      <select class="select" disabled={memberIsUser} bind:value={newRole}>
+      <select class="select" disabled={member_is_user} bind:value={newRole}>
         {#each ROLES.filter((r) => r != "owner") as role}
           <option value={role}>{role}</option>
         {/each}
@@ -123,28 +125,30 @@
 
     <button
       class="btn btn-secondary"
-      disabled={newRole === member.role || memberIsUser || any_loading($loader)}
-      on:click={changeRole}
+      disabled={newRole === member.role ||
+        member_is_user ||
+        any_loading($loader)}
+      on:click={change_role}
     >
-      <Loading loading={$loader["change-role"]}>Change</Loading>
+      <Loading loading={$loader["change_role"]}>Change</Loading>
     </button>
   </div>
 
   <button
     class="btn btn-warning"
-    disabled={$user?.role !== "owner" || memberIsUser || any_loading($loader)}
-    on:click={transferOwnership}
+    disabled={$user?.role !== "owner" || member_is_user || any_loading($loader)}
+    on:click={transfer_ownership}
   >
-    <Loading loading={$loader["transfer-ownership"]}>
+    <Loading loading={$loader["transfer_ownership"]}>
       Transfer Ownership
     </Loading>
   </button>
 
   <button
     class="btn btn-error"
-    disabled={memberIsUser || any_loading($loader)}
-    on:click={removeFromTeam}
+    disabled={member_is_user || any_loading($loader)}
+    on:click={remove_member}
   >
-    <Loading loading={$loader["remove-member"]}>Remove</Loading>
+    <Loading loading={$loader["remove_member"]}>Remove</Loading>
   </button>
 </div>

@@ -5,7 +5,6 @@ import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const DELETE: RequestHandler = async ({ locals, params }) => {
-  // TODO: Promise.all
   const user = await get_user(locals);
 
   const { invite_id } = params;
