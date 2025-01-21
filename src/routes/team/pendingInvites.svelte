@@ -3,7 +3,7 @@
   import Loading from "$lib/components/Loading.svelte";
   import type { Result, SID } from "$lib/interfaces";
   import type { TeamInviteOTP } from "$lib/models/OTPs";
-  import { getProps } from "$lib/utils";
+  import { any_loading, Loader } from "$lib/utils/loader";
   import axios from "axios";
   import { toast } from "svelte-daisyui-toast";
 
@@ -11,12 +11,12 @@
     Pick<TeamInviteOTP, "createdAt" | "data" | "expiresInMs" | "identifier">
   >[];
 
-  let { loadObj } = getProps();
+  const loader = Loader<`delete-invite-${string}`>();
 
   const deletePendingInvite = async (_id: string) => {
     if (!confirm("Are you sure you want to delete this invite?")) return;
 
-    loadObj["delete" + _id] = true;
+    loader.load(`delete-invite-${_id}`);
 
     const { data } = await axios.delete<Result>(`/api/team/invite/${_id}`);
 
@@ -26,7 +26,7 @@
       toast.success("Invite deleted");
     }
 
-    loadObj = {};
+    loader.reset();
   };
 </script>
 
@@ -45,10 +45,10 @@
 
       <button
         class="btn btn-error"
-        disabled={loadObj["delete" + _id]}
+        disabled={any_loading($loader)}
         on:click={() => deletePendingInvite(_id)}
       >
-        <Loading loading={loadObj["delete" + _id]} />
+        <Loading loading={$loader[`delete-invite-${_id}`]} />
         Delete
       </button>
     </div>

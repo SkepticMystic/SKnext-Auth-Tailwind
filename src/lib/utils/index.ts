@@ -1,21 +1,6 @@
 import type { Err, SID, Suc } from "$lib/interfaces";
 import type { ObjectId } from "mongodb";
 
-// TODO: Do away with this, it's mostly just for loadObj these days, and now we have Loader
-export const getProps = <LoadKey extends string | number = string | number>(): {
-  err: string;
-  suc: string;
-  loading: boolean;
-  loadObj: Partial<Record<LoadKey, boolean>>;
-  disabled: boolean;
-} => ({
-  err: "",
-  suc: "",
-  loading: false,
-  loadObj: {},
-  disabled: false,
-});
-
 export const _id_to_string = <T extends { _id: string | ObjectId | unknown }>(
   doc: T,
 ) => {

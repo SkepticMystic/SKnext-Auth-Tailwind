@@ -1,20 +1,22 @@
 <script lang="ts">
   import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
-  import ResultText from "$lib/components/resultText.svelte";
   import type { Result } from "$lib/interfaces";
-  import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
+  import { any_loading, Loader } from "$lib/utils/loader";
   import axios from "axios";
+  import { toast } from "svelte-daisyui-toast";
 
   let newPass = "";
   let confirmPass = "";
-  let { err, loading, suc } = getProps();
+
+  const loader = Loader<"change-pwd">();
 
   const changePassword = async () => {
-    if (newPass !== confirmPass) return (err = "Passwords do not match");
+    toast.set([]);
 
-    (loading = true), (err = suc = "");
+    if (newPass !== confirmPass) return toast.warning("Passwords do not match");
+    loader.load("change-pwd");
 
     try {
       const { data } = await axios.put<Result>("/api/user/password", {
@@ -23,17 +25,18 @@
 
       if (data.ok) {
         newPass = confirmPass = "";
-        suc = "Password changed successfully";
-      } else err = "Something went wrong";
+
+        toast.success("Password changed successfully");
+      } else {
+        toast.error("Something went wrong");
+      }
     } catch (error) {
       console.log(error);
-      err = getHTTPErrorMsg(error);
+      toast.error(getHTTPErrorMsg(error));
     }
 
-    loading = false;
+    loader.reset();
   };
-
-  $: if (newPass || confirmPass) err = suc = "";
 </script>
 
 <h2 class="text-xl">Change Password</h2>
@@ -45,8 +48,6 @@
   <Label lbl="New Password">
     <input
       class="input"
-      class:input-error={err}
-      class:input-success={suc}
       type="password"
       autocomplete="new-password"
       bind:value={newPass}
@@ -55,8 +56,6 @@
   <Label lbl="Confirm Password">
     <input
       class="input"
-      class:input-error={err}
-      class:input-success={suc}
       type="password"
       autocomplete="new-password"
       bind:value={confirmPass}
@@ -67,11 +66,10 @@
     <button
       class="btn btn-primary"
       type="submit"
-      disabled={!newPass || !confirmPass || loading}
+      disabled={!newPass || !confirmPass || any_loading($loader)}
     >
-      <Loading {loading} />
+      <Loading loading={$loader["change-pwd"]} />
       Change Password
     </button>
-    <ResultText {err} {suc} />
   </div>
 </form>

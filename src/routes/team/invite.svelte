@@ -3,21 +3,23 @@
   import { ROLES, type Role } from "$lib/auth/roles";
   import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
-  import ResultText from "$lib/components/resultText.svelte";
-  import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
+  import { any_loading, Loader } from "$lib/utils/loader";
   import axios from "axios";
   import { toast } from "svelte-daisyui-toast";
 
-  let { loading, err } = getProps();
+  const loader = Loader<"invite">();
+
   let email: string;
   let role: Role;
 
   const inviteToTeam = async () => {
-    (loading = true), (err = "");
+    toast.set([]);
+    loader.load("invite");
 
     try {
       const { data } = await axios.post("/api/team/invite", { email, role });
+
       if (data.ok) {
         toast.success("Invite sent!");
         (email = ""), (role = "member");
@@ -26,13 +28,11 @@
       }
     } catch (error) {
       console.log(error);
-      err = getHTTPErrorMsg(error);
+      toast.error(getHTTPErrorMsg(error));
     }
 
-    loading = false;
+    loader.reset();
   };
-
-  $: if (email || role) err = "";
 </script>
 
 <form class="flex flex-col gap-3">
@@ -57,14 +57,12 @@
     <div class="flex flex-wrap items-center gap-3">
       <button
         class="btn btn-secondary"
-        disabled={!email || !role || loading}
+        disabled={!email || !role || any_loading($loader)}
         on:click={inviteToTeam}
       >
-        <Loading {loading} />
+        <Loading loading={$loader["invite"]} />
         Invite to Team
       </button>
-
-      <ResultText {err} />
     </div>
   </div>
 </form>

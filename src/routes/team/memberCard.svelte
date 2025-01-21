@@ -5,26 +5,30 @@
   import Label from "$lib/components/label.svelte";
   import type { Result, SID } from "$lib/interfaces";
   import { user } from "$lib/stores/user";
-  import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
+  import { any_loading, Loader } from "$lib/utils/loader";
   import axios from "axios";
   import type { User } from "lucia";
   import { toast } from "svelte-daisyui-toast";
 
   export let member: SID<Pick<User, "email" | "role">>;
 
-  const memberIsUser = $user?.userId === member._id;
+  const loader = Loader<
+    "remove-member" | "change-role" | "transfer-ownership"
+  >();
 
-  let { loadObj } = getProps();
+  const memberIsUser = $user?.userId === member._id;
 
   let newRole = member.role;
 
   const removeFromTeam = async () => {
     if (
       !confirm(`Are you sure you want to remove ${member.email} from the team?`)
-    )
+    ) {
       return;
-    loadObj["remove"] = true;
+    }
+
+    loader.load("remove-member");
 
     try {
       const { data } = await axios.delete<Result>(
@@ -41,7 +45,7 @@
       toast.error(getHTTPErrorMsg(error));
     }
 
-    loadObj = {};
+    loader.reset();
   };
 
   const changeRole = async () => {
@@ -49,7 +53,8 @@
       newRole = member.role;
       return;
     }
-    loadObj["changeRole"] = true;
+
+    loader.load("change-role");
 
     try {
       const { data } = await axios.put<Result>(
@@ -67,7 +72,7 @@
       toast.error(getHTTPErrorMsg(error));
     }
 
-    loadObj = {};
+    loader.reset();
   };
 
   const transferOwnership = async () => {
@@ -75,7 +80,8 @@
       newRole = member.role;
       return;
     }
-    loadObj["transferOwnership"] = true;
+
+    loader.load("transfer-ownership");
 
     try {
       const { data } = await axios.put<Result>(
@@ -93,10 +99,8 @@
       toast.error(getHTTPErrorMsg(error));
     }
 
-    loadObj = {};
+    loader.reset();
   };
-
-  $: anyLoading = Object.keys(loadObj).length > 0;
 </script>
 
 <div
@@ -119,26 +123,28 @@
 
     <button
       class="btn btn-secondary"
-      disabled={newRole === member.role || memberIsUser || anyLoading}
+      disabled={newRole === member.role || memberIsUser || any_loading($loader)}
       on:click={changeRole}
     >
-      <Loading loading={loadObj["changeRole"]}>Change</Loading>
+      <Loading loading={$loader["change-role"]}>Change</Loading>
     </button>
   </div>
 
   <button
     class="btn btn-warning"
-    disabled={$user?.role !== "owner" || memberIsUser || anyLoading}
+    disabled={$user?.role !== "owner" || memberIsUser || any_loading($loader)}
     on:click={transferOwnership}
   >
-    <Loading loading={loadObj["transferOwnership"]}>Transfer Ownership</Loading>
+    <Loading loading={$loader["transfer-ownership"]}>
+      Transfer Ownership
+    </Loading>
   </button>
 
   <button
     class="btn btn-error"
-    disabled={memberIsUser || anyLoading}
+    disabled={memberIsUser || any_loading($loader)}
     on:click={removeFromTeam}
   >
-    <Loading loading={loadObj["remove"]}>Remove</Loading>
+    <Loading loading={$loader["remove-member"]}>Remove</Loading>
   </button>
 </div>

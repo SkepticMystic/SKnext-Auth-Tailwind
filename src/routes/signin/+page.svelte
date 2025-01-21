@@ -3,21 +3,22 @@
   import { set_href } from "$lib/auth/client";
   import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
-  import ResultText from "$lib/components/resultText.svelte";
-  import { getProps } from "$lib/utils";
   import { getActionErrorMsg } from "$lib/utils/errors";
+  import { any_loading, Loader } from "$lib/utils/loader";
   import type { ActionResult } from "@sveltejs/kit";
   import axios from "axios";
+  import { toast } from "svelte-daisyui-toast";
 
-  const emailHint = $page.url.searchParams.get("email_hint");
+  const loader = Loader<"signin">();
+
   const previous = $page.url.searchParams.get("previous");
+  const email_hint = $page.url.searchParams.get("email_hint");
 
-  let email: string | undefined = emailHint ?? undefined;
   let password: string;
-  let { err, loading, suc } = getProps();
+  let email: string | undefined = email_hint ?? undefined;
 
   const signin = async () => {
-    (loading = true), (err = suc = "");
+    loader.load("signin");
 
     try {
       const { data } = await axios.postForm<ActionResult>("", {
@@ -26,17 +27,16 @@
       });
 
       email = password = "";
-      suc = "Sign in successful";
+      toast.success("Sign in successful");
+
       if (data.type === "redirect") set_href(data.location);
     } catch (error) {
       console.log(error);
-      err = getActionErrorMsg(error);
+      toast.error(getActionErrorMsg(error));
     }
 
-    loading = false;
+    loader.reset();
   };
-
-  $: if (email || password) err = suc = "";
 </script>
 
 {#if previous === "team-invite"}
@@ -51,20 +51,11 @@
 
 <form on:submit|preventDefault={signin}>
   <Label lbl="Email">
-    <input
-      class="input"
-      class:input-error={err}
-      class:input-success={suc}
-      type="email"
-      autocomplete="email"
-      bind:value={email}
-    />
+    <input class="input" type="email" autocomplete="email" bind:value={email} />
   </Label>
   <Label lbl="Password">
     <input
       class="input"
-      class:input-error={err}
-      class:input-success={suc}
       type="password"
       autocomplete="current-password"
       bind:value={password}
@@ -75,13 +66,11 @@
     <button
       class="btn btn-primary my-4"
       type="submit"
-      disabled={!email || !password || loading}
+      disabled={!email || !password || any_loading($loader)}
     >
-      <Loading {loading} />
+      <Loading loading={$loader["signin"]} />
       Sign in
     </button>
-
-    <ResultText {err} />
   </div>
 </form>
 

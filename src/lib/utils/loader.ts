@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 
-export const Loader = <S extends string>() => {
+export const Loader = <S extends string | number>() => {
   const store = writable<Partial<Record<S, boolean>>>({});
 
   return {

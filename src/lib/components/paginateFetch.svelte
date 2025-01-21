@@ -1,10 +1,10 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { getProps } from "$lib/utils";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
+  import { any_loading, Loader } from "$lib/utils/loader";
   import { onMount } from "svelte";
+  import { toast } from "svelte-daisyui-toast";
   import Loading from "./Loading.svelte";
-  import ResultText from "./resultText.svelte";
 
   export let data: any[];
   export let fetchOnMount: boolean = true;
@@ -12,6 +12,8 @@
   export let total: number | null = null;
   export let pageNo: number | null = null;
   export let limit: number | null = null;
+
+  const loader = Loader<Dir>();
 
   let currPage = pageNo ?? Number($page.url.searchParams.get("page") ?? 1);
   let currLimit = limit ?? Number($page.url.searchParams.get("limit") ?? 50);
@@ -21,10 +23,9 @@
 
   // First | Previous | Current | Next | Last
   type Dir = -2 | -1 | 0 | 1 | 2;
-  let { loadObj, err } = getProps<Dir>();
 
   const getMore = async (dir: Dir = 0) => {
-    loadObj[dir] = true;
+    loader.load(dir);
 
     if (dir === -2) skip = 0;
     else if (dir === 2) {
@@ -38,43 +39,41 @@
       // Set page after completing fetch
       currPage = Math.floor(skip / currLimit) + 1;
     } catch (error) {
-      err = getHTTPErrorMsg(error);
+      toast.error(getHTTPErrorMsg(error));
     }
 
-    loadObj = {};
+    loader.reset();
   };
 
   if (fetchOnMount) onMount(getMore);
-
-  $: anyLoading = Object.keys(loadObj).length > 0;
 </script>
 
 <div>
   <div class="flex">
     <button
       class="btn btn-square btn-secondary rounded-none border-0"
-      disabled={anyLoading || skip === 0}
+      disabled={any_loading($loader) || skip === 0}
       title="First"
       on:click={async () => await getMore(-2)}
     >
-      <Loading loading={loadObj[-2]}>≪</Loading>
+      <Loading loading={$loader[-2]}>≪</Loading>
     </button>
     <button
       class="btn btn-square btn-secondary rounded-none border-0"
-      disabled={anyLoading || skip === 0}
+      disabled={any_loading($loader) || skip === 0}
       title="Previous"
       on:click={async () => await getMore(-1)}
     >
-      <Loading loading={loadObj[-1]}>←</Loading>
+      <Loading loading={$loader[-1]}>←</Loading>
     </button>
 
     <button
       class="btn btn-ghost rounded-none border-0 font-bold"
-      disabled={anyLoading}
+      disabled={any_loading($loader)}
       title="Refresh"
       on:click={async () => await getMore(0)}
     >
-      <Loading loading={loadObj[0]}>
+      <Loading loading={$loader[0]}>
         {currPage}{total ? ` / ${totalPages}` : ""}
       </Loading>
     </button>
@@ -82,20 +81,20 @@
     <button
       class="btn btn-square btn-secondary rounded-none border-0"
       title="Next"
-      disabled={anyLoading ||
+      disabled={any_loading($loader) ||
         (total ? currPage === totalPages : data.length < currLimit)}
       on:click={async () => await getMore(1)}
     >
-      <Loading loading={loadObj[1]}>→</Loading>
+      <Loading loading={$loader[1]}>→</Loading>
     </button>
     {#if total}
       <button
         class="btn btn-square btn-secondary rounded-none border-0"
-        disabled={anyLoading || currPage === totalPages}
+        disabled={any_loading($loader) || currPage === totalPages}
         title="Last"
         on:click={async () => await getMore(2)}
       >
-        <Loading loading={loadObj[2]}>≫</Loading>
+        <Loading loading={$loader[2]}>≫</Loading>
       </button>
     {/if}
     <div class="mx-2" />
@@ -114,6 +113,4 @@
       {#if total}<option value={total}>All</option>{/if}
     </select>
   </div>
-
-  <ResultText {err} />
 </div>

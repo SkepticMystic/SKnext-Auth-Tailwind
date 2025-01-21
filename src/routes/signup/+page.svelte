@@ -1,23 +1,25 @@
 <script lang="ts">
-  import { set_href } from "$lib/auth/client";
-  import ResultText from "$lib/components/resultText.svelte";
-  import Label from "$lib/components/label.svelte";
-  import { getActionErrorMsg } from "$lib/utils/errors";
-  import axios from "axios";
-  import { getProps } from "$lib/utils";
-  import type { ActionResult } from "@sveltejs/kit";
   import { page } from "$app/stores";
+  import { set_href } from "$lib/auth/client";
+  import Label from "$lib/components/label.svelte";
   import Loading from "$lib/components/Loading.svelte";
+  import { getActionErrorMsg } from "$lib/utils/errors";
+  import { any_loading, Loader } from "$lib/utils/loader";
+  import type { ActionResult } from "@sveltejs/kit";
+  import axios from "axios";
+  import { toast } from "svelte-daisyui-toast";
 
-  const teamToken = $page.url.searchParams.get("team_token");
-  const emailHint = $page.url.searchParams.get("email_hint");
+  const loader = Loader<"signup">();
 
-  let email: string | undefined = emailHint ?? undefined;
+  const team_token = $page.url.searchParams.get("team_token");
+  const email_hint = $page.url.searchParams.get("email_hint");
+
   let password: string;
-  let { err, loading, suc } = getProps();
+  let email: string | undefined = email_hint ?? undefined;
 
   const signup = async () => {
-    (loading = true), (err = suc = "");
+    toast.set([]);
+    loader.load("signup");
 
     try {
       const { data } = await axios.postForm<ActionResult>("", {
@@ -27,20 +29,21 @@
 
       if (data.type === "redirect") {
         email = password = "";
-        suc = "Sign up successful";
+        toast.success("Sign up successful");
         set_href(data.location);
-      } else err = "Something went wrong";
+      } else {
+        toast.error("Something went wrong");
+      }
     } catch (error) {
       console.log(error);
-      err = getActionErrorMsg(error);
+      toast.error(getActionErrorMsg(error));
     }
-    loading = false;
-  };
 
-  $: if (email || password) err = "";
+    loader.reset();
+  };
 </script>
 
-{#if teamToken}
+{#if team_token}
   <p class="my-3">
     You've been invited to join a team. Please signup to continue.
   </p>
@@ -52,7 +55,7 @@
       class="input"
       type="email"
       autocomplete="email"
-      disabled={!!emailHint}
+      disabled={!!email_hint}
       bind:value={email}
     />
   </Label>
@@ -69,13 +72,11 @@
     <button
       class="btn btn-primary my-4"
       type="submit"
-      disabled={!email || !password || loading}
+      disabled={!email || !password || any_loading($loader)}
     >
-      <Loading {loading} />
+      <Loading loading={$loader["signup"]} />
       Signup
     </button>
-
-    <ResultText {err} />
   </div>
 </form>
 
