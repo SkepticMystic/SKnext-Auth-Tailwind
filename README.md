@@ -39,4 +39,4 @@ You can preview the production build with `npm run preview`.
 
 # TODO
 
-- [ ] oauth
+- [ ] oauth from app.hya.social

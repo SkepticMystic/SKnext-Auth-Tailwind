@@ -36,6 +36,7 @@
     "@lucia-auth/adapter-mongoose": "^3.0.0",
     "@tailwindcss/forms": "^0.5.10",
     "axios": "^1.7.9",
+    "emailjs": "^4.0.3",
     "lucia": "^2.0.0",
     "mongoose": "^7.4.2",
     "svelte-daisyui-toast": "^1.0.0",

@@ -1,10 +1,13 @@
 import type { ActionError, HTTPError } from "$lib/interfaces/errors";
 import { error } from "@sveltejs/kit";
+import { Json } from "./json";
 
 const errToString = (err: unknown) => {
-  if (typeof err === "string") return err;
-  if (err instanceof Error) return err.message;
-  return JSON.stringify(err);
+  if (err instanceof Error) {
+    return err.message;
+  } else {
+    return Json.str_or_stringify(err);
+  }
 };
 
 export const INTERNAL_SERVER_ERROR = (err: unknown) =>
