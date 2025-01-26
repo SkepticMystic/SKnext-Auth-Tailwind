@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { preventDefault } from "svelte/legacy";
+
   import { page } from "$app/stores";
   import { set_href } from "$lib/auth/client";
   import Loading from "$lib/components/Loading.svelte";
@@ -14,8 +16,8 @@
   const previous = $page.url.searchParams.get("previous");
   const email_hint = $page.url.searchParams.get("email_hint");
 
-  let password: string;
-  let email: string | undefined = email_hint ?? undefined;
+  let password = $state("");
+  let email: string | undefined = $state(email_hint ?? undefined);
 
   const signin = async () => {
     loader.load("signin");
@@ -49,7 +51,7 @@
   </p>
 {/if}
 
-<form on:submit|preventDefault={signin}>
+<form onsubmit={preventDefault(signin)}>
   <Label lbl="Email">
     <input class="input" type="email" autocomplete="email" bind:value={email} />
   </Label>

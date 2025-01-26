@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { preventDefault } from "svelte/legacy";
+
   import { page } from "$app/stores";
   import { set_href } from "$lib/auth/client";
   import Label from "$lib/components/label.svelte";
@@ -14,8 +16,8 @@
   const team_token = $page.url.searchParams.get("team_token");
   const email_hint = $page.url.searchParams.get("email_hint");
 
-  let password: string;
-  let email: string | undefined = email_hint ?? undefined;
+  let password = $state("");
+  let email: string | undefined = $state(email_hint ?? undefined);
 
   const signup = async () => {
     toast.set([]);
@@ -49,7 +51,7 @@
   </p>
 {/if}
 
-<form on:submit|preventDefault={signup}>
+<form onsubmit={preventDefault(signup)}>
   <Label lbl="Email">
     <input
       class="input"

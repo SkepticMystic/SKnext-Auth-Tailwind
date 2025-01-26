@@ -96,12 +96,12 @@
   <!-- Mobile menu -->
   <div class="navbar-end flex lg:hidden">
     <div class="dropdown dropdown-left z-50">
-      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-      <!-- svelte-ignore a11y-label-has-associated-control -->
+      <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+      <!-- svelte-ignore a11y_label_has_associated_control -->
       <label tabindex="0" class="btn btn-ghost">
         <IconBars3 />
       </label>
-      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+      <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
       <ul
         tabindex="0"
         class="menu-compact menu dropdown-content mt-3 w-40 rounded-box bg-base-100 p-2 shadow"
@@ -118,7 +118,7 @@
 
         {#if $user}
           <li>
-            <button class="link" on:click={signout}> Sign out </button>
+            <button class="link" onclick={signout}> Sign out </button>
           </li>
         {/if}
       </ul>
@@ -147,7 +147,7 @@
 
       {#if $user}
         <li>
-          <button class="btn btn-ghost btn-sm" on:click={signout}>
+          <button class="btn btn-ghost btn-sm" onclick={signout}>
             Sign out
           </button>
         </li>

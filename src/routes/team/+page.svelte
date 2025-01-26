@@ -3,7 +3,7 @@
   import Members from "./members.svelte";
   import PendingInvites from "./pendingInvites.svelte";
 
-  export let data;
+  let { data } = $props();
 </script>
 
 <h1 class="mb-7 text-2xl">Team</h1>

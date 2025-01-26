@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { preventDefault } from "svelte/legacy";
+
   import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
   import { getActionErrorMsg } from "$lib/utils/errors";
@@ -7,7 +9,7 @@
   import axios from "axios";
   import { toast } from "svelte-daisyui-toast";
 
-  let email: string;
+  let email = $state("");
 
   const loader = Loader<"forgot-password">();
 
@@ -31,7 +33,7 @@
   };
 </script>
 
-<form on:submit|preventDefault={forgotPassword}>
+<form onsubmit={preventDefault(forgotPassword)}>
   <Label lbl="Email">
     <input class="input" type="email" autocomplete="email" bind:value={email} />
   </Label>

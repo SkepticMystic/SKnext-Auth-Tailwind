@@ -7,9 +7,13 @@
   import axios from "axios";
   import { toast } from "svelte-daisyui-toast";
 
-  export let pendingInvites: SID<
+  interface Props {
+    pendingInvites: SID<
     Pick<TeamInviteOTP, "createdAt" | "data" | "expiresInMs" | "identifier">
   >[];
+  }
+
+  let { pendingInvites }: Props = $props();
 
   const loader = Loader<`delete-invite-${string}`>();
 
@@ -46,7 +50,7 @@
       <button
         class="btn btn-error"
         disabled={any_loading($loader)}
-        on:click={() => deletePendingInvite(_id)}
+        onclick={() => deletePendingInvite(_id)}
       >
         <Loading loading={$loader[`delete-invite-${_id}`]} />
         Delete

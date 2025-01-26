@@ -1,5 +1,9 @@
 <script lang="ts">
-  export let tip: string;
+  interface Props {
+    tip: string;
+  }
+
+  let { tip }: Props = $props();
 </script>
 
 <div class="tooltip" data-tip={tip}>

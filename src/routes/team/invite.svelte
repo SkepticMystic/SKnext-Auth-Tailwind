@@ -10,8 +10,8 @@
 
   const loader = Loader<"invite">();
 
-  let email: string;
-  let role: Role;
+  let email = $state("");
+  let role: Role = $state("member");
 
   const inviteToTeam = async () => {
     toast.set([]);
@@ -58,7 +58,7 @@
       <button
         class="btn btn-secondary"
         disabled={!email || !role || any_loading($loader)}
-        on:click={inviteToTeam}
+        onclick={inviteToTeam}
       >
         <Loading loading={$loader["invite"]} />
         Invite to Team

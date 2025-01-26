@@ -6,20 +6,31 @@
   import { toast } from "svelte-daisyui-toast";
   import Loading from "./Loading.svelte";
 
-  export let data: any[];
-  export let fetchOnMount: boolean = true;
-  export let getData: (skip: number, limit: number) => Promise<any[]>;
-  export let total: number | null = null;
-  export let pageNo: number | null = null;
-  export let limit: number | null = null;
+  interface Props {
+    data: any[];
+    fetchOnMount?: boolean;
+    getData: (skip: number, limit: number) => Promise<any[]>;
+    total?: number | null;
+    pageNo?: number | null;
+    limit?: number | null;
+  }
+
+  let {
+    data = $bindable(),
+    fetchOnMount = true,
+    getData,
+    total = null,
+    pageNo = null,
+    limit = null
+  }: Props = $props();
 
   const loader = Loader<Dir>();
 
-  let currPage = pageNo ?? Number($page.url.searchParams.get("page") ?? 1);
-  let currLimit = limit ?? Number($page.url.searchParams.get("limit") ?? 50);
+  let currPage = $state(pageNo ?? Number($page.url.searchParams.get("page") ?? 1));
+  let currLimit = $state(limit ?? Number($page.url.searchParams.get("limit") ?? 50));
 
-  $: totalPages = total ? Math.ceil(total / currLimit) : null;
-  let skip = (currPage - 1) * currLimit;
+  let totalPages = $derived(total ? Math.ceil(total / currLimit) : null);
+  let skip = $state((currPage - 1) * currLimit);
 
   // First | Previous | Current | Next | Last
   type Dir = -2 | -1 | 0 | 1 | 2;
@@ -54,7 +65,7 @@
       class="btn btn-square btn-secondary rounded-none border-0"
       disabled={any_loading($loader) || skip === 0}
       title="First"
-      on:click={async () => await getMore(-2)}
+      onclick={async () => await getMore(-2)}
     >
       <Loading loading={$loader[-2]}>≪</Loading>
     </button>
@@ -62,7 +73,7 @@
       class="btn btn-square btn-secondary rounded-none border-0"
       disabled={any_loading($loader) || skip === 0}
       title="Previous"
-      on:click={async () => await getMore(-1)}
+      onclick={async () => await getMore(-1)}
     >
       <Loading loading={$loader[-1]}>←</Loading>
     </button>
@@ -71,7 +82,7 @@
       class="btn btn-ghost rounded-none border-0 font-bold"
       disabled={any_loading($loader)}
       title="Refresh"
-      on:click={async () => await getMore(0)}
+      onclick={async () => await getMore(0)}
     >
       <Loading loading={$loader[0]}>
         {currPage}{total ? ` / ${totalPages}` : ""}
@@ -83,7 +94,7 @@
       title="Next"
       disabled={any_loading($loader) ||
         (total ? currPage === totalPages : data.length < currLimit)}
-      on:click={async () => await getMore(1)}
+      onclick={async () => await getMore(1)}
     >
       <Loading loading={$loader[1]}>→</Loading>
     </button>
@@ -92,16 +103,16 @@
         class="btn btn-square btn-secondary rounded-none border-0"
         disabled={any_loading($loader) || currPage === totalPages}
         title="Last"
-        on:click={async () => await getMore(2)}
+        onclick={async () => await getMore(2)}
       >
         <Loading loading={$loader[2]}>≫</Loading>
       </button>
     {/if}
-    <div class="mx-2" />
+    <div class="mx-2"></div>
     <select
       class="select"
       bind:value={currLimit}
-      on:change={async () => {
+      onchange={async () => {
         skip = 0;
         await getMore();
       }}

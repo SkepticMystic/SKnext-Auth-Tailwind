@@ -1,15 +1,25 @@
 <script lang="ts">
   import type { TW } from "$lib/interfaces/tailwind";
 
-  export let loading: boolean | undefined;
-  export let size: TW.Size = "sm";
-  export let animation:
+  interface Props {
+    loading: boolean | undefined;
+    size?: TW.Size;
+    animation?: 
     | "spinner"
     | "dots"
     | "ring"
     | "ball"
     | "bars"
-    | "infinity" = "spinner";
+    | "infinity";
+    children?: import('svelte').Snippet;
+  }
+
+  let {
+    loading,
+    size = "sm",
+    animation = "spinner",
+    children
+  }: Props = $props();
 
   const loadingSizes: Record<TW.Size, `loading-${TW.Size}`> = {
     xs: "loading-xs",
@@ -36,7 +46,7 @@
   <span
     class="{loadingSizes[size]} {loadingAnimations[animation]}"
     class:loading
-  />
+></span>
 {:else}
-  <slot />
+  {@render children?.()}
 {/if}

@@ -7,10 +7,15 @@
   import type { User } from "lucia";
   import { user } from "$lib/stores/user";
   import Loading from "$lib/components/Loading.svelte";
+  interface Props {
+    children?: import('svelte').Snippet;
+  }
+
+  let { children }: Props = $props();
 
   toast.defaults.set({ clear_on_navigate: true, duration_ms: 10_000 });
 
-  let loading = true;
+  let loading = $state(true);
   onMount(async () => {
     const { data } = await axios.get<{ user: User | undefined }>("/api/init");
 
@@ -26,7 +31,7 @@
 
 <main class="mx-14 my-4">
   <Loading {loading}>
-    <slot />
+    {@render children?.()}
   </Loading>
 </main>
 

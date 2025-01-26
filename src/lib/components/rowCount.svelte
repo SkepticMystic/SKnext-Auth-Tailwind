@@ -1,6 +1,10 @@
 <script lang="ts">
-  export let max: number;
-  export let preview: number;
+  interface Props {
+    max: number;
+    preview: number;
+  }
+
+  let { max, preview }: Props = $props();
 </script>
 
 <code>{Math.min(preview, max)}</code> of <code>{max}</code> rows

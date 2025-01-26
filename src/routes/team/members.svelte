@@ -3,7 +3,11 @@
   import type { User } from "lucia";
   import MemberCard from "./memberCard.svelte";
 
-  export let members: SID<Pick<User, "email" | "role">>[];
+  interface Props {
+    members: SID<Pick<User, "email" | "role">>[];
+  }
+
+  let { members }: Props = $props();
 </script>
 
 <div class="flex gap-3">

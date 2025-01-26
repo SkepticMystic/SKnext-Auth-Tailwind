@@ -1,7 +1,7 @@
 <script lang="ts">
   import Table from "$lib/components/table.svelte";
 
-  export let data;
+  let { data } = $props();
 </script>
 
 <Table rows={data.users} />

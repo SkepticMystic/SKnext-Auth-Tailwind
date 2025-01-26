@@ -1,12 +1,25 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import RowCount from "./rowCount.svelte";
 
-  export let rows: Record<string, any>[];
-  export let headers: string[] = [];
-  export let preview: number = 30;
-  export let indexCol: boolean = false;
+  interface Props {
+    rows: Record<string, any>[];
+    headers?: string[];
+    preview?: number;
+    indexCol?: boolean;
+  }
 
-  $: headers = headers.length ? headers : Object.keys(rows[0] ?? {});
+  let {
+    rows,
+    headers = $bindable([]),
+    preview = 30,
+    indexCol = false
+  }: Props = $props();
+
+  run(() => {
+    headers = headers.length ? headers : Object.keys(rows[0] ?? {});
+  });
 </script>
 
 <div>

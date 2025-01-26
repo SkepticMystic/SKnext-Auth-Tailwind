@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { preventDefault } from "svelte/legacy";
+
   import { set_href } from "$lib/auth/client";
   import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
@@ -11,8 +13,8 @@
 
   const loader = Loader<"reset-pwd">();
 
-  let newPass: string;
-  let confirmPass: string;
+  let newPass = $state("");
+  let confirmPass = $state("");
 
   const resetPassword = async () => {
     toast.set([]);
@@ -42,7 +44,7 @@
   };
 </script>
 
-<form on:submit|preventDefault={resetPassword}>
+<form onsubmit={preventDefault(resetPassword)}>
   <Label lbl="New Password">
     <input
       class="input"

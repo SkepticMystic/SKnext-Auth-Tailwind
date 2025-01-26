@@ -11,7 +11,11 @@
   import type { User } from "lucia";
   import { toast } from "svelte-daisyui-toast";
 
-  export let member: SID<Pick<User, "email" | "role">>;
+  interface Props {
+    member: SID<Pick<User, "email" | "role">>;
+  }
+
+  let { member }: Props = $props();
 
   const loader = Loader<
     "remove_member" | "change_role" | "transfer_ownership"
@@ -19,7 +23,7 @@
 
   const member_is_user = $user?.userId === member._id;
 
-  let newRole = member.role.slice();
+  let newRole = $state(member.role.slice());
 
   const remove_member = async () => {
     if (
@@ -128,7 +132,7 @@
       disabled={newRole === member.role ||
         member_is_user ||
         any_loading($loader)}
-      on:click={change_role}
+      onclick={change_role}
     >
       <Loading loading={$loader["change_role"]}>Change</Loading>
     </button>
@@ -137,7 +141,7 @@
   <button
     class="btn btn-warning"
     disabled={$user?.role !== "owner" || member_is_user || any_loading($loader)}
-    on:click={transfer_ownership}
+    onclick={transfer_ownership}
   >
     <Loading loading={$loader["transfer_ownership"]}>
       Transfer Ownership
@@ -147,7 +151,7 @@
   <button
     class="btn btn-error"
     disabled={member_is_user || any_loading($loader)}
-    on:click={remove_member}
+    onclick={remove_member}
   >
     <Loading loading={$loader["remove_member"]}>Remove</Loading>
   </button>

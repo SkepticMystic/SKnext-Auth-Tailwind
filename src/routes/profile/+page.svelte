@@ -29,7 +29,7 @@
 </script>
 
 <h1 class="text-2xl">Profile</h1>
-<div class="my-3" />
+<div class="my-3"></div>
 
 {#if $user}
   <p class="text-lg">Welcome {$user.email.split("@")[0]}</p>
@@ -42,7 +42,7 @@
     <button
       class="btn btn-error"
       disabled={any_loading($loader)}
-      on:click={deleteUser}
+      onclick={deleteUser}
     >
       <Loading loading={$loader["delete-user"]} />
       Delete Account

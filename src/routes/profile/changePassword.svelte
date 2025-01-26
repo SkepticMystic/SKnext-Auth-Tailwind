@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
   import Loading from "$lib/components/Loading.svelte";
   import Label from "$lib/components/label.svelte";
   import type { Result } from "$lib/interfaces";
@@ -7,8 +9,8 @@
   import axios from "axios";
   import { toast } from "svelte-daisyui-toast";
 
-  let newPass = "";
-  let confirmPass = "";
+  let newPass = $state("");
+  let confirmPass = $state("");
 
   const loader = Loader<"change-pwd">();
 
@@ -43,7 +45,7 @@
 
 <form
   class="flex flex-wrap items-end gap-3"
-  on:submit|preventDefault={changePassword}
+  onsubmit={preventDefault(changePassword)}
 >
   <Label lbl="New Password">
     <input
