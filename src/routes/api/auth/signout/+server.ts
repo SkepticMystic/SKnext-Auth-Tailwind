@@ -11,5 +11,5 @@ export const POST: RequestHandler = async ({ locals }) => {
 
   locals.auth.setSession(null);
 
-  redirect(302, "/signin");
+  redirect(302, "/auth/signin");
 };

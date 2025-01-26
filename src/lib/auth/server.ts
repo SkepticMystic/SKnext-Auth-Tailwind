@@ -36,7 +36,7 @@ export const get_user = async (
   if (!session) {
     redirect(
       302,
-      App.url("/signin", { redirect: url ? Url.strip_origin(url) : "/" }),
+      App.url("/auth/signin", { redirect: url ? Url.strip_origin(url) : "/" }),
     );
   }
   const { user } = session;

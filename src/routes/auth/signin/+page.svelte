@@ -77,8 +77,8 @@
 </form>
 
 <p class="my-3">
-  <a class="link" href="/forgot-password">Forgot Password?</a>
+  <a class="link" href="/auth/forgot-password">Forgot Password?</a>
 </p>
 <p class="my-3">
-  <a class="link" href="/signup">Don't have an account? Sign up</a>
+  <a class="link" href="/auth/signup">Don't have an account? Sign up</a>
 </p>

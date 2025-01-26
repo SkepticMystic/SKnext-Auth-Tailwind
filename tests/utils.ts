@@ -18,7 +18,7 @@ export const signin = async (
   email = "email@gmail.com",
   password = <string>process.env.TEST_PASSWORD,
 ) => {
-  await page.goto("/signin");
+  await page.goto("/auth/signin");
   await page.fill("input[name=email]", email);
   await page.fill("input[name=password]", password);
   await page.click("button:has-text('Sign in')");

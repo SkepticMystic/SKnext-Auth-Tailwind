@@ -51,13 +51,13 @@
     {
       side: "right",
       label: "Sign in",
-      href: "/signin",
+      href: "/auth/signin",
       authed: false,
     },
     {
       side: "right",
       label: "Sign up",
-      href: "/signup",
+      href: "/auth/signup",
       authed: false,
     },
   ];

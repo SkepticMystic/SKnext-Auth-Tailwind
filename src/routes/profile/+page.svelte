@@ -18,7 +18,7 @@
 
     try {
       const { data } = await axios.delete<Result>("/api/user");
-      if (data.ok) await goto("/signin");
+      if (data.ok) await goto("/auth/signin");
     } catch (error) {
       console.log(error);
       toast.error(getHTTPErrorMsg(error));

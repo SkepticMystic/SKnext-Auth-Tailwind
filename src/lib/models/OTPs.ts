@@ -1,8 +1,12 @@
 import { Users } from "$lib/auth/lucia";
 import type { Role } from "$lib/auth/roles";
+import { EMAIL_TEMPLATES } from "$lib/const/email";
 import { TIME } from "$lib/const/time";
+import type { SID } from "$lib/interfaces";
 import { err, suc } from "$lib/utils";
 import { App } from "$lib/utils/app";
+import { Email } from "$lib/utils/email";
+import type { User } from "lucia";
 import mongoose, { Model } from "mongoose";
 
 const OTP_KINDS = [
@@ -229,36 +233,35 @@ const validateUserToken = async (input: Pick<OTP, "token" | "kind">) => {
 };
 
 const handleLinks = {
-  "email-verification": async (input: { idValue: string }) => {
-    const { idValue } = input;
-
+  "email-verification": async ({ user }: { user: User }) => {
     // We know there were no existing email-verification OTPs,
     //   since we just created the user
     //   so we can create a new one without checking for existing
     const otp = await OTP.create({
-      identifier: `_id:${idValue}`,
+      identifier: `_id:${user.userId}`,
       kind: "email-verification",
     });
 
-    const href = App.full_url("/api/verify-email", {
-      token: otp.token,
-      _id: idValue,
+    await Email.send({
+      ...EMAIL_TEMPLATES["email-verification"]({ token: otp.token, user }),
+      to: user.email,
     });
-    console.log(href);
-    console.log("TODO: sendEmail");
   },
 
-  "password-reset": async (input: { idValue: string }) => {
-    const { idValue } = input;
-
+  "password-reset": async ({
+    user,
+  }: {
+    user: SID<Lucia.DatabaseUserAttributes>;
+  }) => {
     const otp = await OTP.getOrCreate({
-      identifier: `_id:${idValue}`,
       kind: "password-reset",
+      identifier: `_id:${user._id}`,
     });
 
-    const href = App.full_url("/api/reset-password", { token: otp.token });
-    console.log(href);
-    console.log("TODO: sendEmail");
+    await Email.send({
+      ...EMAIL_TEMPLATES["password-reset"]({ token: otp.token, user }),
+      to: user.email,
+    });
   },
 
   "team-invite": async (input: {

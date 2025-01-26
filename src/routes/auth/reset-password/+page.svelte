@@ -31,7 +31,7 @@
       if (data.type === "success") {
         toast.success("Password changed successfully");
 
-        set_href(App.url("/signin", { previous: "reset-password" }));
+        set_href(App.url("/auth/signin", { previous: "reset-password" }));
       } else {
         toast.error("Something went wrong");
       }

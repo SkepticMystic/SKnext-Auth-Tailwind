@@ -43,7 +43,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 
       redirect(
         302,
-        App.url("/signup", {
+        App.url("/auth/signup", {
           team_token: token,
           email_hint: checkUser.error.id.value,
         }),
@@ -77,6 +77,9 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 
   redirect(
     302,
-    App.url("/signin", { email_hint: user.email, previous: "team-invite" }),
+    App.url("/auth/signin", {
+      email_hint: user.email,
+      previous: "team-invite",
+    }),
   );
 };

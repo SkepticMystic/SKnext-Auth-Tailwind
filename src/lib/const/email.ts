@@ -29,7 +29,7 @@ export const EMAIL_TEMPLATES = {
     text: `
 Hi,
 
-Click here to reset your ${APP.NAME} password: ${App.full_url("/reset-password", { token: data.token })}.
+Click here to reset your ${APP.NAME} password: ${App.full_url("/auth/reset-password", { token: data.token })}.
 
 If you did not request this, you can safely ignore this email.
 

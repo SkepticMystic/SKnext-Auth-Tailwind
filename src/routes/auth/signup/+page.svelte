@@ -83,5 +83,5 @@
 </form>
 
 <p class="my-3">
-  <a class="link" href="/signin">Sign in instead</a>
+  <a class="link" href="/auth/signin">Sign in instead</a>
 </p>

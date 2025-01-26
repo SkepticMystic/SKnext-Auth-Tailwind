@@ -19,7 +19,7 @@ export const actions: Actions = {
       return { ok: true };
     }
 
-    await OTP.handleLinks["password-reset"]({ idValue: user._id.toString() });
+    await OTP.handleLinks["password-reset"]({ user });
 
     return { ok: true };
   },
