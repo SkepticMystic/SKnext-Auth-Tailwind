@@ -104,7 +104,7 @@
       <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
       <ul
         tabindex="0"
-        class="menu-compact menu dropdown-content mt-3 w-40 rounded-box bg-base-100 p-2 shadow"
+        class="menu-compact menu dropdown-content mt-3 w-40 rounded-box bg-base-100 p-2 shadow-sm"
       >
         <!-- Shows all routes, not just those for a given `side` -->
         {#each routes as r}

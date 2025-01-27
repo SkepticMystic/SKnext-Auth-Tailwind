@@ -1,19 +1,37 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui";
+@source '../node_modules/svelte-daisyui-toast/dist/**/*.{js,svelte}';
 
-@layer components {
-  .input {
-    @apply input-bordered;
-  }
-  .textarea {
-    @apply textarea-bordered;
-  }
-  .select {
-    @apply select-bordered;
-  }
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
 
-  .link {
-    @apply link-hover no-underline;
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
   }
+}
+
+@utility input {
+  @apply input-bordered;
+}
+
+@utility textarea {
+  @apply textarea-bordered;
+}
+
+@utility select {
+  @apply select-bordered;
+}
+
+@utility link {
+  @apply link-hover no-underline;
 }

@@ -4,21 +4,15 @@
   interface Props {
     loading: boolean | undefined;
     size?: TW.Size;
-    animation?: 
-    | "spinner"
-    | "dots"
-    | "ring"
-    | "ball"
-    | "bars"
-    | "infinity";
-    children?: import('svelte').Snippet;
+    animation?: "spinner" | "dots" | "ring" | "ball" | "bars" | "infinity";
+    children?: import("svelte").Snippet;
   }
 
   let {
     loading,
     size = "sm",
     animation = "spinner",
-    children
+    children,
   }: Props = $props();
 
   const loadingSizes: Record<TW.Size, `loading-${TW.Size}`> = {
@@ -46,7 +40,7 @@
   <span
     class="{loadingSizes[size]} {loadingAnimations[animation]}"
     class:loading
-></span>
+  ></span>
 {:else}
   {@render children?.()}
 {/if}

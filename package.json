@@ -17,8 +17,9 @@
     "@sveltejs/adapter-vercel": "^5.5.3",
     "@sveltejs/kit": "^2.16.0",
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
+    "@tailwindcss/postcss": "^4.0.0",
     "autoprefixer": "^10.4.20",
-    "daisyui": "^4.12.23",
+    "daisyui": "^5.0.0-beta.2",
     "dotenv": "^16.4.7",
     "postcss": "^8.5.1",
     "prettier": "^3.4.2",
@@ -39,7 +40,7 @@
     "emailjs": "^4.0.3",
     "lucia": "^2.0.0",
     "mongoose": "^7.4.2",
-    "svelte-daisyui-toast": "^1.0.0",
+    "svelte-daisyui-toast": "^2.0.3",
     "theme-change": "^2.5.0",
     "zod": "^3.24.1"
   }
