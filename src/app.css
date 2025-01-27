@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui";
-@source '../node_modules/svelte-daisyui-toast/dist/**/*.{js,svelte}';
+@source "../node_modules/svelte-daisyui-toast/dist/**/*.{js,svelte}";
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -18,20 +18,4 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
-}
-
-@utility input {
-  @apply input-bordered;
-}
-
-@utility textarea {
-  @apply textarea-bordered;
-}
-
-@utility select {
-  @apply select-bordered;
-}
-
-@utility link {
-  @apply link-hover no-underline;
 }
