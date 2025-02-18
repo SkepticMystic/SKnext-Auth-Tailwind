@@ -8,11 +8,17 @@ import { z } from "zod";
 
 export const actions: Actions = {
   default: async ({ request, url }) => {
-    const { newPass } = await Parsers.form(
-      request,
-      z.object({ newPass: password_schema }),
-    );
     const { token } = Parsers.url(url, z.object({ token: z.string() }));
+
+    const input = await Parsers.form(
+      request,
+      z
+        .object({ new: password_schema, confirm: password_schema })
+        .refine(
+          (input) => input.new === input.confirm,
+          "Passwords do not match",
+        ),
+    );
 
     const check = await OTP.validateUserToken({
       token,
@@ -23,7 +29,7 @@ export const actions: Actions = {
     const { user, otp } = check.data;
     try {
       await Promise.all([
-        auth.updateKeyPassword("email", user.email, newPass),
+        auth.updateKeyPassword("email", user.email, input.new),
         otp.deleteOne(),
       ]);
 

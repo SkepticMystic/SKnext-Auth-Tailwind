@@ -4,7 +4,7 @@
   import { any_loading, Loader } from "$lib/utils/loader";
   import { onMount } from "svelte";
   import { toast } from "svelte-daisyui-toast";
-  import Loading from "./Loading.svelte";
+  import Loading from "./daisyui/Loading.svelte";
 
   interface Props {
     data: any[];
@@ -21,13 +21,17 @@
     getData,
     total = null,
     pageNo = null,
-    limit = null
+    limit = null,
   }: Props = $props();
 
   const loader = Loader<Dir>();
 
-  let currPage = $state(pageNo ?? Number($page.url.searchParams.get("page") ?? 1));
-  let currLimit = $state(limit ?? Number($page.url.searchParams.get("limit") ?? 50));
+  let currPage = $state(
+    pageNo ?? Number($page.url.searchParams.get("page") ?? 1),
+  );
+  let currLimit = $state(
+    limit ?? Number($page.url.searchParams.get("limit") ?? 50),
+  );
 
   let totalPages = $derived(total ? Math.ceil(total / currLimit) : null);
   let skip = $state((currPage - 1) * currLimit);

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import Loading from "$lib/components/Loading.svelte";
+  import Loading from "$lib/components/daisyui/Loading.svelte";
   import type { Result } from "$lib/interfaces";
   import { user } from "$lib/stores/user";
   import { getHTTPErrorMsg } from "$lib/utils/errors";

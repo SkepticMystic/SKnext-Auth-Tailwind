@@ -1,8 +1,4 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
-  import RowCount from "./rowCount.svelte";
-
   interface Props {
     rows: Record<string, any>[];
     headers?: string[];
@@ -14,22 +10,14 @@
     rows,
     headers = $bindable([]),
     preview = 30,
-    indexCol = false
+    indexCol = false,
   }: Props = $props();
 
-  run(() => {
-    headers = headers.length ? headers : Object.keys(rows[0] ?? {});
-  });
+  headers = headers.length ? headers : Object.keys(rows[0] ?? {});
 </script>
 
 <div>
   {#key rows}
-    {#if preview}
-      <div class="my-3">
-        <RowCount {preview} max={rows.length} />
-      </div>
-    {/if}
-
     <table class="table">
       <thead>
         <tr>

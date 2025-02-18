@@ -1,8 +1,8 @@
 <script lang="ts">
   import { invalidateAll } from "$app/navigation";
   import { ROLES } from "$lib/auth/roles";
-  import Loading from "$lib/components/Loading.svelte";
-  import Label from "$lib/components/label.svelte";
+  import Loading from "$lib/components/daisyui/Loading.svelte";
+  import Label from "$lib/components/daisyui/Label.svelte";
   import type { Result, SID } from "$lib/interfaces";
   import { user } from "$lib/stores/user";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
@@ -108,7 +108,7 @@
 </script>
 
 <div
-  class="flex min-w-[200px] flex-col gap-3 rounded-box border bg-base-100 p-3"
+  class="rounded-box bg-base-100 flex min-w-[200px] flex-col gap-3 border p-3"
 >
   <span class="text-sm" class:font-semibold={member_is_user}
     >{member.email}</span

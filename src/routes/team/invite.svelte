@@ -1,8 +1,8 @@
 <script lang="ts">
   import { invalidateAll } from "$app/navigation";
   import { ROLES, type Role } from "$lib/auth/roles";
-  import Loading from "$lib/components/Loading.svelte";
-  import Label from "$lib/components/label.svelte";
+  import Loading from "$lib/components/daisyui/Loading.svelte";
+  import Label from "$lib/components/daisyui/Label.svelte";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import { any_loading, Loader } from "$lib/utils/loader";
   import axios from "axios";

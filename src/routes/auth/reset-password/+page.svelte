@@ -1,32 +1,34 @@
 <script lang="ts">
-  import { preventDefault } from "svelte/legacy";
-
   import { set_href } from "$lib/auth/client";
-  import Loading from "$lib/components/Loading.svelte";
-  import Label from "$lib/components/label.svelte";
+  import Fieldset from "$lib/components/daisyui/Fieldset.svelte";
+  import Label from "$lib/components/daisyui/Label.svelte";
+  import Loading from "$lib/components/daisyui/Loading.svelte";
   import { App } from "$lib/utils/app";
   import { getActionErrorMsg } from "$lib/utils/errors";
   import { any_loading, Loader } from "$lib/utils/loader";
   import type { ActionResult } from "@sveltejs/kit";
   import axios from "axios";
   import { toast } from "svelte-daisyui-toast";
+  import { preventDefault } from "svelte/legacy";
 
   const loader = Loader<"reset-pwd">();
 
-  let newPass = $state("");
-  let confirmPass = $state("");
+  let form = $state({
+    new: "",
+    confirm: "",
+  });
 
-  const resetPassword = async () => {
+  const reset_password = async () => {
     toast.set([]);
 
-    if (newPass !== confirmPass) {
+    if (form.new !== form.confirm) {
       return toast.error("Passwords do not match");
     }
 
     loader.load("reset-pwd");
 
     try {
-      const { data } = await axios.postForm<ActionResult>("", { newPass });
+      const { data } = await axios.postForm<ActionResult>("", form);
 
       if (data.type === "success") {
         toast.success("Password changed successfully");
@@ -44,28 +46,32 @@
   };
 </script>
 
-<form onsubmit={preventDefault(resetPassword)}>
-  <Label lbl="New Password">
-    <input
-      class="input"
-      type="password"
-      autocomplete="new-password"
-      bind:value={newPass}
-    />
-  </Label>
-  <Label lbl="Confirm Password">
-    <input
-      class="input"
-      type="password"
-      autocomplete="new-password"
-      bind:value={confirmPass}
-    />
-  </Label>
+<form onsubmit={preventDefault(reset_password)} class="flex flex-col gap-3">
+  <Fieldset legend="Reset password">
+    <Label lbl="New Password">
+      <input
+        class="input"
+        type="password"
+        placeholder="New Password"
+        autocomplete="new-password"
+        bind:value={form.new}
+      />
+    </Label>
+    <Label lbl="Confirm Password">
+      <input
+        class="input"
+        type="password"
+        placeholder="Confirm Password"
+        autocomplete="new-password"
+        bind:value={form.confirm}
+      />
+    </Label>
+  </Fieldset>
 
   <button
-    class="btn btn-primary my-4"
+    class="btn btn-primary"
     type="submit"
-    disabled={!newPass || !confirmPass || any_loading($loader)}
+    disabled={!form.new || !form.confirm || any_loading($loader)}
   >
     <Loading loading={$loader["reset-pwd"]} />
     Reset Password

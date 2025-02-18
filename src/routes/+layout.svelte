@@ -1,14 +1,15 @@
 <script lang="ts">
-  import Navbar from "$lib/components/navbar.svelte";
-  import { toast, Toaster } from "svelte-daisyui-toast";
-  import "../app.css";
-  import { onMount } from "svelte";
+  import Loading from "$lib/components/daisyui/Loading.svelte";
+  import Navbar from "$lib/components/daisyui/Navbar.svelte";
+  import { user } from "$lib/stores/user";
   import axios from "axios";
   import type { User } from "lucia";
-  import { user } from "$lib/stores/user";
-  import Loading from "$lib/components/Loading.svelte";
+  import { onMount } from "svelte";
+  import { toast, Toaster } from "svelte-daisyui-toast";
+  import "../app.css";
+
   interface Props {
-    children?: import('svelte').Snippet;
+    children?: import("svelte").Snippet;
   }
 
   let { children }: Props = $props();

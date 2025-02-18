@@ -1,6 +1,6 @@
 <script lang="ts">
   import { invalidateAll } from "$app/navigation";
-  import Loading from "$lib/components/Loading.svelte";
+  import Loading from "$lib/components/daisyui/Loading.svelte";
   import type { Result, SID } from "$lib/interfaces";
   import type { TeamInviteOTP } from "$lib/models/OTPs";
   import { any_loading, Loader } from "$lib/utils/loader";
@@ -9,8 +9,8 @@
 
   interface Props {
     pendingInvites: SID<
-    Pick<TeamInviteOTP, "createdAt" | "data" | "expiresInMs" | "identifier">
-  >[];
+      Pick<TeamInviteOTP, "createdAt" | "data" | "expiresInMs" | "identifier">
+    >[];
   }
 
   let { pendingInvites }: Props = $props();
@@ -36,7 +36,7 @@
 
 <div class="flex gap-3">
   {#each pendingInvites as { _id, createdAt, data, identifier, expiresInMs }}
-    <div class="flex flex-col gap-2 rounded-box border bg-base-100 p-3">
+    <div class="rounded-box bg-base-100 flex flex-col gap-2 border p-3">
       <span>
         <span>{identifier.split("email:")[1]}</span> -
         <span class="capitalize">{data.role}</span>

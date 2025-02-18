@@ -55,7 +55,7 @@ export const actions: Actions = {
     // !SECTION
 
     try {
-      const { userId } = await auth.createUser({
+      const user = await auth.createUser({
         attributes: {
           ...attributes,
           email,
@@ -69,13 +69,11 @@ export const actions: Actions = {
       });
 
       const promises: Promise<any>[] = [
-        auth.createSession({ userId, attributes: {} }),
+        auth.createSession({ userId: user.userId, attributes: {} }),
       ];
 
       if (!attributes.email_verified) {
-        promises.push(
-          OTP.handleLinks["email-verification"]({ idValue: userId }),
-        );
+        promises.push(OTP.handleLinks["email-verification"]({ user }));
       }
 
       const [session] = await Promise.all(promises);

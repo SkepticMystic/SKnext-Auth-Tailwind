@@ -13,12 +13,6 @@ type GetUserOptions = {
   url?: URL;
 };
 
-const DEFAULT_OPTIONS: GetUserOptions = {
-  admin: false,
-  role: undefined,
-  url: undefined,
-};
-
 /** The catch-all function to get the current user.
  * Check roles.
  * Redirect to signin if not logged in.
@@ -27,10 +21,12 @@ export const get_user = async (
   locals: App.Locals,
   options?: GetUserOptions,
 ) => {
-  const { admin, role, url } = Object.assign(
-    { ...DEFAULT_OPTIONS },
-    options ?? {},
-  );
+  const { admin, role, url } = {
+    admin: false,
+    role: undefined,
+    url: undefined,
+    ...(options ?? {}),
+  };
 
   const session = await locals.auth.validate();
   if (!session) {

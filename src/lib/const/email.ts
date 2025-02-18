@@ -19,7 +19,6 @@ ${APP.URL}
   },
 };
 
-// TODO: Implement in OTP.handleLinks
 export const EMAIL_TEMPLATES = {
   "password-reset": (data: {
     token: string;

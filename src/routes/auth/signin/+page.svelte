@@ -1,15 +1,15 @@
 <script lang="ts">
   import { preventDefault } from "svelte/legacy";
-
   import { page } from "$app/stores";
   import { set_href } from "$lib/auth/client";
-  import Loading from "$lib/components/Loading.svelte";
-  import Label from "$lib/components/label.svelte";
+  import Loading from "$lib/components/daisyui/Loading.svelte";
+  import Label from "$lib/components/daisyui/Label.svelte";
   import { getActionErrorMsg } from "$lib/utils/errors";
   import { any_loading, Loader } from "$lib/utils/loader";
   import type { ActionResult } from "@sveltejs/kit";
   import axios from "axios";
   import { toast } from "svelte-daisyui-toast";
+  import Fieldset from "$lib/components/daisyui/Fieldset.svelte";
 
   const loader = Loader<"signin">();
 
@@ -42,31 +42,42 @@
 </script>
 
 {#if previous === "team-invite"}
-  <p class="my-3 text-success">
+  <p class="text-success my-3">
     Team invite accepted, please sign in to continue.
   </p>
 {:else if previous === "reset-password"}
-  <p class="my-3 text-success">
+  <p class="text-success my-3">
     Password reset successful, please sign in to continue.
   </p>
 {/if}
 
-<form onsubmit={preventDefault(signin)}>
-  <Label lbl="Email">
-    <input class="input" type="email" autocomplete="email" bind:value={email} />
-  </Label>
-  <Label lbl="Password">
-    <input
-      class="input"
-      type="password"
-      autocomplete="current-password"
-      bind:value={password}
-    />
-  </Label>
+<form class="flex flex-col gap-3" onsubmit={preventDefault(signin)}>
+  <Fieldset legend="Signin">
+    <div class="flex flex-col gap-3">
+      <Label lbl="Email">
+        <input
+          class="input"
+          type="email"
+          placeholder="Email"
+          autocomplete="email"
+          bind:value={email}
+        />
+      </Label>
+      <Label lbl="Password">
+        <input
+          class="input"
+          type="password"
+          placeholder="Password"
+          autocomplete="current-password"
+          bind:value={password}
+        />
+      </Label>
+    </div>
+  </Fieldset>
 
   <div class="flex flex-wrap items-center gap-3">
     <button
-      class="btn btn-primary my-4"
+      class="btn btn-primary"
       type="submit"
       disabled={!email || !password || any_loading($loader)}
     >

@@ -1,13 +1,13 @@
 <script lang="ts">
   import { preventDefault } from "svelte/legacy";
-
-  import Loading from "$lib/components/Loading.svelte";
-  import Label from "$lib/components/label.svelte";
+  import Loading from "$lib/components/daisyui/Loading.svelte";
+  import Label from "$lib/components/daisyui/Label.svelte";
   import { getActionErrorMsg } from "$lib/utils/errors";
   import { any_loading, Loader } from "$lib/utils/loader";
   import type { ActionResult } from "@sveltejs/kit";
   import axios from "axios";
   import { toast } from "svelte-daisyui-toast";
+  import Fieldset from "$lib/components/daisyui/Fieldset.svelte";
 
   let email = $state("");
 
@@ -33,13 +33,21 @@
   };
 </script>
 
-<form onsubmit={preventDefault(forgotPassword)}>
-  <Label lbl="Email">
-    <input class="input" type="email" autocomplete="email" bind:value={email} />
-  </Label>
+<form onsubmit={preventDefault(forgotPassword)} class="flex flex-col gap-3">
+  <Fieldset legend="Forgot password">
+    <Label lbl="Email">
+      <input
+        class="input"
+        type="email"
+        placeholder="Email"
+        autocomplete="email"
+        bind:value={email}
+      />
+    </Label>
+  </Fieldset>
 
   <button
-    class="btn btn-primary my-4"
+    class="btn btn-primary w-fit"
     type="submit"
     disabled={!email || any_loading($loader)}
   >

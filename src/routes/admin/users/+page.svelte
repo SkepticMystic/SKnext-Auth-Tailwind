@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Table from "$lib/components/table.svelte";
+  import Table from "$lib/components/daisyui/Table.svelte";
 
   let { data } = $props();
 </script>

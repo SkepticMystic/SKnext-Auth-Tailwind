@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { preventDefault } from 'svelte/legacy';
-
-  import Loading from "$lib/components/Loading.svelte";
-  import Label from "$lib/components/label.svelte";
+  import { preventDefault } from "svelte/legacy";
+  import Loading from "$lib/components/daisyui/Loading.svelte";
+  import Label from "$lib/components/daisyui/Label.svelte";
   import type { Result } from "$lib/interfaces";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import { any_loading, Loader } from "$lib/utils/loader";
   import axios from "axios";
   import { toast } from "svelte-daisyui-toast";
+  import Fieldset from "$lib/components/daisyui/Fieldset.svelte";
 
   let newPass = $state("");
   let confirmPass = $state("");
@@ -41,28 +41,26 @@
   };
 </script>
 
-<h2 class="text-xl">Change Password</h2>
+<form class="flex flex-col gap-3" onsubmit={preventDefault(changePassword)}>
+  <Fieldset legend="Change password">
+    <Label lbl="New Password">
+      <input
+        class="input"
+        type="password"
+        autocomplete="new-password"
+        bind:value={newPass}
+      />
+    </Label>
 
-<form
-  class="flex flex-wrap items-end gap-3"
-  onsubmit={preventDefault(changePassword)}
->
-  <Label lbl="New Password">
-    <input
-      class="input"
-      type="password"
-      autocomplete="new-password"
-      bind:value={newPass}
-    />
-  </Label>
-  <Label lbl="Confirm Password">
-    <input
-      class="input"
-      type="password"
-      autocomplete="new-password"
-      bind:value={confirmPass}
-    />
-  </Label>
+    <Label lbl="Confirm Password">
+      <input
+        class="input"
+        type="password"
+        autocomplete="new-password"
+        bind:value={confirmPass}
+      />
+    </Label>
+  </Fieldset>
 
   <div class="flex flex-wrap items-center gap-3">
     <button
