@@ -1,23 +1,21 @@
 <script lang="ts">
-  import { preventDefault } from "svelte/legacy";
-  import { page } from "$app/stores";
   import { set_href } from "$lib/auth/client";
-  import Loading from "$lib/components/daisyui/Loading.svelte";
+  import Fieldset from "$lib/components/daisyui/Fieldset.svelte";
   import Label from "$lib/components/daisyui/Label.svelte";
+  import Loading from "$lib/components/daisyui/Loading.svelte";
   import { getActionErrorMsg } from "$lib/utils/errors";
   import { any_loading, Loader } from "$lib/utils/loader";
   import type { ActionResult } from "@sveltejs/kit";
   import axios from "axios";
   import { toast } from "svelte-daisyui-toast";
-  import Fieldset from "$lib/components/daisyui/Fieldset.svelte";
+  import { preventDefault } from "svelte/legacy";
+
+  export let data;
 
   const loader = Loader<"signin">();
 
-  const previous = $page.url.searchParams.get("previous");
-  const email_hint = $page.url.searchParams.get("email_hint");
-
   let password = $state("");
-  let email: string | undefined = $state(email_hint ?? undefined);
+  let email: string | undefined = $state(data.search.email_hint ?? undefined);
 
   const signin = async () => {
     loader.load("signin");
@@ -41,11 +39,11 @@
   };
 </script>
 
-{#if previous === "team-invite"}
+{#if data.search.previous === "team-invite"}
   <p class="text-success my-3">
     Team invite accepted, please sign in to continue.
   </p>
-{:else if previous === "reset-password"}
+{:else if data.search.previous === "reset-password"}
   <p class="text-success my-3">
     Password reset successful, please sign in to continue.
   </p>

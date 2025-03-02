@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { page } from "$app/stores";
   import { getHTTPErrorMsg } from "$lib/utils/errors";
   import { any_loading, Loader } from "$lib/utils/loader";
   import { onMount } from "svelte";
@@ -11,30 +10,23 @@
     fetchOnMount?: boolean;
     getData: (skip: number, limit: number) => Promise<any[]>;
     total?: number | null;
-    pageNo?: number | null;
-    limit?: number | null;
+    pageNo?: number;
+    limit?: number;
   }
 
   let {
-    data = $bindable(),
-    fetchOnMount = true,
-    getData,
+    limit = 50,
+    pageNo = 1,
     total = null,
-    pageNo = null,
-    limit = null,
+    fetchOnMount = true,
+    data = $bindable(),
+    getData,
   }: Props = $props();
 
   const loader = Loader<Dir>();
 
-  let currPage = $state(
-    pageNo ?? Number($page.url.searchParams.get("page") ?? 1),
-  );
-  let currLimit = $state(
-    limit ?? Number($page.url.searchParams.get("limit") ?? 50),
-  );
-
-  let totalPages = $derived(total ? Math.ceil(total / currLimit) : null);
-  let skip = $state((currPage - 1) * currLimit);
+  let skip = $state((pageNo - 1) * limit);
+  let page_count = $derived(total ? Math.ceil(total / limit) : null);
 
   // First | Previous | Current | Next | Last
   type Dir = -2 | -1 | 0 | 1 | 2;
@@ -44,15 +36,15 @@
 
     if (dir === -2) skip = 0;
     else if (dir === 2) {
-      if (!totalPages) return;
-      else skip = (totalPages - 1) * currLimit;
-    } else skip += dir * currLimit;
+      if (!page_count) return;
+      else skip = (page_count - 1) * limit;
+    } else skip += dir * limit;
 
     try {
-      data = await getData(skip, currLimit);
+      data = await getData(skip, limit);
 
       // Set page after completing fetch
-      currPage = Math.floor(skip / currLimit) + 1;
+      pageNo = Math.floor(skip / limit) + 1;
     } catch (error) {
       toast.error(getHTTPErrorMsg(error));
     }
@@ -89,7 +81,7 @@
       onclick={async () => await getMore(0)}
     >
       <Loading loading={$loader[0]}>
-        {currPage}{total ? ` / ${totalPages}` : ""}
+        {pageNo}{total ? ` / ${page_count}` : ""}
       </Loading>
     </button>
 
@@ -97,7 +89,7 @@
       class="btn btn-square btn-secondary rounded-none border-0"
       title="Next"
       disabled={any_loading($loader) ||
-        (total ? currPage === totalPages : data.length < currLimit)}
+        (total ? pageNo === page_count : data.length < limit)}
       onclick={async () => await getMore(1)}
     >
       <Loading loading={$loader[1]}>→</Loading>
@@ -105,7 +97,7 @@
     {#if total}
       <button
         class="btn btn-square btn-secondary rounded-none border-0"
-        disabled={any_loading($loader) || currPage === totalPages}
+        disabled={any_loading($loader) || pageNo === page_count}
         title="Last"
         onclick={async () => await getMore(2)}
       >
@@ -115,7 +107,7 @@
     <div class="mx-2"></div>
     <select
       class="select"
-      bind:value={currLimit}
+      bind:value={limit}
       onchange={async () => {
         skip = 0;
         await getMore();
